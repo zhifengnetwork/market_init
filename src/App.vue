@@ -12,6 +12,10 @@ export default {
 </script>
 
 <style>
+     /* 公共样式 */
+    @import "../static/css/public/public.css";
+    /* 公共头部 */
+    @import "../static/css/public/header.css";
 * {
 		margin: 0;
 		padding: 0;

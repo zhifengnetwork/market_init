@@ -6,7 +6,10 @@ import register from '@/components/login/register'
 import forget from '@/components/login/forget'
 /*首页*/
 import index from '@/components/index'
-
+/*购物车 */
+import cart from '../components/cart/cart'
+/*个人中心 */
+import user from '../components/user/user'
 
 Vue.use(Router)
 
@@ -43,7 +46,12 @@ export default new Router({
 	    	path: '/index',
 	    	name: 'index',
 	    	component: (resolve) => require(['@/components/index'],resolve)
-	    },
-    
+			},
+			{
+				path:'/cart',name: 'cart',component:cart,
+			},
+			{
+				path:'/user',name: 'user',component:user,
+	    }
   	]
 })
