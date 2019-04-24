@@ -20,7 +20,7 @@
                               <div class="cart-content normal-good active" v-if="list[0].title!= ''">
                                     <a class="tips clearfix" href="" >
                                         <div>
-                                            购物满¥000.00 已免运费{{list[0].title}}
+                                            购物满¥000.00 已免运费
                                         </div>
                                         <span class="iconfont free-shipping">
                                             <img src="../../../static/img/public/right.png" alt="">
