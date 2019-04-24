@@ -12,6 +12,8 @@ import classify from '../components/classify/classify'
 import cart from '../components/cart/cart'
 /*个人中心 */
 import user from '../components/user/user'
+/* 商品分类 */
+import classify from '../components/classify/classify'
 
 Vue.use(Router)
 
@@ -58,6 +60,9 @@ export default new Router({
 			},
 			{
 				path:'/user',name: 'user',component:user,
-	    }
+			},
+			{
+				path:'/classify',name: 'classify',component:classify,
+			},
   	]
 })
