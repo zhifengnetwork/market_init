@@ -3,16 +3,16 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-<<<<<<< HEAD
 import 'mint-ui/lib/style.css'
 
 import 'lib-flexible/flexible.js'
-=======
 import'mint-ui/lib/style.css'
 import { Spinner } from 'mint-ui';
 
+import Mint from 'mint-ui';
+Vue.use(Mint);
+
 Vue.component(Spinner.name, Spinner);
->>>>>>> f6a0a8a4f905f54cfc128b1af79f3a12b1ac2dc1
 
 
 //引入axios库

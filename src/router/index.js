@@ -6,8 +6,6 @@ import register from '@/components/login/register'
 import forget from '@/components/login/forget'
 /*首页*/
 import index from '@/components/index'
-// 分类
-import classify from '../components/classify/classify'
 /*购物车 */
 import cart from '../components/cart/cart'
 /*个人中心 */
@@ -21,18 +19,13 @@ export default new Router({
 	/*去除掉，路径#号*/
 	mode: 'history',
   	routes: [
-			{
+	    {
 	    	path: '/',
-		    name: 'classify',
-			component:classify
-		},
-	    // {
-	    // 	path: '/',
-		  //   name: 'login',
-		  //   redirect: '/login', /**重定向**/
-		  //   /*component: login*/
-			// 	component: (resolve) => require(['@/components/login/login.vue'],resolve)
-	    // },
+		    name: 'login',
+		    redirect: '/login', /**重定向**/
+		    /*component: login*/
+				component: (resolve) => require(['@/components/login/login.vue'],resolve)
+	    },
 	    {
 	    	path: '/login', 
 				component: (resolve) => require(['@/components/login/login.vue'],resolve)
