@@ -1,18 +1,258 @@
 <template>
-    <div class="Classify">
-        分类
-    </div>
+	<div class="Classify">
+		<div class="container">
+			 <!-- 头部组件 -->
+			<headerView custom-title="分类" custom-fixed rightNone>
+				<div class="backBtn" slot="backBtn" @click="backBtn">
+					<img src="static/img/public/backBtn.png" />
+				</div>
+			</headerView>
+
+			<div class="scroll">
+				<div class="scroll-menu" ref="menuBox">
+					<ul>
+						<li 
+							v-for="(item,index) of menuBar"
+							:key="index"
+							@click="handleClick(index)"
+							:class="{on:currentIndex === index }"
+							>{{item}}</li>
+					</ul>
+				</div>
+				<div class="scroll-prolist" ref="proBox">
+					<ul class="pro">
+						<li class="pro-classify" ref="proClassify"
+							v-for="(items,index) of goods"
+							:key="index"
+							>
+                            <!-- 热门种类 -->
+                            <h3 class="title">{{items.hotCategory.title}}</h3>
+							<ul class="pro-items">
+								<router-link 
+									tag="li"
+									to="/Details"
+									v-for="(item,index) of items.hotCategory.list"
+									:key="index"
+								>
+									<div class="picture">
+										<img :src="item.imgUrl">
+									</div>
+									<p>{{item.name}}</p>
+								</router-link>
+							</ul>
+
+                            <!-- 热销商品 -->
+                            <h3 class="title">{{items.hotSingle.title}}</h3>
+							<ul class="singleList">
+								<router-link 
+									tag="li"
+									to="/Details"
+									v-for="(item,index) of items.hotSingle.list"
+									:key="index"
+								>
+									<div class="img-wrap">
+										<img :src="item.imgUrl">
+									</div>
+									<div class="text">
+										<h3>{{item.proTit}}</h3>
+										<span class="sign">热卖</span>
+										<div class="line3">
+											<span class="price">¥{{item.price}}</span>
+											<span class="commentNum">评论{{item.commentNum}}条</span>
+										</div>
+									</div>
+								</router-link>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- <MenuBar></MenuBar> -->
+	</div>
 </template>
 
 <script>
-    name:'classify'
-    export default {
-        
-    }
+	import BScroll from 'better-scroll'
+	import headerView from '../common/headerView'
+	export default {
+	 	name:"Classify",
+	 	data(){
+	 		return{
+	 			menuBar:[],
+	 			goods:[],
+	 			listHeight:[],
+				scrollY:0
+	 		}
+	 	},
+	 	computed:{
+	 		currentIndex(){
+	 			for(let i = 0;i < this.listHeight.length-1;i++){
+	 				let height1 = this.listHeight[i]
+					let height2 = this.listHeight[i+1]					 
+	 				if(!height2 || (this.scrollY >= height1 && this.scrollY< height2) ){
+						 return i;
+	 				}
+	 			}
+	 			return 0;
+	 		}
+		},
+		 
+	 	methods:{
+			// 后退
+            backBtn:function(){
+                this.$router.go(-1);
+            },
+	 		initScroll(){
+				this.menuScroll = new BScroll(this.$refs.menuBox,{
+					click:true
+				})
+	 			this.proScroll = new BScroll(this.$refs.proBox,{
+	 				probeType : 3
+	 			})
+	 			this.proScroll.on('scroll',(pos)=>{
+					this.scrollY = Math.abs(Math.round(pos.y))
+	 			})
+			 },
+	
+	 		handleClick(i){
+	 			let proList = this.$refs.proClassify
+				let el = proList[i]
+	 			this.proScroll.scrollToElement(el,300);
+	 		},
+	 		getHeight(){
+				let proList = this.$refs.proClassify
+				let height = 0
+				 
+				this.listHeight.push(height)
+				
+	 			for(let i = 0; i < proList.length; i++ ){
+					
+					let item = proList[i]
+					 
+					height += item.clientHeight
+					
+	 				this.listHeight.push(height)
+				 }
+	 		}
+	 	},
+	 	mounted(){
+	 		this.axios.get("/api/classify.json")
+	 		.then((res)=>{
+	 			let resData = res.data
+	 			this.menuBar = resData.menuBar
+                this.goods = resData.goods
+	 			this.$nextTick(()=>{
+					 this.initScroll()
+					 this.getHeight()
+				})
+	 		})
+		 },
+		components:{
+            headerView
+        }
+		 
+	}
 </script>
 
-<style scoped>
+<style lang="stylus" scoped="scoped">
+.Classify
+	background-color #fff
+	height 100vh
+	overflow hidden
+	.container
+		.scroll
+			display flex
+			padding-top 88px
+			.scroll-menu
+				width 234px
+				background #fafafa
+				ul
+					li
+						height 93px
+						line-height 93px
+						text-align center
+						font-size 28px
+					li.on
+						color #ff9900
+						background url("~static/img/classify/menu-bg.jpg") no-repeat
+			.scroll-prolist
+				width 516px	
+				height calc(100vh - 100px)
+				padding 0 20px
+				.pro
+					.pro-classify
+						.title
+							line-height 100px
+							font-size 28px						
+						.pro-items
+							display flex
+							flex-wrap wrap
+							justify-content space-between
+							li
+								width 33%
+								height 274px
+								margin 10px 0
+								.picture
+									width 100%;
+									height 215px;
+									overflow hidden
+									position relative
+									img
+										width 100%
+										position absolute
+										left 50%
+										top 50%
+										transform translate(-50%,-50%)
+										z-index 3
+								p
+									text-align center
+									height 60px
+									line-height 60px
+									font-size 26px
+									color #000000 
+						.singleList
+							li
+								display flex
+								align-items center
+								border-bottom 1px solid #eeeeee
+								.img-wrap
+									width 160px
+									height 100%
+									img 
+										width 100%
+								.text
+									flex 1
+									h3
+										font-size 22px
+										color #000
+										font-weight normal
+										line-height 32px
+										display: -webkit-box
+										overflow hidden
+										-webkit-line-clamp 2
+										-webkit-box-orient vertical
+									.sign
+										padding 0 4px
+										box-sizing border-box
+										height 35px
+										line-height 35px
+										color #ffffff
+										font-size 22px
+										background-color #ff6600
+										margin 15px 0
+										display inline-block
+									.price
+										font-size 20px
+										color #ff6600
+									.commentNum
+										font-size 20px	
+										color #999999
+										
 
+			
+		
+					
+
+		
 </style>
-
-

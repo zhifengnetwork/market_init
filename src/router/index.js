@@ -22,8 +22,8 @@ export default new Router({
 			{
 	    	path: '/',
 		    name: 'classify',
-				component:classify
-			},
+			component:classify
+		},
 	    // {
 	    // 	path: '/',
 		  //   name: 'login',
