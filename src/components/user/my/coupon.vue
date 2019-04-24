@@ -1,6 +1,6 @@
 <template>
-    <div>
-        
+    <div class="coupon">
+           
     </div>
 </template>
 <script>
@@ -12,6 +12,7 @@ export default {
     }
 }
 </script>
-<style scoped>
-
+<style lang="stylus" scoped>
+    .coupon
+         border 1px
 </style>

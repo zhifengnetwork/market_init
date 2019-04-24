@@ -12,8 +12,8 @@ import classify from '../components/classify/classify'
 import cart from '../components/cart/cart'
 /*个人中心 */
 import user from '../components/user/user'
-/* 商品分类 */
-import classify from '../components/classify/classify'
+/* 我的优惠券 */
+import coupon from '../components/user/my/coupon'
 
 Vue.use(Router)
 
@@ -21,18 +21,13 @@ export default new Router({
 	/*去除掉，路径#号*/
 	mode: 'history',
   	routes: [
-			{
+	    {
 	    	path: '/',
-		    name: 'classify',
-				component:classify
-			},
-	    // {
-	    // 	path: '/',
-		  //   name: 'login',
-		  //   redirect: '/login', /**重定向**/
-		  //   /*component: login*/
-			// 	component: (resolve) => require(['@/components/login/login.vue'],resolve)
-	    // },
+		    name: 'login',
+		    redirect: '/login', /**重定向**/
+		    /*component: login*/
+				component: (resolve) => require(['@/components/login/login.vue'],resolve)
+	    },
 	    {
 	    	path: '/login', 
 				component: (resolve) => require(['@/components/login/login.vue'],resolve)
@@ -64,5 +59,9 @@ export default new Router({
 			{
 				path:'/classify',name: 'classify',component:classify,
 			},
+			// 我的优惠券
+			{
+				path:'/my/coupon',name: 'coupon',component:coupon,
+			}
   	]
 })

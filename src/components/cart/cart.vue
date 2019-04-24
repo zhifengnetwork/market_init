@@ -90,7 +90,7 @@
                               <div class="cart-zero" v-if="list[0].title==''">
                                 <i class="iconfont"></i>
                                 <p>您的购物车暂无商品</p>
-                                <a href="/product/new">随便逛逛</a>
+                                <a href="javascript:;">随便逛逛</a>
                              </div>
                               <!--  total box -->   
                               <div class="total box">
@@ -315,11 +315,11 @@ export default {
                     var item = this.list[i];
                     if(item.ischeack){
                         var index=this.list.indexOf(item);
-                         console.log(index)
+                        // console.log(index)
                         this.list.splice(index,1);
-                        if(this.list.length==1){
-                            this.list.splice(index,1,{id:0,title:'',size:[],color:[],url:"",num:0});
-                        }
+                        // if(this.list.length==1){
+                        //     this.list.splice(index,1,{id:0,title:'',size:[],color:[],url:"",num:0});
+                        // }
                         Toast({
                         message: '删除成功',
                         iconClass: 'icon icon-success',
