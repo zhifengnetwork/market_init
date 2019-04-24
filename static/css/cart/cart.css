@@ -481,9 +481,8 @@ img {
 }
 
 /* total */
-.shopping-cart-page .box {
-    background-color: #fff;
-    margin-top: .2rem;
+ .edit .box {
+    display: none;
 }
 
 .price-compute {
