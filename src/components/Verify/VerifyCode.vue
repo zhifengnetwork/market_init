@@ -4,8 +4,6 @@
              @click="setCode"
              :style="{
                     'width': width,
-                    'height': height,
-                    'line-height': height,
                     'font-size': fontSize,
                     'background-color': containerBackgroundColor,
                     'color': containerColor
@@ -59,7 +57,7 @@
             },
             fontSize: {
                 type: String,
-                default: '.3rem'
+                default: '.34rem'
             },
             codeLength: {
                 type: Number,

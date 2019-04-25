@@ -6,8 +6,6 @@ import register from '@/components/login/register'
 import forget from '@/components/login/forget'
 /*首页*/
 import index from '@/components/index'
-// 分类
-import classify from '../components/classify/classify'
 /*购物车 */
 import cart from '../components/cart/cart'
 /*个人中心 */

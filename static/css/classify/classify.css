@@ -11,13 +11,8 @@ header {
 }
 
 .list_wrap {
-<<<<<<< HEAD
-	/* padding-top: .88rem; */
-	background-color: #fff;
-=======
 	padding-top: .88rem;
 	background: #fff;
->>>>>>> f6a0a8a4f905f54cfc128b1af79f3a12b1ac2dc1
 }
 
 .list_left {
@@ -42,10 +37,7 @@ header {
 .list_right {
 	width: 74%;
 	float: right;
-<<<<<<< HEAD
-=======
 	background: #fff;
->>>>>>> f6a0a8a4f905f54cfc128b1af79f3a12b1ac2dc1
 }
 
 .active {
@@ -94,10 +86,7 @@ header {
 	box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
-<<<<<<< HEAD
-=======
 	position: relative;
->>>>>>> f6a0a8a4f905f54cfc128b1af79f3a12b1ac2dc1
 }
 
 .bottom_img {
@@ -128,9 +117,6 @@ header {
 	box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
-<<<<<<< HEAD
-}
-=======
 	position: absolute;
 	bottom: .7rem;
 }
@@ -140,17 +126,13 @@ header {
 	bottom: .4rem;
 }
 
->>>>>>> f6a0a8a4f905f54cfc128b1af79f3a12b1ac2dc1
 .bottom_content .content_title{
 	width: 100%;
 	display: -webkit-box;
 	overflow: hidden;
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
-<<<<<<< HEAD
-=======
 	height: .7rem;
->>>>>>> f6a0a8a4f905f54cfc128b1af79f3a12b1ac2dc1
 }
 .price {
 	color: #ff6600;
