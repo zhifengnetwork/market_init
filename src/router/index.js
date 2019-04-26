@@ -6,14 +6,14 @@ import register from '@/components/login/register'
 import forget from '@/components/login/forget'
 /*首页*/
 import index from '@/components/index'
-// 分类
-import classify from '../components/classify/classify'
 /*购物车 */
 import cart from '../components/cart/cart'
 /*个人中心 */
 import user from '../components/user/user'
 /* 我的优惠券 */
 import coupon from '../components/user/my/coupon'
+/* 商品分类 */
+import classify from '../components/classify/classify'
 
 Vue.use(Router)
 
