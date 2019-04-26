@@ -30,7 +30,7 @@
 		top: 0;
 		left: 0;
 		z-index: 99;
-		width: 7.5rem;
+		width: 100%;
 		height: 100vh;
 		background-color: rgba(255, 255, 255, .7);
 	}
@@ -46,7 +46,7 @@
 		box-sizing: border-box;
 		-webkit-box-sizing: border-box;
 		-moz-box-sizing: border-box;
-		width: 7.5rem;
+		width: 100%;
 		height: .8rem;
 		font-size: .24rem;
 		line-height: .3rem;

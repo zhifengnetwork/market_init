@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<mt-button @click.native="handleClick">按钮</mt-button>
+		首页
 	</div>
 </template>
 
@@ -11,11 +11,6 @@
 		data(){
 			return {
 				
-			}
-		},
-		  methods: {
-			handleClick: function() {
-				this.$toast('Hello world!')
 			}
 		}
 	}
