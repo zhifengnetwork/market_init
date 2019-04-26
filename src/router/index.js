@@ -16,6 +16,12 @@ import classify from '@/components/classify/classify'
 import order from '@/components/order/order'
 // 订单详情页
 import orderDetails from '@/components/order/orderDetails'
+import user from '../components/user/user'
+/* 我的优惠券 */
+import coupon from '../components/user/my/coupon'
+
+/* 商品详情 */
+import details from '../components/goods/details'
 
 Vue.use(Router)
 
@@ -71,5 +77,13 @@ export default new Router({
 			name: 'orderDetails', 
 			component:orderDetails
 		},
+		// 我的优惠券
+		{
+			path:'/my/coupon',name: 'coupon',component:coupon,
+		},
+		// 商品详情
+		{
+			path:'/details',name:'details',component:details,
+		}
   	]
 })

@@ -59,12 +59,12 @@
             </div> -->
             <!-- btn-bar -->
             <div class="btn-bar">
-                    <a class="btn-item privilege-item" href="" v-for="(item,index) in btnBar" :key="index">
+                    <router-link class="btn-item privilege-item"  v-for="(item,index) in btnBar" :key="index" :to="item.aUrl">
                         <div class="item-name">{{item.name}}</div>
                         <img :src="item.imgUrl" alt="" class="item_icon">
                         <span class="item-desc">{{item.viceName}}</span>
                         <i class="right-arrow"></i>
-                      </a>
+                      </router-link>
             </div>
         </div>
 
@@ -82,13 +82,13 @@ export default {
                  {id:5,name:'退款/售后',imgUrl:'../../../static/img/user/shouhou.png'}
              ],
              btnBar:[
-                 {id:1,name:'会员福利社',viceName:'签到送积分',imgUrl:'../../../static/img/user/Member@2x.png'},
-                 {id:2,name:'急速保价',imgUrl:'../../../static/img/user/Price@2x.png'},
-                 {id:3,name:'我的产品库',imgUrl:'../../../static/img/user/Inventory@2x.png'},
-                 {id:4,name:'我的兑换',imgUrl:'../../../static/img/user/exchange@2x.png'},
-                 {id:5,name:'我的收藏',imgUrl:'../../../static/img/user/Collection@2x.png'},
-                 {id:6,name:'帮助中心',imgUrl:'../../../static/img/user/Help@2x.png'},
-                 {id:7,name:'设置',viceName:'用户设置•地址',imgUrl:'../../../static/img/user/Set_up@2x.png'}
+                 {id:1,name:'会员福利社',viceName:'签到送积分',imgUrl:'../../../static/img/user/Member@2x.png',aUrl:''},
+                 {id:2,name:'急速保价',imgUrl:'../../../static/img/user/Price@2x.png',aUrl:''},
+                 {id:3,name:'我的优惠券',imgUrl:'../../../static/img/user/coupon.png',aUrl:'/my/coupon'},
+                 {id:4,name:'我的兑换',imgUrl:'../../../static/img/user/exchange@2x.png',aUrl:''},
+                 {id:5,name:'我的收藏',imgUrl:'../../../static/img/user/Collection@2x.png',aUrl:''},
+                 {id:6,name:'帮助中心',imgUrl:'../../../static/img/user/Help@2x.png',aUrl:''},
+                 {id:7,name:'设置',viceName:'用户设置•地址',imgUrl:'../../../static/img/user/Set_up@2x.png',aUrl:''}
              ],
              user:{ id:1,userName:'马冬梅',vipRank:'白金会员'}
                 

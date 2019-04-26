@@ -11,8 +11,8 @@ header {
 }
 
 .list_wrap {
-	padding-top: .88rem;
-	background: #fff;
+	/* padding-top: .88rem; */
+	background-color: #fff;
 }
 
 .list_left {

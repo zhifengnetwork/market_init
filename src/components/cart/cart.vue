@@ -1,6 +1,6 @@
 <template>
    <div class="cart_box" :class="{edit:redactTextState}">
-                <div class="lb_headWrap ">
+                <!-- <div class="lb_headWrap ">
                         <p class="lb_headWrap_return" >
                             <img class="lb_headWrap_return_img" src="../../../static/img/public/back@2x.png" />
                         </p>
@@ -8,7 +8,13 @@
                         <p class="lb_headWrap_text" @click="redact">
                                {{redactText}}
                         </p>
-                </div>
+                </div> -->
+                <headerView custom-title="购物车" custom-fixed >
+                    <div class="backBtn" slot="backBtn" @click="backBtn($router.go(-1))">
+                        <img src="../../../static/img/public/backBtn.png" />
+                    </div>
+                    <span class="rightBtn" slot="rightBtn" @click="redact">{{redactText}}</span>
+                </headerView>
                 <div class="shopping-cart-page cart-page ">
                      <div class="cart-box">
                               <div class="cart-nav clearfix more" v-if="list[0].title!= ''">
@@ -90,7 +96,7 @@
                               <div class="cart-zero" v-if="list[0].title==''">
                                 <i class="iconfont"></i>
                                 <p>您的购物车暂无商品</p>
-                                <a href="/product/new">随便逛逛</a>
+                                <a href="javascript:;">随便逛逛</a>
                              </div>
                               <!--  total box -->   
                               <div class="total box">
@@ -256,6 +262,7 @@
 import {Toast} from "mint-ui"
 import { MessageBox } from 'mint-ui';
 import { Indicator } from 'mint-ui';
+import headerView from '../common/headerView.vue'
 export default {
     data() {
         return {
@@ -315,7 +322,7 @@ export default {
                     var item = this.list[i];
                     if(item.ischeack){
                         var index=this.list.indexOf(item);
-                         console.log(index)
+                        // console.log(index)
                         this.list.splice(index,1);
                         if(this.list.length==1){
                             this.list.splice(index,1,{id:0,title:'',size:[],color:[],url:"",num:0});
@@ -533,12 +540,13 @@ export default {
     }
     return sum;
     }
-}
+},components:{
+        headerView
+    }
 }
 </script>
 <style scope>
     @import "../../../static/css/cart/cart.css";
-
     .mint-msgbox{
         border-radius: .3rem;
     }
@@ -558,5 +566,10 @@ export default {
     /* .mint-toast{
         background: hsla(0,0%,100%,.84);
     } */
-
+  .mint-msgbox-content{
+      padding:40px;
+  }
+  .mint-msgbox-btns{
+      height: 100px;
+  }
 </style>

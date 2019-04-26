@@ -16,6 +16,7 @@
     "mint-ui": "^1.0.2",
     "px2rem-loader": "^0.1.9",
     "stylus": "^0.54.5",
+    "vant": "^1.6.16",
     "vue": "^2.5.2",
     "vue-axios": "^2.1.4",
     "vue-router": "^3.0.1",
