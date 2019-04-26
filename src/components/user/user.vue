@@ -11,7 +11,7 @@
         <div class="section">
             <!-- 全部订单 -->
             <div class="order_bar">
-               <a href="" class="order_look">
+               <a href="/order" class="order_look">
                    <span class="look_text">全部订单</span>
                     <span class="look_right">查看详情</span>
                     <i class="right-arrow"></i>

@@ -37,6 +37,7 @@
         height 100%
         display flex
         align-items center
+        justify-content center
         position absolute
         justify-content center
         left 0
@@ -52,9 +53,10 @@
         position absolute
         right  0
         top 0
-
-    
-
+        display flex
+        justify-content center
+        height 100%
+        align-items center
 </style>
 
 
