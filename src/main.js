@@ -3,6 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import 'mint-ui/lib/style.css'
+
+import 'lib-flexible/flexible.js'
 import'mint-ui/lib/style.css'
 import { Spinner } from 'mint-ui';
 
@@ -12,7 +15,7 @@ Vue.component(Spinner.name, Spinner);
 //引入axios库
 import axios from "axios";
 //注册组件
-Vue.prototype.axios=axios;
+Vue.prototype.axios = axios;
 
 
 /* 设置为 false 以阻止 vue 在启动时生成生产提示。 */

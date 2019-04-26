@@ -27,7 +27,7 @@ a {
     margin-bottom: 1.2rem;
     overflow-x: hidden;
     overflow-y: hidden;
-    padding-top: .88rem;
+    padding-top: 1.173333rem;
 }
 
 .shopping-cart-page .cart-nav.more {
@@ -565,7 +565,7 @@ img {
     -webkit-box-flex: 1;
     -webkit-flex: 1;
     flex: 1;
-    padding-top: .11rem;
+    /* padding-top: .11rem; */
 }
 
 .cart-footer .opts .total .price {

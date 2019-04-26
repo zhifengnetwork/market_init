@@ -59,12 +59,12 @@
             </div> -->
             <!-- btn-bar -->
             <div class="btn-bar">
-                    <a class="btn-item privilege-item" href="" v-for="(item,index) in btnBar" :key="index">
+                    <router-link class="btn-item privilege-item"  v-for="(item,index) in btnBar" :key="index" :to="item.aUrl">
                         <div class="item-name">{{item.name}}</div>
                         <img :src="item.imgUrl" alt="" class="item_icon">
                         <span class="item-desc">{{item.viceName}}</span>
                         <i class="right-arrow"></i>
-                      </a>
+                      </router-link>
             </div>
         </div>
 
@@ -84,7 +84,7 @@ export default {
              btnBar:[
                  {id:1,name:'会员福利社',viceName:'签到送积分',imgUrl:'../../../static/img/user/Member@2x.png',aUrl:''},
                  {id:2,name:'急速保价',imgUrl:'../../../static/img/user/Price@2x.png',aUrl:''},
-                 {id:3,name:'我的优惠券',imgUrl:'../../../static/img/user/coupon.png',aUrl:''},
+                 {id:3,name:'我的优惠券',imgUrl:'../../../static/img/user/coupon.png',aUrl:'/my/coupon'},
                  {id:4,name:'我的兑换',imgUrl:'../../../static/img/user/exchange@2x.png',aUrl:''},
                  {id:5,name:'我的收藏',imgUrl:'../../../static/img/user/Collection@2x.png',aUrl:''},
                  {id:6,name:'帮助中心',imgUrl:'../../../static/img/user/Help@2x.png',aUrl:''},
