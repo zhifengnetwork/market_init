@@ -223,81 +223,81 @@
 <style scoped>
 	/*最大边框*/
 	.warpperO {
-		padding: .88rem 0 .98rem 0;
+		padding: 88px 0 98px 0;
 		box-sizing: border-box;
 		-webkit-box-sizing: border-box;
 		-moz-box-sizing: border-box;
-		width: 7.5rem;
+		width: 100%;
 		height: auto;
 	}
 	/*public 隔开上线 box*/
 	
 	.publicSeptum {
 		width: 100%;
-		height: .2rem;
+		height: 20px;
 	}
 	/*内容*/
 	
 	.contentWrapO {
-		width: 7.5rem;
+		width: 100%;
 		height: auto;
 	}
 	/*公共的class=>项Wrap*/
 	
 	.pblicTermWrapO {
 		position: relative;
-		width: 7.5rem;
-		height: 1.1rem;
+		width: 100%;
+		height: 110px;
 	}
 	/*公共的class=>项(伪类)'底边框线'*/
 	
 	.publicButtomLIne:after {
 		content: " ";
-		width: 6.9rem;
-		height: .02rem;
-		border-bottom: .02rem solid #dcdcdc;
+		width: 690px;
+		height: 2px;
+		border-bottom: 2px solid #dcdcdc;
 		position: absolute;
 		bottom: 0;
-		left: .3rem;
+		left: 30px;
 	}
 	/*公共的class=>项box*/
 	
 	.publicTermBoxO {
-		padding: .27rem 0 0 .3rem;
+		padding: 27px 0 0 30px;
 		box-sizing: border-box;
-		width: 7.5rem;
-		height: 1.1rem;
-		font-size: .3rem;
+		width: 100%;
+		height: 110px;
+		font-size: 30px;
 		background-color: #fff;
 	}
 	/*左*/
 	
 	.publicTermLeftO {
 		float: left;
-		width: 1.79rem;
-		height: .67rem;
+		width: 179px;
+		height: 67px;
 		color: #666;
-		font: .3rem/.67rem "微软雅黑";
-		text-indent: .03rem;
-		letter-spacing: .04rem;
+		font: 30px/67px "微软雅黑";
+		text-indent: 3px;
+		letter-spacing: 4px;
 	}
 	/*右*/
 	
 	.publicTermRightO {
 		float: left;
-		width: 5.11rem;
-		height: .67rem;
+		width: 511px;
+		height: 67px;
 	}
 	/*input*/
 	
 	.publicTROInput {
 		outline: none;
 		border: none;
-		width: 5rem;
-		height: .67rem;
-		font-size: .3rem;
+		width: 500px;
+		height: 67px;
+		font-size: 30px;
 		color: #666;
-		letter-spacing: .01rem;
+		letter-spacing: 1px;
 		background-color: #fff;
 	}
 	/*input=>提示文本*/
@@ -305,48 +305,50 @@
 	.publicTROInput::-webkit-input-placeholder {
 		/* WebKit browsers */
 		color: #bbb;
-		font-size: .26rem;
+		font-size: 26px;
 		font-family: "微软雅黑";
 	}
 	
 	.publicTROInput:-moz-placeholder {
 		/* Mozilla Firefox 4 to 18 */
 		color: #bbb;
-		font-size: .26rem;
+		font-size: 26px;
 		font-family: "微软雅黑";
 	}
 	
 	.publicTROInput::-moz-placeholder {
 		/* Mozilla Firefox 19+ */
 		color: #bbb;
-		font-size: .26rem;
+		font-size: 26px;
 		font-family: "微软雅黑";
 	}
 	
 	.publicTROInput:-ms-input-placeholder {
 		/* Internet Explorer 10+ */
 		color: #bbb;
-		font-size: .26rem;
+		font-size: 26px;
 		font-family: "微软雅黑";
 	}
 	/*注册 box*/
 	
 	.registerButBox {
-		padding-top: 1.2rem;
+		padding-top: 112px;
 		box-sizing: border-box;
-		width: 7.5rem;
+		width: 100%;
 		height: auto;
 	}
 	/*注册 按钮*/
 	
 	.registerButton {
 		margin: 0 auto;
-		width: 6.9rem;
-		height: .91rem;
-		font: .3rem/.91rem "微软雅黑";
+		width: 690px;
+		height: 90px;
+		display: flex;
+		align-items: center;
+		justify-content: center;		
+		font: 30px "微软雅黑";
 		color: #fff;
-		text-align: center;
-		border-radius: .07rem;
+		border-radius: 7px;
 		background-color: #1e82d2;
 	}
 </style>

@@ -2,7 +2,7 @@
 	<div>
 		<!--登录=>最大边框 U-->
 		<div class="warpperU">
-			<!--语言 box，7.5rem-->
+			<!--语言 box，100%-->
 			<div class="languageBoxU">
 				<!--<p class="languageButtonU">语言</p>-->
 			</div>
@@ -281,13 +281,13 @@ body {
 	box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
-	width: 7.5rem;
+	width: 100%;
 	height: auto;
 }
 
-/*语言 box，7.5rem;*/
+/*语言 box，100%;*/
 .languageBoxU {
-	width: 7.5rem;
+	width: 100%;
 	height: .77rem;
 	background-color: #fff;
 }
@@ -305,7 +305,7 @@ body {
 .headPortraitWrap {
 	padding-top: .29rem;
 	box-sizing: border-box;
-	width: 7.5rem;
+	width: 100%;
 	height: 2.17rem;
 	font-size: .2rem;
 	background-color: #fff;
@@ -315,10 +315,10 @@ body {
 	position: relative;
 	margin: 0 auto;
 	box-sizing: border-box;
-	width: 1.4rem;
-	height: 1.4rem;
+	width: 140px;
+	height: 140px;
 	border-radius: 50%;
-	border: .01rem solid #dcdcdc;
+	border: 1px solid #dcdcdc;
 
 }
 /*头像 icon*/
@@ -330,27 +330,28 @@ body {
 	bottom: 0;
 	left: 0;
 	margin: auto;
-	width: 1.38rem;
-	height: 1.38rem;
+	width: 138px;
+	height: 138px;
 	border-radius: 50%;
 }
 /*内容*/
 .contentWrapU {
-	padding-left: .3rem;
+	padding-left: 30px;
 	box-sizing: border-box;
-	width: 7.5rem;
+	width: 100%;
 	height: auto;
 	background-color: #fff;
 }
 /*登录public输入框=>项*/
 .loginPublicTermU {
 	position: relative;
-	padding-top: .27rem;
-	box-sizing: border-box;
-	width: 6.9rem;
-	height: 1.11rem;
-	font-size: .3rem;
-	border-bottom: .02rem solid #dcdcdc;
+	padding-top:15px;
+	width: 690px;
+	height: 96px;
+	line-height: 96px;
+	align-items: center;
+	font-size: 30px;
+	border-bottom: 2px solid #dcdcdc;
 }
 /*兄弟元素=>最后一个*/
 .loginPublicTermU:last-child {
@@ -359,49 +360,46 @@ body {
 /*左*/
 .loginPTLeftU {
 	float: left;
-	width: 1.41rem;
-	height: .67rem;
+	width: 140px;
 	color: #666;
-	font: .3rem/.67rem "微软雅黑";
-	text-indent: .03rem;
-	letter-spacing: .04rem;
+	font-size: 30px;
+	text-indent: 3px;
+	letter-spacing: 4px;
 }
 /*右*/
 .loginPTRightU {
 	float: left;
-	width: 5.49rem;
-	height: .67rem;
+	width: 549px;
 }
 /*input*/
 .loginPTRInput {
 	outline: none;
 	border: none;
-	width: 5.4rem;
-	height: .67rem;
-	font-size: .3rem;
+	width: 540px;
+	font-size: 30px;
 	color: #666;
-	letter-spacing: .01rem;
+	letter-spacing: 1px;
 	background-color: #fff; 
 }
 /*input=>提示文本*/
 input::-webkit-input-placeholder { /* WebKit browsers */ 
 	color: #bbb; 
-	font-size: .26rem;
+	font-size: 26px;
 	font-family: "微软雅黑";
 } 
 input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */ 
 	color: #bbb; 
-	font-size: .26rem;
+	font-size: 30px;
 	font-family: "微软雅黑";
 } 
 input::-moz-placeholder { /* Mozilla Firefox 19+ */ 
 	color: #bbb; 
-	font-size: .26rem;
+	font-size: 30px;
 	font-family: "微软雅黑";
 } 
 input:-ms-input-placeholder { /* Internet Explorer 10+ */ 
 	color: #bbb; 
-	font-size: .26rem;
+	font-size: 30px;
 	font-family: "微软雅黑";
 } 
 /*验证码 input*/
@@ -409,16 +407,16 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 	float: left;
 	outline: none;
 	border: none;
-	width: 3rem;
-	height: .67rem;
-	font-size: .3rem;
+	width: 300px;
+	height: 96px;
+	font-size: 30px;
 	color: #666;
 	letter-spacing: .01rem;
 }
 /*验证码 icon*/
 .loginCodeImg {
-	width: 2.48rem;
-	height: .67rem;
+	width: 248px;
+	height: 96px;
 }
 
 /*记住账号 wrap*/
@@ -431,44 +429,44 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 	color: #666;
 }
 .rememberAccountBox {
-	width: 1.8rem;
-	height: .48rem;
+	width: 180px;
+	height: 48px;
 }
 .rememberAccountBoxL {
 	float: left;
-	padding: .1rem 0 0 .07rem;
-	box-sizing: border-box;
-	width: .5rem;
-	height: .48rem;
+	width: 48px;
+	height: 48px;
+	line-height: 48px;
 }
 /*记住账号 icon*/
 .rememberAccountBoxLIcon {
-	width: .28rem;
-	height: .28rem;	
+	width: 28px;
+	height: 28px;	
 }
 .rememberAccountBoxR {
 	float: left;
-	width: 1.3rem;
-	height: .48rem;
-	font: .25rem/.48rem "微软雅黑";
-	letter-spacing: .02rem;
+	width: 130px;
+	height: 48px;
+	line-height: 48px;
+	font: 24px/40px "微软雅黑";
+	letter-spacing: 2px;
 }
 /*'登录'按钮 box*/
 .loginButtonBox {
 	padding-top: 1.08rem;
 	box-sizing: border-box;
-	width: 7.5rem;
+	width: 100%;
 	height: auto;
 }
 .loginButton {
 	margin: 0 auto;
-	width: 6.9rem;
-	height: .91rem;
-	font: .3rem/.91rem "微软雅黑";
+	width: 690px;
+	height: 90px;
+	font: 30px/90px "微软雅黑";
 	color: #fff;
 	text-align: center;
-	border-radius: .07rem;
-	letter-spacing: .03rem;
+	border-radius: 8px;
+	letter-spacing: 3px;
 	background-color: #1e82d2;
 }
 /*'快捷'登录 =>功能wrap*/
@@ -476,7 +474,7 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 	position: relative;
 	padding-top: .15rem;
 	box-sizing: border-box;
-	width: 7.5rem;
+	width: 100%;
 	height: .64rem;
 	
 }
@@ -517,7 +515,7 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 	position: fixed;
 	bottom: 0;
 	left: 0;
-	width: 7.5rem;
+	width: 100%;
 	height: .76rem;
 	
 }
@@ -531,7 +529,7 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 .registerButton, .forgetButton {
 	width: 1.7rem;
 	height: .49rem;
-	font: .25rem/.49rem "微软雅黑";
+	font: 26px/30px "微软雅黑";
 	text-align: center;
 	letter-spacing: .04rem;
 	color: #1e82d2;
