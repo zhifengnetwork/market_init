@@ -2,7 +2,7 @@
     <div class="headerView" :style="{'position':customFixed ? 'fixed' : 'relative' }">
         <slot name="backBtn"></slot>        
         <h3>{{customTitle}}</h3>
-        <span class="rightBtn" :style="{'display':rightNone ? 'none' :'block' }">编辑</span>
+        <slot name="rightBtn"></slot>   
     </div>
 </template>
 
@@ -17,10 +17,6 @@
             'customFixed':{
                 type:Boolean,
                 default:false
-            },
-            'rightNone':{
-                type:Boolean,
-                default:false 
             }
         }        
     }
@@ -37,29 +33,29 @@
     position relative
     z-index 99
     .backBtn
+        width 10%
         height 100%
         display flex
         align-items center
         position absolute
+        justify-content center
         left 0
         top 0
         img 
-            width 32px
-            height 32px
-            padding 0 20px
+            width 40px
     h3
         font-size 30px
         font-weight normal
     .rightBtn
         width 12%
         font-size 26px
-        display none
         position absolute
         right  0
         top 0
-
-    
-
+        display flex
+        justify-content center
+        height 100%
+        align-items center
 </style>
 
 

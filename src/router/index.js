@@ -6,14 +6,16 @@ import register from '@/components/login/register'
 import forget from '@/components/login/forget'
 /*首页*/
 import index from '@/components/index'
-// 分类
-import classify from '../components/classify/classify'
 /*购物车 */
 import cart from '../components/cart/cart'
 /*个人中心 */
 import user from '../components/user/user'
+/* 我的优惠券 */
+import coupon from '../components/user/my/coupon'
 /* 商品分类 */
 import classify from '../components/classify/classify'
+/* 商品详情 */
+import details from '../components/goods/details'
 
 Vue.use(Router)
 
@@ -21,18 +23,13 @@ export default new Router({
 	/*去除掉，路径#号*/
 	mode: 'history',
   	routes: [
-			{
+	    {
 	    	path: '/',
-		    name: 'classify',
-			component:classify
-		},
-	    // {
-	    // 	path: '/',
-		  //   name: 'login',
-		  //   redirect: '/login', /**重定向**/
-		  //   /*component: login*/
-			// 	component: (resolve) => require(['@/components/login/login.vue'],resolve)
-	    // },
+		    name: 'login',
+		    redirect: '/login', /**重定向**/
+		    /*component: login*/
+				component: (resolve) => require(['@/components/login/login.vue'],resolve)
+	    },
 	    {
 	    	path: '/login', 
 				component: (resolve) => require(['@/components/login/login.vue'],resolve)
@@ -64,5 +61,13 @@ export default new Router({
 			{
 				path:'/classify',name: 'classify',component:classify,
 			},
+			// 我的优惠券
+			{
+				path:'/my/coupon',name: 'coupon',component:coupon,
+			},
+			// 商品详情
+			{
+				path:'/details',name:'details',component:details,
+			}
   	]
 })

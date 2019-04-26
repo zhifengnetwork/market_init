@@ -278,80 +278,80 @@
 <style scoped>
 	/*最大边框 P*/
 	.warpperP {
-		padding: .88rem 0 .98rem 0;
+		padding: 88px 0 98px 0;
 		box-sizing: border-box;
-		width: 7.5rem;
+		width: 100%;
 		height: auto;
 	}
 	/*public 隔开上线 box*/
 	
 	.publicSeptum {
 		width: 100%;
-		height: .2rem;
+		height: 20px;
 	}
 	/*内容*/
 	
 	.contentWrapP {
-		width: 7.5rem;
+		width: 100%;
 		height: auto;
 	}
 	/*公共的class=>项Wrap*/
 	
 	.pblicTermWrapP {
 		position: relative;
-		width: 7.5rem;
-		height: 1.1rem;
+		width: 100%;
+		height: 110px;
 	}
 	/*公共的class=>项(伪类)'底边框线'*/
 	
 	.publicButtomLIne:after {
 		content: " ";
-		width: 6.9rem;
-		height: .02rem;
-		border-bottom: .02rem solid #dcdcdc;
+		width: 690px;
+		height: 2px;
+		border-bottom: 2px solid #dcdcdc;
 		position: absolute;
 		bottom: 0;
-		left: .3rem;
+		left: 30px;
 	}
 	/*公共的class=>项box*/
 	
 	.publicTermBoxP {
 		position: relative;
-		padding: .24rem 0 0 .3rem;
+		padding: 24px 0 0 30px;
 		box-sizing: border-box;
-		width: 7.5rem;
-		height: 1.1rem;
-		font-size: .3rem;
+		width: 100%;
+		height: 110px;
+		font-size: 30px;
 		background-color: #fff;
 	}
 	/*左*/
 	
 	.publicTermLeftP {
 		float: left;
-		width: 2.3rem;
-		height: .67rem;
+		width: 230px;
+		height: 67px;
 		color: #666;
-		font: .3rem/.67rem "微软雅黑";
-		text-indent: .03rem;
-		letter-spacing: .04rem;
+		font: 30px/67px "微软雅黑";
+		text-indent: 3px;
+		letter-spacing: 4px;
 	}
 	/*右*/
 	
 	.publicTermRightP {
 		float: left;
-		width: 4.6rem;
-		height: .67rem;
+		width: 460px;
+		height:67px;
 	}
 	/*input*/
 	
 	.publicTRPInput {
 		outline: none;
 		border: none;
-		width: 4.5rem;
-		height: .67rem;
-		font-size: .3rem;
+		width: 450px;
+		height: 67px;
+		font-size: 30px;
 		color: #666;
-		letter-spacing: .01rem;
+		letter-spacing: 1px;
 		background-color: #fff;
 	}
 	/*input=>提示文本=>.publicTRPInput::-webkit-input-placeholder*/
@@ -359,89 +359,89 @@
 	input::-webkit-input-placeholder {
 		/* WebKit browsers */
 		color: #bbb;
-		font-size: .26rem;
+		font-size: 26px;
 		font-family: "微软雅黑";
 	}
 	
 	input:-moz-placeholder {
 		/* Mozilla Firefox 4 to 18 */
 		color: #bbb;
-		font-size: .26rem;
+		font-size: 26px;
 		font-family: "微软雅黑";
 	}
 	
 	input::-moz-placeholder {
 		/* Mozilla Firefox 19+ */
 		color: #bbb;
-		font-size: .26rem;
+		font-size: 26px;
 		font-family: "微软雅黑";
 	}
 	
 	input:-ms-input-placeholder {
 		/* Internet Explorer 10+ */
 		color: #bbb;
-		font-size: .26rem;
+		font-size: 26px;
 		font-family: "微软雅黑";
 	}
 	/*'输入验证码box'和'input'*/
 	
 	.shortWidthBox,
 	.shortInputWidth {
-		width: 2.3rem;
+		width: 230px;
 	}
 	/* 输入框'|'获取验证码 的竖线=>伪元素 */
 	
 	.shortWidthBox:after {
 		content: " ";
-		width: .01rem;
-		height: .7rem;
-		border-right: .01rem solid #d2d2d2;
+		width: 1px;
+		height: 70px;
+		border-right: 1px solid #d2d2d2;
 		position: absolute;
-		top: .2rem;
-		right: 2.2rem;
+		top: 20px;
+		right: 220px;
 	}
 	/*'获取验证码'按钮*/
 	.obtainCodeBut {
 		position: absolute;
-		bottom: .11rem;
-		right: .3rem;
-		width: 1.74rem;
-		height: .87rem;
-		font: .26rem/.87rem "微软雅黑";
-		letter-spacing: .02rem;
+		bottom: 11px;
+		right: 30px;
+		width: 174px;
+		height: 87px;
+		font: 30px/87px "微软雅黑";
+		letter-spacing: 2px;
 		color: #1e82d2;
 		text-align: center;
 	}
 	/*'获取验证码'倒计时-按钮*/
 	.obtainCodeNoBut {
 		position: absolute;
-		bottom: .11rem;
-		right: .3rem;
-		width: 1.74rem;
-		height: .87rem;
-		font: .26rem/.87rem "微软雅黑";
-		letter-spacing: .02rem;
+		bottom: 11px;
+		right: 30px;
+		width: 174px;
+		height:87px;
+		font: 26px/87px "微软雅黑";
+		letter-spacing: 2px;
 		color: #bbb;
 		text-align: center;
 	}
 	/*确认 box*/
 	
 	.modifyButBox {
-		padding-top: 1.2rem;
+		padding-top: 120px;
 		box-sizing: border-box;
-		width: 7.5rem;
+		width: 100%;
 		height: auto;
 	}
 	/*确认 按钮*/
 	
 	.modifyButton {
 		margin: 0 auto;
-		width: 6.9rem;
-		height: .91rem;
-		font: .3rem/.91rem "微软雅黑";
+		width: 690px;
+		height: 91px;
+		font: 30px/91px "微软雅黑";
 		color: #fff;
 		text-align: center;
-		border-radius: .07rem;
+		border-radius: 7px;
 		background-color: #1e82d2;
 	}
 </style>
