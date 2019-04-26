@@ -12,6 +12,8 @@ import cart from '../components/cart/cart'
 import user from '../components/user/user'
 /* 我的优惠券 */
 import coupon from '../components/user/my/coupon'
+/* 我的收藏 */
+import enshrine from '../components/user/my/enshrine'
 /* 商品分类 */
 import classify from '../components/classify/classify'
 
@@ -62,6 +64,10 @@ export default new Router({
 			// 我的优惠券
 			{
 				path:'/my/coupon',name: 'coupon',component:coupon,
+			},
+			// 我的收藏
+			{
+				path:'/my/enshrine',name: 'enshrine',component:enshrine,
 			}
   	]
 })
