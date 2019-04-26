@@ -68,13 +68,14 @@
 				</div>
 			</div>
 		</div>
-		<!-- <MenuBar></MenuBar> -->
+		<menuBar></menuBar>
 	</div>
 </template>
 
 <script>
 	import BScroll from 'better-scroll'
 	import headerView from '../common/headerView'
+	import menuBar from '../common/menuBar.vue'
 	export default {
 	 	name:"Classify",
 	 	data(){
@@ -149,7 +150,8 @@
 	 		})
 		 },
 		components:{
-            headerView
+			headerView,
+			menuBar
         }
 		 
 	}

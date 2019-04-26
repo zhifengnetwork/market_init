@@ -6,11 +6,8 @@ import router from './router'
 import 'mint-ui/lib/style.css'
 
 import 'lib-flexible/flexible.js'
-import'mint-ui/lib/style.css'
 import { Spinner } from 'mint-ui';
 
-import Mint from 'mint-ui';
-Vue.use(Mint);
 // vant
 import Vant from 'vant';
 import 'vant/lib/index.css';
@@ -22,6 +19,8 @@ Vue.use(Lazyload);
 import { Sku } from 'vant';
 Vue.use(Sku);
 
+//css
+import '../static/css/font/iconfont.css'
 
 Vue.component(Spinner.name, Spinner);
 
