@@ -37,6 +37,7 @@
         height 100%
         display flex
         align-items center
+        justify-content center
         position absolute
         justify-content center
         left 0

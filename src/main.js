@@ -8,6 +8,8 @@ import 'mint-ui/lib/style.css'
 import 'lib-flexible/flexible.js'
 import { Spinner } from 'mint-ui';
 
+import Mint from 'mint-ui';
+Vue.use(Mint);
 // vant
 import Vant from 'vant';
 import 'vant/lib/index.css';
