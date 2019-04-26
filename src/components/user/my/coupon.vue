@@ -288,5 +288,5 @@ export default {
 	.coupon-box .coupon-list .coupon .used-stamp 
     background-image: url(../../../../static/img/user/coupon/used.622e9d2c81.png);
 	.coupon-box .coupon-list .coupon .overtime-stamp
-	background-image url('../../../../static/img/user/coupon/timeout.53da2df638.png')
+	background-image url('../../../../static/img/user/coupon/timeout.53da2df638.png');
 </style>

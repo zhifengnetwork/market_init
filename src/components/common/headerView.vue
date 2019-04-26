@@ -52,9 +52,10 @@
         position absolute
         right  0
         top 0
-
-    
-
+        display flex
+        justify-content center
+        height 100%
+        align-items center
 </style>
 
 

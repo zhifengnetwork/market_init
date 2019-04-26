@@ -14,6 +14,8 @@ import user from '../components/user/user'
 import coupon from '../components/user/my/coupon'
 /* 商品分类 */
 import classify from '../components/classify/classify'
+/* 商品详情 */
+import details from '../components/goods/details'
 
 Vue.use(Router)
 
@@ -62,6 +64,10 @@ export default new Router({
 			// 我的优惠券
 			{
 				path:'/my/coupon',name: 'coupon',component:coupon,
+			},
+			// 商品详情
+			{
+				path:'/details',name:'details',component:details,
 			}
   	]
 })
