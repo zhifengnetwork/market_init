@@ -67,10 +67,11 @@
                       </router-link>
             </div>
         </div>
-
+        <menuBar></menuBar>
     </div>
 </template>
 <script>
+import menuBar from '../common/menuBar.vue'
 export default {
     data() {
         return {
@@ -95,6 +96,9 @@ export default {
              
         }
     },
+    components:{
+        menuBar
+    }
 }
 </script>
 <style>

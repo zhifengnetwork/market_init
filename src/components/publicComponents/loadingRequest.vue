@@ -42,7 +42,7 @@
 		bottom: 0;
 		left: 0;
 		margin: auto;
-		padding: .25rem 0 0 2.8rem;
+		padding: .25rem 0 0 3.5rem;
 		box-sizing: border-box;
 		-webkit-box-sizing: border-box;
 		-moz-box-sizing: border-box;

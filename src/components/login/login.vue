@@ -144,7 +144,7 @@
 					/*提示弹窗的text(vuex里面的方法只能接受一个参数，所以传个'对象'过去)*/
 					tipsText: '登陆成功',
 					/*提示弹窗的url*/
-					tipsUrl: '/index',
+					tipsUrl: '/home',
 				}
 				
 			}
@@ -233,7 +233,7 @@
 						/*提示弹窗的text(vuex里面的方法只能接受一个参数，所以传个'对象'过去)*/
 						tipsText: '登陆成功',
 						/*提示弹窗的url*/
-						tipsUrl: '/index',
+						tipsUrl: '/home',
 					}
 					/*调用组件的函数=> 更新-验证码*/
 					that.$refs.mychildFun.setCode();
@@ -348,7 +348,7 @@ body {
 	padding-top:15px;
 	width: 690px;
 	height: 96px;
-	line-height: 96px;
+	/* line-height: 96px; */
 	align-items: center;
 	font-size: 30px;
 	border-bottom: 2px solid #dcdcdc;
@@ -361,6 +361,7 @@ body {
 .loginPTLeftU {
 	float: left;
 	width: 140px;
+	line-height: 75px;
 	color: #666;
 	font-size: 30px;
 	text-indent: 3px;
@@ -370,6 +371,7 @@ body {
 .loginPTRightU {
 	float: left;
 	width: 549px;
+	line-height: 75px;
 }
 /*input*/
 .loginPTRInput {
@@ -408,7 +410,8 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 	outline: none;
 	border: none;
 	width: 300px;
-	height: 96px;
+	height: 75px;
+	line-height: 75px;
 	font-size: 30px;
 	color: #666;
 	letter-spacing: .01rem;
