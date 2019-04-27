@@ -1,17 +1,29 @@
 <template>
-    <div>
-        
+    <div class="home">
+        首页
+        <menuBar></menuBar>
     </div>
 </template>
-<script>
-export default {
-    data(){
-        return{
 
+<script>
+    import menuBar from '../common/menuBar.vue'
+    export default {
+        name:'home',
+        data(){
+            return{
+
+            }
+        },
+        components:{
+            menuBar
         }
     }
-}
 </script>
-<style scoped>
+
+<style lang="stylus" scoped>
+.home 
+    font-size 34px
+    text-align center
+    
 
 </style>

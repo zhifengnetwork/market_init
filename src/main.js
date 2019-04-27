@@ -12,9 +12,11 @@ import { Spinner } from 'mint-ui';
 import Vant from 'vant';
 import 'vant/lib/index.css';
 Vue.use(Vant);
+
 // 懒加载
 import { Lazyload } from 'mint-ui';
 Vue.use(Lazyload);
+
 // 提交订单
 import { Sku } from 'vant';
 Vue.use(Sku);

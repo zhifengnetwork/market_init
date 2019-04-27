@@ -3,9 +3,9 @@
 		<div class="container">
 			<!-- 头部组件 -->
 			<headerView custom-title="分类" custom-fixed rightNone>
-				<div class="backBtn" slot="backBtn" @click="$router.go(-1)">
+				<!-- <div class="backBtn" slot="backBtn" @click="$router.go(-1)">
 					<img src="static/img/public/backBtn.png" />
-				</div>
+				</div> -->
 			</headerView>
 
 			<div class="scroll">
