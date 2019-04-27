@@ -37,6 +37,7 @@
         height 100%
         display flex
         align-items center
+        justify-content center
         position absolute
         justify-content center
         left 0
@@ -44,7 +45,7 @@
         img 
             width 40px
     h3
-        font-size 30px
+        font-size 35px
         font-weight normal
     .rightBtn
         width 12%

@@ -6,19 +6,32 @@ import router from './router'
 import 'mint-ui/lib/style.css'
 
 import 'lib-flexible/flexible.js'
-import'mint-ui/lib/style.css'
 import { Spinner } from 'mint-ui';
 
 // vant
 import Vant from 'vant';
 import 'vant/lib/index.css';
 Vue.use(Vant);
+
 // 懒加载
 import { Lazyload } from 'mint-ui';
 Vue.use(Lazyload);
-// 提交订单
-import { Sku } from 'vant';
-Vue.use(Sku);
+
+// 商品导航
+import {
+  GoodsAction,
+  GoodsActionBigBtn,
+  GoodsActionMiniBtn
+} from 'vant';
+Vue
+  .use(GoodsAction)
+  .use(GoodsActionBigBtn)
+  .use(GoodsActionMiniBtn);
+
+//css
+
+
+import '../static/css/font/iconfont.css'
 
 Vue.component(Spinner.name, Spinner);
 

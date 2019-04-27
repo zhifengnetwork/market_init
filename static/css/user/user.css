@@ -1,6 +1,10 @@
 /* 
   个人中心
 */
+body{
+    background:#eee;
+}
+
 a img {
     border: none;
 }

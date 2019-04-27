@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-/*注册模块*/
+
+// 注册模块
 import login from '@/components/login/login'
 import register from '@/components/login/register'
 import forget from '@/components/login/forget'
@@ -10,6 +11,9 @@ import home from '@/components/home/home'
 // 商品分类
 import classify from '@/components/classify/classify'
 
+// 商品详情
+import details from '@/components/goods/details'
+
 // 购物车
 import cart from '@/components/cart/cart'
 
@@ -17,16 +21,22 @@ import cart from '@/components/cart/cart'
 import user from '@/components/user/user'
 
 // 订单页
-// import order from '@/components/order/order'
+import order from '@/components/order/order'
 
 // 订单详情
-// import orderDetails from '@/components/order/orderDetails'
+import orderDetails from '@/components/order/orderDetails'
 
 // 我的优惠券
 import coupon from '@/components/user/my/coupon'
 
-/* 商品详情 */
-import details from '@/components/goods/details'
+// 我的收藏 
+import collection from '@/components/user/my/collection'
+
+//商品评价 
+import evaluate from '@/components/goods/details/evaluate'
+
+//发布评价
+import appraise from '@/components/user/my/publishApp'
 
 Vue.use(Router)
 
@@ -55,15 +65,9 @@ export default new Router({
 	    {
 	    	path: '/forget',
 	    	name: 'forget',
-				component: (resolve) => require(['@/components/login/forget'],resolve)
-	    	
-	    },
-	    {
-	    	path: '/index',
-	    	name: 'index',
-	    	component: (resolve) => require(['@/components/index'],resolve)
+			component: (resolve) => require(['@/components/login/forget'],resolve)
 		},
-			// 首页
+		// 首页
 		{
 			path:'/home',
 			name: 'home',
@@ -94,23 +98,40 @@ export default new Router({
 			component:user
 		},
 		// 订单
-		// {
-		// 	path:'/order',
-		// 	name: 'order',
-		// 	component:order
-		// },
-		// // 订单详情
-		// {
-		// 	path: '/orderDetails', 
-		// 	name: 'orderDetails', 
-		// 	component:orderDetails
-		// },
+		{
+			path:'/order',
+			name: 'order',
+			component:order
+		},
+		// 订单详情
+		{
+			path: '/orderDetails', 
+			name: 'orderDetails', 
+			component:orderDetails
+		},
 		// 我的优惠券
 		{
 			path:'/my/coupon',
 			name: 'coupon',
 			component:coupon
 		},
-		
+		// 我的收藏
+		{
+			path:'/collection',
+			name:'collection',
+			component:collection
+		},
+		//商品评价
+		{
+			path:'/details/evaluate',
+			name:'evaluate',
+			component:evaluate
+		},
+		//发布评价
+		{
+			path:'/my/appraise',
+			name:'appraise',
+			component:appraise
+		}
   	]
 })

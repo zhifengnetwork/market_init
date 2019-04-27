@@ -1,11 +1,11 @@
 <template>
 	<div class="Classify">
 		<div class="container">
-			 <!-- 头部组件 -->
+			<!-- 头部组件 -->
 			<headerView custom-title="分类" custom-fixed rightNone>
-				<div class="backBtn" slot="backBtn" @click="backBtn">
+				<!-- <div class="backBtn" slot="backBtn" @click="$router.go(-1)">
 					<img src="static/img/public/backBtn.png" />
-				</div>
+				</div> -->
 			</headerView>
 
 			<div class="scroll">
@@ -68,13 +68,14 @@
 				</div>
 			</div>
 		</div>
-		<!-- <MenuBar></MenuBar> -->
+		<menuBar></menuBar>
 	</div>
 </template>
 
 <script>
 	import BScroll from 'better-scroll'
 	import headerView from '../common/headerView'
+	import menuBar from '../common/menuBar.vue'
 	export default {
 	 	name:"Classify",
 	 	data(){
@@ -149,7 +150,8 @@
 	 		})
 		 },
 		components:{
-            headerView
+			headerView,
+			menuBar
         }
 		 
 	}
@@ -175,7 +177,7 @@
 						font-size 28px
 					li.on
 						color #ff9900
-						background url("~static/img/classify/menu-bg.jpg") no-repeat
+						background url("~/static/img/classify/menu-bg.jpg") no-repeat
 			.scroll-prolist
 				width 516px	
 				height calc(100vh - 100px)

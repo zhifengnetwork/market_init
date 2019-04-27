@@ -130,7 +130,7 @@
                                         <div class="close iconfont" @click="closeInfo">
                                             <img src="../../../static/img/cart/close.png" alt="">
                                         </div>
-                                        <div class="infos ">
+                                        <div class="infos">
                                             <div class="basic-info">
                                                 <div class="thumb-img">
                                                     <img class="thumb" :src="list[specification].url">
@@ -167,8 +167,8 @@
                                                         </a>
                                                         <input id="good-num" class="good-num disabled" type="text"  v-model:value="newList.num"  disabled="true">
                                                             <a class="btn btn-plus" href="javascript:void(0);" @click="pushh"   :data-id="list[specification].id">
-                                                                +
-                                                            </a>
+                                                           +
+                                                        </a>
                                                     </div>
                                                     <span class="left-num"></span>
                                                     <input id="left-num" type="hidden" value="0">
