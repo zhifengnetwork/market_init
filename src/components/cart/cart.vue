@@ -121,7 +121,10 @@
                                             <p class="price">总计:¥{{getSubTotal}}.00&nbsp;&nbsp;({{getnum}}件)</p>
                                             <p class="intro">不含运费</p>
                                         </div>
-                                        <div class="btn btn-red btn-balance">结算</div>
+
+                                        <router-link to="/confirmOrder">
+                                            <div class="btn btn-red btn-balance">结算</div>
+                                        </router-link>
                                     </div>
                                 </div>
                               <!-- 选择 -->

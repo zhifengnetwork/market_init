@@ -32,6 +32,9 @@ import coupon from '@/components/user/my/coupon'
 
 // 我的收藏 
 import collection from '@/components/user/my/collection'
+// 确认订单
+import confirmOrder from '@/components/pay/confirmOrder'
+
 
 Vue.use(Router)
 
@@ -115,7 +118,14 @@ export default new Router({
 			path:'/collection',
 			name:'collection',
 			component:collection
+		},
+		// 确认订单
+		{
+			path:'/confirmOrder',
+			name: 'confirmOrder',
+			component:confirmOrder
 		}
+
 		
   	]
 })
