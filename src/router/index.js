@@ -116,5 +116,6 @@ export default new Router({
 			name:'collection',
 			component:collection
 		}
+		
   	]
 })
