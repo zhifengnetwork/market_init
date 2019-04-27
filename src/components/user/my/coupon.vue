@@ -1,7 +1,7 @@
 <template>
     <div class="coupont">
            <headerView custom-title="我的优惠券" custom-fixed rightNone>
-				<div class="backBtn" slot="backBtn" @click="backBtn($router.go(-1))">
+				<div class="backBtn" slot="backBtn" @click="$router.go(-1)">
 					<img src="../../../../static/img/public/backBtn.png" />
 				</div>
 			</headerView>
