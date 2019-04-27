@@ -31,6 +31,9 @@ import coupon from '@/components/user/my/coupon'
 
 // 我的收藏 
 import collection from '@/components/user/my/collection'
+// 确认订单
+import confirmOrder from '@/components/pay/confirmOrder'
+
 
 //商品评价 
 import evaluate from '@/components/goods/details/evaluate'
@@ -121,6 +124,7 @@ export default new Router({
 			name:'collection',
 			component:collection
 		},
+<<<<<<< HEAD
 		//商品评价
 		{
 			path:'/details/evaluate',
@@ -133,5 +137,15 @@ export default new Router({
 			name:'appraise',
 			component:appraise
 		}
+=======
+		// 确认订单
+		{
+			path:'/confirmOrder',
+			name: 'confirmOrder',
+			component:confirmOrder
+		}
+
+		
+>>>>>>> 66886015168889b6f4bc821905bf2cd9c67b380f
   	]
 })

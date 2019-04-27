@@ -28,13 +28,19 @@ Vue
   .use(GoodsActionBigBtn)
   .use(GoodsActionMiniBtn);
 
+<<<<<<< HEAD
 //css
 
 
 import '../static/css/font/iconfont.css'
+=======
+>>>>>>> 66886015168889b6f4bc821905bf2cd9c67b380f
 
 Vue.component(Spinner.name, Spinner);
 
+
+//字体图标css
+import '../static/css/font/iconfont.css'
 
 //引入axios库
 import axios from "axios";

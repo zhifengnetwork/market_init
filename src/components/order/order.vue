@@ -391,6 +391,7 @@
 </script>
 
 <style lang="stylus" scoped>
+@import '../../../static/css/public/mixin.styl';
 .order
     .tab-wrap
         padding-top 88px
