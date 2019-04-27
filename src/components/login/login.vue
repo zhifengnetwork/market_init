@@ -144,7 +144,7 @@
 					/*提示弹窗的text(vuex里面的方法只能接受一个参数，所以传个'对象'过去)*/
 					tipsText: '登陆成功',
 					/*提示弹窗的url*/
-					tipsUrl: '/index',
+					tipsUrl: '/home',
 				}
 				
 			}

@@ -39,10 +39,11 @@
                     </ul>
                </div>
     </header>
-    <div class="goods">
+    <!-- 商品详情 -->
+        <div class="goods">
                 <van-swipe class="goods-swipe" :autoplay="0" indicator-color="#000">
                 <van-swipe-item v-for="thumb in goods.thumb" :key="thumb">
-                    <img  :src="thumb"v-lazy="thumb" >       
+                    <img  :src="thumb" v-lazy="thumb" >       
                 </van-swipe-item>
                 </van-swipe>
 
@@ -121,7 +122,7 @@
                                 1983年的美国犹他州，有一位专门为科罗拉多河探险的人们提供向导服务的人，当时他有个困扰：身上的太阳镜总是容易丢失，为此他发明了一种多功能的眼镜绳，这是当时市场上一款可调节的全棉眼镜绳——他就是CHUMS品牌创始人Mike Taggett。“CHUMS”这一品牌名称，是由Mike 先生好友的爱犬“Chumley”的名字演变而来，其中蕴含了Mike先生希望透过这一品牌，让顾客感受到生活的温馨与美好的心情。
                             </p>
                             <p v-for="thumb in goods.thumb" :key="thumb" class="p-info">
-                                <img  :src="thumb"v-lazy="thumb">
+                                <img  :src="thumb" v-lazy="thumb">
                             </p>
                         </div>
                         <div class="marking_price_wrap">
@@ -143,30 +144,99 @@
                 </van-goods-action-mini-btn>
                 <van-goods-action-big-btn @click="sorry">
                     加入购物车
-                </van-goods-action-big-btn>
-                <van-goods-action-big-btn primary @click="sorry">
+                </van-goods-action-big-btn @click="add-cart">
+                <van-goods-action-big-btn primary @click="buy-clicked">
                     立即购买
                 </van-goods-action-big-btn>
                 </van-goods-action>
-        </div>
-            <!-- <van-sku
-            v-model="showBase"
-            :sku="sku"
-            :goods="goods"
-            :goods-id="goodsId"
-            :hide-stock="sku.hide_stock"
-            :quota="quota"
-            :quota-used="quotaUsed"
-            :reset-stepper-on-hide="resetStepperOnHide"
-            :reset-selected-sku-on-hide="resetSelectedSkuOnHide"
-            :close-on-click-overlay="closeOnClickOverlay"
-            :disable-stepper-input="disableStepperInput"
-            :message-config="messageConfig"
-            @buy-clicked="onBuyClicked"
-            @add-cart="onAddCartClicked"
-            /> -->
+                </div>
+        <!-- sku -->
+        <!-- <div class="chose-panel" >
+                                    <div class="main">
+                                        <div class="close iconfont" >
+                                            <img src="../../../static/img/cart/close.png" alt="">
+                                        </div>
+                                        <div class="infos ">
+                                            <div class="basic-info">
+                                                <div class="thumb-img">
+                                                    <img class="thumb" :src=" goods.thumb[0]">
+                                                </div>
+                                                <div class="text-info">
+                                                    <p class="price">
+                                                        <span class="sale-price no-price">{{formatPrice(goods.price)}}</span>  
+                                                    </p>
+                                                    <p class="not-choose">请选择颜色、尺码</p>
+                                                    <p class="choosed-info" >已选择:</p>
+                                                    <p class="size-info hide"></p>
+                                                    <p class="size-rec hide"></p>
+                                                </div>
+                                            </div>
+                                            <div class="chose-items">
+                                                    <div class="block-list">
+                                                        <span class="name">颜色</span>
+                                                        <ul class="size-row clearfix">
+                                                            <li class="block "></li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="block-list">
+                                                        <span class="name">规格</span>
+                                                        <ul class="size-row clearfix">
+                                                            <li class="block "></li>
+                                                        </ul>
+                                                    </div>
+                                                <div class="num">
+                                                    <span class="name">数量</span>
+                                                    <div class="clearfix">
+                                                        <a class="btn btn-minus " href="javascript:void(0);" >
+                                                           -
+                                                        </a>
+                                                        <input id="good-num" class="good-num disabled" type="text">
+                                                            <a class="btn btn-plus" href="javascript:void(0);">
+                                                                +
+                                                            </a>
+                                                    </div>
+                                                    <span class="left-num"></span>
+                                                    <input id="left-num" type="hidden" value="0">
+                                                    <input id="limitNum" type="hidden" value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="btn-wrap">
+                                                <div id="chose-btn-sure" class="btn btn-sure" >{{append}}</div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <van-sku
+  v-model="showCustomAction"
+  stepper-title="我要买"
+  :sku="sku"
+  :goods="goods"
+  :goods-id="goodsId"
+  :hide-stock="sku.hide_stock"
+  :quota="quota"
+  :quota-used="quotaUsed"
+  show-add-cart-btn
+  reset-stepper-on-hide
+  :initial-sku="initialSku"
+  @buy-clicked="onBuyClicked"
+  @add-cart="onAddCartClicked"
+>
+  <!-- 自定义 sku-header-price -->
+  <template slot="sku-header-price" slot-scope="props">
+    <div class="van-sku__goods-price">
+      <span class="van-sku__price-symbol">￥</span><span class="van-sku__price-num">{{ props.price }}</span>
+    </div>
+  </template>
+  <!-- 自定义 sku actions -->
+  <template slot="sku-actions" slot-scope="props">
+    <div class="van-sku-actions">
+      <van-button bottom-action @click="onPointClicked">积分兑换</van-button>
+      <!-- 直接触发 sku 内部事件，通过内部事件执行 onBuyClicked 回调 -->
+      <van-button type="primary" bottom-action @click="props.skuEventBus.$emit('sku:buy')">买买买</van-button>
+    </div>
+  </template>
+</van-sku>
 </div>
-    
 </template>
 <script>
 // 公告头部
@@ -187,7 +257,8 @@ import {
 export default {
     data(){
         return{
-             isHide:true, goods: {
+             isHide:true, 
+             goods: {
                 title: '美国伽力果（约680g/3个）',
                 price: 2680,
                 express: '免运费',
@@ -195,8 +266,57 @@ export default {
                 thumb: [
                 'https://img.yzcdn.cn/public_files/2017/10/24/e5a5a02309a41f9f5def56684808d9ae.jpeg',
                 'https://img.yzcdn.cn/public_files/2017/10/24/1791ba14088f9c2be8c610d0a6cc0f93.jpeg'
-                ]
-            }
+                ],
+            },
+            append:'加入购物车',
+            sku: {
+  // 所有sku规格类目与其值的从属关系，比如商品有颜色和尺码两大类规格，颜色下面又有红色和蓝色两个规格值。
+  // 可以理解为一个商品可以有多个规格类目，一个规格类目下可以有多个规格值。
+  tree: [
+    {
+      k: '颜色', // skuKeyName：规格类目名称
+      v: [
+        {
+          id: '30349', // skuValueId：规格值 id
+          name: '红色', // skuValueName：规格值名称
+          imgUrl: 'https://img.yzcdn.cn/1.jpg' // 规格类目图片，只有第一个规格类目可以定义图片
+        },
+        {
+          id: '1215',
+          name: '蓝色',
+          imgUrl: 'https://img.yzcdn.cn/2.jpg'
+        }
+      ],
+      k_s: 's1' // skuKeyStr：sku 组合列表（下方 list）中当前类目对应的 key 值，value 值会是从属于当前类目的一个规格值 id
+    }
+  ],
+  // 所有 sku 的组合列表，比如红色、M 码为一个 sku 组合，红色、S 码为另一个组合
+  list: [
+    {
+      id: 2259, // skuId，下单时后端需要
+      price: 100, // 价格（单位分）
+      s1: '1215', // 规格类目 k_s 为 s1 的对应规格值 id
+      s2: '1193', // 规格类目 k_s 为 s2 的对应规格值 id
+      s3: '0', // 最多包含3个规格值，为0表示不存在该规格
+      stock_num: 110 // 当前 sku 组合对应的库存
+    }
+  ],
+  price: '1.00', // 默认价格（单位元）
+  stock_num: 227, // 商品总库存
+  collection_id: 2261, // 无规格商品 skuId 取 collection_id，否则取所选 sku 组合对应的 id
+  none_sku: false, // 是否无规格商品
+  messages: [
+    {
+      // 商品留言
+      datetime: '0', // 留言类型为 time 时，是否含日期。'1' 表示包含
+      multiple: '0', // 留言类型为 text 时，是否多行文本。'1' 表示多行
+      name: '留言', // 留言名称
+      type: 'text', // 留言类型，可选: id_no（身份证）, text, tel, date, time, email
+      required: '1' // 是否必填 '1' 表示必填
+    }
+  ],
+  hide_stock: false // 是否隐藏剩余库存
+}
     };
     },components:{
         // 公告头部
@@ -211,7 +331,7 @@ export default {
         [SwipeItem.name]: SwipeItem,
         [GoodsAction.name]: GoodsAction,
         [GoodsActionBigBtn.name]: GoodsActionBigBtn,
-        [GoodsActionMiniBtn.name]: GoodsActionMiniBtn
+        [GoodsActionMiniBtn.name]: GoodsActionMiniBtn,
     },methods: {
         showTab(){
             this.isHide=!this.isHide
@@ -229,12 +349,14 @@ export default {
 
         },
         onAddCartClicked(){
-
+            
         }
+       
         }
 }
 </script>
 <style lang="stylus" >
+@import "../../../static/css/cart/cart.css";
     .rightBtn>img
        height 50px
        width 50px
@@ -377,6 +499,7 @@ export default {
            height 100%  
      .van-goods-action-mini-btn__icon
         font-size 35px
+
     // 商品评价
       .mod_detail_info_header 
             background-color: #fff;
@@ -384,25 +507,31 @@ export default {
             border-bottom: 1px solid #eee;
             border-top: 1px solid #eee;
             margin-top: 10px;
+
       .evaluate .detail_info_line 
             border-bottom: 1px solid #eee
             position: relative
             padding: 30px 0 30px 20px
+
      .mod_detail_info_header h3 
             color: #333;
             float: left;
             font-size: 30px
             font-weight: normal;
+
     .detail_switch 
             padding-left: 15px;
+
     .evaluate .evaluate_tag_box 
             overflow: hidden
             box-sizing: border-box
             padding: 5px 0 15px 0
             border-bottom: 1px solid #f4f4f4
+            
     .evaluate .evaluate_tag_box_inner 
             height: 50px
             overflow: hidden
+
     .evaluate .evaluate_tag_box span.tags_span 
             display: inline-block;
             font-size: 25px
@@ -416,26 +545,34 @@ export default {
             vertical-align: middle;
             padding: 0 8px;
             margin: 10px 10px 0 0;
+
     .evaluate .evaluate_list_box 
             padding: 15px 0 20px 0;
+
     .evaluate .evaluate_list_box .evaluate_box 
             padding-right: 15px;
             background: #fff;
+
     .evaluate .evaluate_list_box .evaluate_box .avator_wrap 
             float: left;
             height: 50px
             line-height 50px;
+
     .evaluate .evaluate_list_box .evaluate_box .quality_time 
             float: right;
+
     .evaluate .evaluate_list_box .evaluate_box .avator_wrap img.avator_pic 
             width: 50px
             height: 50px;
             border-radius: 15px;
             -webkit-border-radius: 15px;
+            display inline-block
+
     .evaluate .evaluate_list_box .evaluate_box .comment_time 
             color: #ccc;
             font-size: 13px;
             line-height: 50px;
+
     .evaluate .evaluate_list_box .evaluate_box .avator_wrap .avator_name 
             display: inline-block;
             line-height: 50px;
@@ -445,6 +582,7 @@ export default {
             overflow: hidden;
             white-space: nowrap;
             text-overflow: ellipsis;
+
     .evaluate .evaluate_list_box .evaluate_box p.evaluate_comment 
             font-size: 25px;
             clear: both;
@@ -452,6 +590,7 @@ export default {
             word-break: break-all;
             overflow: hidden;
             margin-top: 25px
+
     .evaluate .all_evaluate_btn 
             cursor: pointer;
             display: block;
@@ -461,6 +600,7 @@ export default {
             font-size: 14px;
             text-align: center;
             border-top: 1px solid #f4f4f4;
+
     .evaluate .evaluate_icon
                 display: inline-block;
                 position: relative;
@@ -470,20 +610,25 @@ export default {
                 font-weight: normal;
                 border-bottom: 2px solid #0092d8;
                 border-right: 2px solid #0092d8;
+
     .detail_wrap 
                 display: block;
                 width:100%;
+
     .detail_wrap    .p-info
                 padding: 17px 25px 20px 25px;
                 font-size: 10px;
                 background-color: #fff;
+
      .detail_wrap    .p-info>img
                 display: block;
                 width:100%;
+
     .marking_price_wrap 
                 padding: 17px 25px 20px 25px;
                 font-size: 10px;
                 background-color: #fff;
+
     .marking_price_wrap .marking_price__title 
                 position: relative;
                 height: 30px
@@ -493,9 +638,13 @@ export default {
                 font-weight: bold;
                 color: #000;
                 vertical-align: baseline;
+
     .marking_price_wrap .marking_price__content 
                 padding-left: 5px;
                 margin-bottom: 15px;
                 color: #999;
-   
+
+//    sku 
+     .thumb
+                height 2.34rem
 </style>

@@ -20,7 +20,6 @@ Vue.use(Lazyload);
 import { Sku } from 'vant';
 Vue.use(Sku);
 
-
 Vue.component(Spinner.name, Spinner);
 
 
