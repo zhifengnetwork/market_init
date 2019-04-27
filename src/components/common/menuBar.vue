@@ -60,7 +60,7 @@ export default {
 				justify-content center
 				i
 					display block
-					margin 7px 0 
+					margin-top 7px 
 				.iconfont
 					font-size 38px
 					color #666
