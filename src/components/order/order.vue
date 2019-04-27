@@ -317,6 +317,7 @@
 </script>
 
 <style lang="stylus" scoped>
+@import '../../../static/css/public/mixin.styl';
 .order
     .tab-wrap
         padding-top 88px
@@ -400,7 +401,7 @@
                         font-size 24px
                         line-height 58px
                         text-align center
-                        border 1px solid #000
+                        border 2px solid #000
                         border-radius 5px
                         display inline-block
                         margin-left 20px

@@ -222,7 +222,7 @@
 									width 160px
 									height 100%
 									img 
-										width 100%
+										width 99%
 								.text
 									flex 1
 									h3

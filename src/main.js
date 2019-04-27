@@ -21,11 +21,12 @@ Vue.use(Lazyload);
 import { Sku } from 'vant';
 Vue.use(Sku);
 
-//css
-import '../static/css/font/iconfont.css'
 
 Vue.component(Spinner.name, Spinner);
 
+
+//字体图标css
+import '../static/css/font/iconfont.css'
 
 //引入axios库
 import axios from "axios";

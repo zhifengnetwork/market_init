@@ -30,6 +30,10 @@ import orderDetails from '@/components/order/orderDetails'
 // 我的优惠券
 import coupon from '@/components/user/my/coupon'
 
+// 确认订单
+import confirmOrder from '@/components/pay/confirmOrder'
+
+
 Vue.use(Router)
 
 export default new Router({
@@ -106,7 +110,14 @@ export default new Router({
 			path:'/my/coupon',
 			name: 'coupon',
 			component:coupon
+		},
+		// 确认订单
+		{
+			path:'/confirmOrder',
+			name: 'confirmOrder',
+			component:confirmOrder
 		}
+
 		
   	]
 })
