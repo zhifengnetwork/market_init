@@ -10,7 +10,7 @@
                         </p>
                 </div> -->
                 <headerView custom-title="购物车" custom-fixed >
-                    <div class="backBtn" slot="backBtn" @click="backBtn($router.go(-1))">
+                    <div class="backBtn" slot="backBtn" @click="($router.go(-1))">
                         <img src="../../../static/img/public/backBtn.png" />
                     </div>
                     <span class="rightBtn" slot="rightBtn" @click="redact">{{redactText}}</span>

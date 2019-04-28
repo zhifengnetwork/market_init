@@ -89,7 +89,7 @@ export default {
                  {id:4,name:'我的兑换',imgUrl:'../../../static/img/user/exchange@2x.png',aUrl:''},
                  {id:5,name:'我的收藏',imgUrl:'../../../static/img/user/Collection@2x.png',aUrl:'/collection'},
                  {id:6,name:'帮助中心',imgUrl:'../../../static/img/user/Help@2x.png',aUrl:''},
-                 {id:7,name:'设置',viceName:'用户设置•地址',imgUrl:'../../../static/img/user/Set_up@2x.png',aUrl:''}
+                 {id:7,name:'设置',viceName:'用户设置•地址',imgUrl:'../../../static/img/user/Set_up@2x.png',aUrl:'/my/userinfo'}
              ],
              user:{ id:1,userName:'马冬梅',vipRank:'白金会员'}
                 

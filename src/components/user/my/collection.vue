@@ -85,7 +85,8 @@
 	.yoho-page {
 		position: relative;
 		padding-top 88px 		
-		
+		background:#ffffff
+		height 100%
 	}
 	.fav-tab {
 		padding: 25px 0;

@@ -27,10 +27,14 @@ Vue
   .use(GoodsAction)
   .use(GoodsActionBigBtn)
   .use(GoodsActionMiniBtn);
+Vue.component(Spinner.name, Spinner);
 
 // 优惠券
 import { CouponCell, CouponList } from 'vant';
 Vue.use(CouponCell).use(CouponList);
+//mint 时间
+import { DatetimePicker } from 'mint-ui';
+Vue.component(DatetimePicker.name, DatetimePicker);
 
 import { Radio } from 'mint-ui';
 Vue.component(Radio.name, Radio);
@@ -43,6 +47,7 @@ Vue.component(Spinner.name, Spinner);
 
 //字体图标css
 import '../static/css/font/iconfont.css'
+
 
 //引入axios库
 import axios from "axios";
