@@ -370,7 +370,7 @@
                     {
                         tabTitle:"待评价"
                     }
-				]
+                ]
             }
         },
         methods:{

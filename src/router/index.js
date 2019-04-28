@@ -124,7 +124,6 @@ export default new Router({
 			name:'collection',
 			component:collection
 		},
-<<<<<<< HEAD
 		//商品评价
 		{
 			path:'/details/evaluate',
@@ -136,8 +135,7 @@ export default new Router({
 			path:'/my/appraise',
 			name:'appraise',
 			component:appraise
-		}
-=======
+		},
 		// 确认订单
 		{
 			path:'/confirmOrder',
@@ -146,6 +144,5 @@ export default new Router({
 		}
 
 		
->>>>>>> 66886015168889b6f4bc821905bf2cd9c67b380f
   	]
 })

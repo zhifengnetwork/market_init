@@ -5,7 +5,7 @@ import App from './App'
 import router from './router'
 import 'mint-ui/lib/style.css'
 
-import 'lib-flexible/flexible.js'
+import 'lib-flexible/flexible.js' 
 import { Spinner } from 'mint-ui';
 
 // vant
@@ -28,13 +28,15 @@ Vue
   .use(GoodsActionBigBtn)
   .use(GoodsActionMiniBtn);
 
-<<<<<<< HEAD
+// 优惠券
+import { CouponCell, CouponList } from 'vant';
+Vue.use(CouponCell).use(CouponList);
+
+import { Radio } from 'mint-ui';
+Vue.component(Radio.name, Radio);
+
 //css
-
-
 import '../static/css/font/iconfont.css'
-=======
->>>>>>> 66886015168889b6f4bc821905bf2cd9c67b380f
 
 Vue.component(Spinner.name, Spinner);
 
