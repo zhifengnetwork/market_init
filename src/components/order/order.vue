@@ -297,7 +297,9 @@
                             <div class="order-opt">
                                 <span class="btn cancelBtn">删除订单</span>
                                 <!-- <span class="btn">再次购买</span> -->
+                                  <router-link to="/my/appraise">
                                  <span class="btn">评价</span>
+                                 </router-link>
                             </div>
                         </div>
 
@@ -328,7 +330,9 @@
                             <div class="order-opt">
                                 <span class="btn cancelBtn">删除订单</span>
                                 <!-- <span class="btn">再次购买</span> -->
+                                <router-link to="/my/appraise">
                                  <span class="btn">评价</span>
+                                 </router-link>
                             </div>
                         </div>
                     </li>

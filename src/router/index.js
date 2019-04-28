@@ -31,6 +31,7 @@ import coupon from '@/components/user/my/coupon'
 
 // 我的收藏 
 import collection from '@/components/user/my/collection'
+
 // 确认订单
 import confirmOrder from '@/components/pay/confirmOrder'
 
@@ -40,6 +41,18 @@ import evaluate from '@/components/goods/details/evaluate'
 
 //发布评价
 import appraise from '@/components/user/my/publishApp'
+
+//个人信息
+import userinfo from '@/components/user/my/userinfo'
+
+//个人地址管理
+import site from '@/components/user/my/site'
+
+//添加地址
+import addressAct from '@/components/user/my/addressAct'
+
+//账号安全
+import changePwd from '@/components/user/my/changePwd'
 
 Vue.use(Router)
 
@@ -124,7 +137,6 @@ export default new Router({
 			name:'collection',
 			component:collection
 		},
-<<<<<<< HEAD
 		//商品评价
 		{
 			path:'/details/evaluate',
@@ -136,16 +148,36 @@ export default new Router({
 			path:'/my/appraise',
 			name:'appraise',
 			component:appraise
-		}
-=======
+		},
 		// 确认订单
 		{
 			path:'/confirmOrder',
 			name: 'confirmOrder',
 			component:confirmOrder
-		}
-
-		
->>>>>>> 66886015168889b6f4bc821905bf2cd9c67b380f
+		},
+		//个人信息
+		{
+			path:'/my/userinfo',
+			name: 'userinfo',
+			component:userinfo
+		},
+		//个人地址管理
+		{
+			path:'/my/site',
+			name: 'site',
+			component:site
+		},
+		//添加地址
+		{
+			path:'/my/addressAct',
+			name: 'addressAct',
+			component:addressAct
+		},
+		//账号安全
+		{
+			path:'/my/changePwd',
+			name: 'changePwd',
+			component:changePwd
+		}	
   	]
 })
