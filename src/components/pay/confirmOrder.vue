@@ -81,22 +81,8 @@
                 </div>
             </div>
 
-             
-<!-- 
-            <div class="dispatch-row" >
-                <div class="title" @click = "toggleDrop($event)">
-                    <div class="fl">支付方式</div>
-                    <div class="fr">
-                        <span class="wayText">{{this.value}}</span>
-                        <span class="iconfont">&#xe602;</span>
-                    </div>
-                </div>
-                 
-
-            </div> -->
-
             <!-- 支付方式 -->
-            <div class="dispatch-row">
+            <div class="dispatch-row" >
                 <div class="title" @click = "toggleDrop($event)">
                     <div class="fl">支付方式</div>
                     <div class="fr">
@@ -104,80 +90,51 @@
                         <span class="iconfont">&#xe602;</span>
                     </div>
                 </div>
-                <ul class="list"  v-show="isDrop">
-                    <li @click = "selectWay($event)">
-                        <span>在线支付</span>
-                        <span class="iconfont">&#xe776;</span>
-                        <!-- <span class="iconfont">&#xe691;</span> -->
-                    </li>
-                    <li @click = "selectWay($event)">
-                        <span>货到付款</span>
-                        <span class="iconfont">&#xe776;</span>
-                        <!-- <span class="iconfont">&#xe691;</span> -->
-                    </li>
-                </ul>
+                <div class="list">
+                       <van-radio-group v-model="payWay" v-show="isDrop">
+                        <van-cell-group>
+                            <van-cell title="在线支付" clickable   @click="payWay = '在线支付'" >
+                            <van-radio name="在线支付"   @click="payWay = '在线支付'" />
+                            </van-cell>
+                            <van-cell title="货到付款" clickable   @click="payWay = '货到付款'" >
+                            <van-radio name="货到付款" @click="payWay = '货到付款'" />
+                            </van-cell>
+                        </van-cell-group>
+                    </van-radio-group>    
+                </div>  
+            </div>
+
+            <!-- 配送方式 -->
+            <div class="dispatch-row" >
+                <div class="title" @click = "toggleDrop2($event)">
+                    <div class="fl">配送方式</div>
+                    <div class="fr">
+                        <span class="wayText">{{this.delivery}}</span>
+                        <span class="iconfont">&#xe602;</span>
+                    </div>
+                </div>
+                <div class="list">
+                       <van-radio-group v-model="delivery" v-show="isDrop2">
+                        <van-cell-group>
+                            <van-cell title="普通快递 : 运费¥10" clickable   @click="delivery = '普通快递 : 运费¥10'" >
+                            <van-radio name="普通快递 : 运费¥10"   @click="delivery = '普通快递 : 运费¥10'" />
+                            </van-cell>
+                            <van-cell title="顺丰速运:运费¥15" clickable   @click="delivery = '顺丰速运:运费¥15'" >
+                            <van-radio name="顺丰速运:运费¥15" @click="delivery = '顺丰速运:运费¥15'" />
+                            </van-cell>
+                        </van-cell-group>
+                    </van-radio-group>    
+                </div>  
             </div>
 
             <!-- 订单留言 -->
-            <!-- <div class="dispatch-row" style="display:none">
+            <div class="dispatch-row">
                 <div class="title">订单留言</div>
                 <div class="msg">
                     <textarea placeholder="限300字（若有特殊需求，请联系商城在线客服)"></textarea>
                 </div>
-            </div> -->
+            </div>
             
-            <!-- <div class="dispatch"> -->
-                <!-- 支付方式 -->
-                <!-- <div class="dispatch-row"
-                v-for="(items,index) in wayArr"
-                @click = "toggleDrop($event,index)" >
-                    <div class="title" >
-                        <div class="fl">{{items.wayData.title}}</div>
-                        <div class="fr">
-                            <span class="wayText">在线支付</span>
-                            <span class="iconfont">&#xe602;</span>
-                        </div>
-                    </div>
-                    <ul class="list"  v-show="isDrop">
-                        <li v-for="item in items.wayData.wayList">
-                            <span>{{item}}</span>
-                            <span class="iconfont" >&#xe776;</span>
-                            <span class="iconfont">&#xe691;</span>
-                        </li>
-                        <li>
-                            <span>货到付款</span>
-                            <span class="iconfont">&#xe776;</span>
-                            <span class="iconfont">&#xe691;</span>
-                        </li>
-                    </ul>
-                </div> -->
-
-                <!-- 配送方式 -->
-                <!-- <div class="dispatch-row" style="dispaly:none">
-                    <div class="title" @click = "toggleDrop($event)">
-                        <div class="fl">配送方式</div>
-                        <div class="fr">
-                            <span class="wayText">普通快递 : 运费¥10</span>
-                            <span class="iconfont">&#xe602;</span>
-                        </div>
-                    </div>
-                    <ul class="list">
-                        <li>
-                            <span>普通快递 : 运费¥10</span>
-                            <span class="iconfont" >&#xe776;</span>
-                            <span class="iconfont">&#xe691;</span>
-                        </li>
-                        <li>
-                            <span>顺丰速运:运费¥15</span>
-                            <span class="iconfont">&#xe776;</span>
-                            <span class="iconfont">&#xe691;</span>
-                        </li>
-                    </ul>
-                </div> -->
-
-            <!-- </div> -->
-
-
            
         </div>
 
@@ -242,18 +199,9 @@
                 disabledCoupons: [coupon],
                 showList:false,
                 isDrop:false,
-                value:"",
-                abc :[
-                    { 
-                        label: '在线支付',
-                        value:'1'
-                    },
-                      { 
-                        label: '货到付款',
-                        value:'2'
-                    }
-                ],
-                payWay:"在线支付",
+                isDrop2:false,
+                payWay: '在线支付',
+                delivery:"普通快递 : 运费¥10",
                 wayArr:[
                     {
                         wayData:{
@@ -301,13 +249,16 @@
             toggleDrop(){
                 this.isDrop = !this.isDrop
             },
+            toggleDrop2(){
+                this.isDrop2 = !this.isDrop2
+            },
             // 更换支付方式
             selectWay(e){
                 var selectText = e.target.children[0].innerText;
                 this.payWay = selectText;
                 this.isDrop = !this.isDrop
             },
-           
+       
         
         },
         filters:{
@@ -321,8 +272,6 @@
 		},
         components:{
 			headerView
-        },created(){
-            console.log(this.value)
         }
         
         
@@ -331,6 +280,7 @@
 
 
 <style lang="stylus" scoped>
+
 .confirmOrder
     .content
         padding-top 88px
@@ -476,19 +426,15 @@
                         position relative
                         top 3px
             .list
-                // background #323232
-                // color #fff
-                padding 0 30px
-                box-sizing border-box
-                // display none
-                li
+                .van-radio-group /deep/ .van-cell
                     line-height 60px
+                    padding 0 30px
                     font-size 24px
-                    display flex
-                    align-items center
-                    justify-content space-between
-                    .iconfont
-                        font-size 30px
+                    .van-radio__icon 
+                        i
+                            width 32px
+                            height 32px
+                            line-height 32px
             .msg
                 textarea
                     width 95%
@@ -499,9 +445,7 @@
                     padding-left 10px
                     box-sizing border-box
                     border-radius 10px
-
-        
-
+                    font-family "微软雅黑"
     .order-bill
         width 100%
         height 88px

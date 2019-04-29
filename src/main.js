@@ -36,8 +36,12 @@ Vue.use(CouponCell).use(CouponList);
 import { DatetimePicker } from 'mint-ui';
 Vue.component(DatetimePicker.name, DatetimePicker);
 
-import { Radio } from 'mint-ui';
-Vue.component(Radio.name, Radio);
+// 单选框 
+import { RadioGroup, Radio } from 'vant';
+Vue.use(RadioGroup);
+Vue.use(Radio);
+import { Cell, CellGroup } from 'vant';
+Vue.use(Cell).use(CellGroup);
 
 //css
 import '../static/css/font/iconfont.css'
@@ -52,7 +56,7 @@ import '../static/css/font/iconfont.css'
 //引入axios库
 import axios from "axios";
 //注册组件
-Vue.prototype.axios = axios;
+Vue.prototype.$axios = axios;
 
 
 /* 设置为 false 以阻止 vue 在启动时生成生产提示。 */

@@ -2,7 +2,7 @@
     <div class='details'>
          <header>
          <headerView custom-title="商品详情" custom-fixed rightNone>
-				<div class="backBtn" slot="backBtn" @click="backBtn($router.go(-1))">
+				<div class="backBtn" slot="backBtn" @click="$router.go(-1)">
 					<img src="../../../static/img/public/backBtn.png" />
 				</div>
                 <div class="rightBtn" slot="rightBtn" @click="showTab">
@@ -469,7 +469,7 @@ export default {
         }
 }
 </script>
-<style lang="stylus" >
+<style lang="stylus" scoped>
 @import "../../../static/css/cart/cart.css";
     .details
        background #eee
