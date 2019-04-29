@@ -27,20 +27,21 @@
 							>
                             <!-- 热门种类 -->
                             <h3 class="title">{{items.hotCategory.title}}</h3>
-							<ul class="pro-items">
-								<router-link 
-									tag="li"
-									to="/Details"
-									v-for="(item,index) of items.hotCategory.list"
-									:key="index"
-								>
-									<div class="picture">
-										<img :src="item.imgUrl">
-									</div>
-									<p>{{item.name}}</p>
-								</router-link>
-							</ul>
-
+                            <router-link to="/Details" style="pointer-events：none;">
+								<ul class="pro-items">
+									<router-link 
+										tag="li"
+										to="/Details"
+										v-for="(item,index) of items.hotCategory.list"
+										:key="index"
+									>
+										<div class="picture">
+											<img :src="item.imgUrl">
+										</div>
+										<p>{{item.name}}</p>
+									</router-link>
+								</ul>
+							</router-link>
                             <!-- 热销商品 -->
                             <h3 class="title">{{items.hotSingle.title}}</h3>
 							<ul class="singleList">

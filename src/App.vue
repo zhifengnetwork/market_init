@@ -28,4 +28,14 @@ export default {
   height: 100vh;
   overflow-y: scroll;
 }
+	.van-dialog {
+		border-radius: 15px;
+	}
+	.van-dialog__message {
+		padding: 55px 25px;
+		line-height: 55px;
+	}
+	.van-button {
+		height: 85px;
+	}
 </style>
