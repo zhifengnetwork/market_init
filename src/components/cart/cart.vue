@@ -414,6 +414,7 @@ export default {
         imgselect(item,e,index){
             this.liding()
             var i=e.target.dataset.id
+            console.log(i)
             if(typeof item.ischeack == "undefined"){
                 this.$set(item,"ischeack",true)
             }else{

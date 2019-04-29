@@ -33,12 +33,39 @@ Vue.component(Spinner.name, Spinner);
 import { DatetimePicker } from 'mint-ui';
 Vue.component(DatetimePicker.name, DatetimePicker);
 
-
+import { Swipe, SwipeItem } from 'mint-ui';
+Vue.component(Swipe.name, Swipe);
+Vue.component(SwipeItem.name, SwipeItem);
 
 
 //字体图标css
 import '../static/css/font/iconfont.css'
 
+
+
+//全局获取倒计时
+Vue.prototype.timeCountdown = function (obj){
+  const TIME_COUNT = 60; //默认倒计时秒数
+
+  if (!obj.timer) {
+      obj.waitTime = TIME_COUNT;
+      obj.canGet = false;
+      obj.timer = setInterval(() => {
+          if (obj.waitTime>0 && obj.waitTime<=TIME_COUNT) {
+              obj.waitTime--;
+          }else{
+              obj.canGet = true;
+              clearInterval(obj.timer); //清空定时器
+              obj.timer = null;
+          }
+      }, 1000)
+  }
+  return {
+      timer: obj.timer,
+      canGet: obj.canGet,
+      waitTime: obj.waitTime
+  }
+}
 
 //引入axios库
 import axios from "axios";

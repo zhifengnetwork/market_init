@@ -16,53 +16,48 @@
 							:key="index"
 							@click="handleClick(index)"
 							:class="{on:currentIndex === index }"
-							>{{item}}</li>
+							>{{item.cat_name}}</li>
 					</ul>
 				</div>
 				<div class="scroll-prolist" ref="proBox">
-					<ul class="pro">
-						<li class="pro-classify" ref="proClassify"
-							v-for="(items,index) of goods"
-							:key="index"
-							>
+					<ul class="pro" >
+						<!-- 肉类 -->
+						<li class="pro-classify" ref="proClassify" v-for="(item,index) of menuBarr">
+							<div v-for="(items,index) of item.children" >
                             <!-- 热门种类 -->
-                            <h3 class="title">{{items.hotCategory.title}}</h3>
+                            <h3 class="title">{{items.cat_name}}</h3>
 							<ul class="pro-items">
-								<router-link 
-									tag="li"
-									to="/Details"
-									v-for="(item,index) of items.hotCategory.list"
-									:key="index"
-								>
-									<div class="picture">
-										<img :src="item.imgUrl">
-									</div>
-									<p>{{item.name}}</p>
-								</router-link>
+								<li  v-for="item of items.children" >
+								      <router-link  to="/confirmOrder">
+											<div class="picture">
+												<img :src="s+item.img">
+											</div>
+											<p>{{item.cat_name}}</p>
+								     </router-link>
+								</li>
 							</ul>
-
+                            </div>
+							<div  v-for="items of item.goods" >
                             <!-- 热销商品 -->
-                            <h3 class="title">{{items.hotSingle.title}}</h3>
+                            <h3 class="title">{{items.attr_name}}</h3>
 							<ul class="singleList">
-								<router-link 
-									tag="li"
-									to="/Details"
-									v-for="(item,index) of items.hotSingle.list"
-									:key="index"
-								>
-									<div class="img-wrap">
-										<img :src="item.imgUrl">
-									</div>
-									<div class="text">
-										<h3>{{item.proTit}}</h3>
-										<span class="sign">热卖</span>
-										<div class="line3">
-											<span class="price">¥{{item.price}}</span>
-											<span class="commentNum">评论{{item.commentNum}}条</span>
-										</div>
-									</div>
-								</router-link>
+								<li >
+								        <a  :href="'/details?products_id='+items.goods_id">
+												<div class="img-wrap">
+													<img :src="s+items.img">
+												</div>
+												<div class="text">
+													<h3>{{item.price}}</h3>
+													<span class="sign">{{items.attr_name}}</span>
+													<div class="line3">
+														<span class="price">¥{{items.price}}</span>
+														<span class="commentNum">评论{{items.comment}}条</span>
+													</div>
+												</div>
+									 </a>
+								</li>
 							</ul>
+							</div>
 						</li>
 					</ul>
 				</div>
@@ -80,10 +75,12 @@
 	 	name:"Classify",
 	 	data(){
 	 		return{
-	 			menuBar:[],
-	 			goods:[],
-	 			listHeight:[],
-				scrollY:0
+				 menuBar:[],
+				 menuBarr:[],
+					goods:[],
+					listHeight:[],
+					scrollY:0,
+				s:'http://www.zfwl.c3w.cc/upload/images/',
 	 		}
 	 	},
 	 	computed:{
@@ -117,6 +114,7 @@
 			 },
 	
 	 		handleClick(i){
+				//  console.log(1232)
 	 			let proList = this.$refs.proClassify
 				let el = proList[i]
 	 			this.proScroll.scrollToElement(el,300);
@@ -138,11 +136,10 @@
 	 		}
 	 	},
 	 	mounted(){
-	 		this.axios.get("/api/classify.json")
+			 this.axios.get("/api/goods/categoryList")
 	 		.then((res)=>{
-	 			let resData = res.data
-	 			this.menuBar = resData.menuBar
-                this.goods = resData.goods
+				 this.menuBar = res.data.data //分类名称
+				 this.menuBarr =  res.data.data 
 	 			this.$nextTick(()=>{
 					 this.initScroll()
 					 this.getHeight()
@@ -195,6 +192,8 @@
 								width 33%
 								height 274px
 								margin 10px 0
+								a
+									display block
 								.picture
 									width 100%;
 									height 215px;
@@ -250,7 +249,8 @@
 									.commentNum
 										font-size 20px	
 										color #999999
-										
+					.pro-classify
+						  pointer-events: none!important								
 
 			
 		
