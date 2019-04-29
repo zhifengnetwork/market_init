@@ -11,10 +11,10 @@
 			<div class="scroll">
 				<div class="scroll-menu" ref="menuBox">
 					<ul>
-						<li 
+						<li :data-id="6"
 							v-for="(item,index) of resData"
 							:key="index"
-							@click="handleClick(index)"
+							@click="handleClick($event,index)"
 							:class="{on:currentIndex === index }"
 							>{{item.cat_name}}</li>
 					</ul>
@@ -58,7 +58,7 @@
 												<img :src="baseUrl + item.img">
 											</div>
 											<div class="text">
-												<h3>{{item.attr_name}}</h3>
+												<h3>{{item.goods_name}}</h3>
 												<span class="sign">热卖</span>
 												<div class="line3">
 													<span class="price">¥{{item.price}}</span>
@@ -167,10 +167,11 @@
 	 			})
 			 },
 	
-	 		handleClick(i){
+	 		handleClick(e,i){
 	 			let proList = this.$refs.proClassify
 				let el = proList[i]
-	 			this.proScroll.scrollToElement(el,300);
+				this.proScroll.scrollToElement(el,300);
+				console.log(e) 
 	 		},
 	 		getHeight(){
 				let proList = this.$refs.proClassify
@@ -254,13 +255,11 @@
 								width 33%
 								height 274px
 								margin 10px 0
-								margin-right 5px
 								.picture
 									width 100%;
 									height 215px;
 									overflow hidden
 									position relative
-									// border 1px solid #ccc
 									img
 										width 100%
 										position absolute
