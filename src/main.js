@@ -5,7 +5,7 @@ import App from './App'
 import router from './router'
 import 'mint-ui/lib/style.css'
 
-import 'lib-flexible/flexible.js'
+import 'lib-flexible/flexible.js' 
 import { Spinner } from 'mint-ui';
 
 // vant
@@ -29,6 +29,9 @@ Vue
   .use(GoodsActionMiniBtn);
 Vue.component(Spinner.name, Spinner);
 
+// 优惠券
+import { CouponCell, CouponList } from 'vant';
+Vue.use(CouponCell).use(CouponList);
 //mint 时间
 import { DatetimePicker } from 'mint-ui';
 Vue.component(DatetimePicker.name, DatetimePicker);
@@ -36,6 +39,17 @@ Vue.component(DatetimePicker.name, DatetimePicker);
 import { Swipe, SwipeItem } from 'mint-ui';
 Vue.component(Swipe.name, Swipe);
 Vue.component(SwipeItem.name, SwipeItem);
+// 单选框 
+import { RadioGroup, Radio } from 'vant';
+Vue.use(RadioGroup);
+Vue.use(Radio);
+import { Cell, CellGroup } from 'vant';
+Vue.use(Cell).use(CellGroup);
+
+//css
+import '../static/css/font/iconfont.css'
+
+Vue.component(Spinner.name, Spinner);
 
 
 //字体图标css
@@ -70,7 +84,7 @@ Vue.prototype.timeCountdown = function (obj){
 //引入axios库
 import axios from "axios";
 //注册组件
-Vue.prototype.axios = axios;
+Vue.prototype.$axios = axios;
 
 
 /* 设置为 false 以阻止 vue 在启动时生成生产提示。 */
