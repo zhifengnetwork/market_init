@@ -12,85 +12,37 @@
 				<div class="scroll-menu" ref="menuBox">
 					<ul>
 						<li 
-							v-for="(item,index) of resData"
+							v-for="(item,index) of menuBar"
 							:key="index"
 							@click="handleClick(index)"
 							:class="{on:currentIndex === index }"
-							>{{item.cat_name}}</li>
+							>{{item}}</li>
 					</ul>
 				</div>
 				<div class="scroll-prolist" ref="proBox">
 					<ul class="pro">
 						<li class="pro-classify" ref="proClassify"
-							v-for="(items,index) of resData"
+							v-for="(items,index) of goods"
 							:key="index"
-							>	
-							<div>
-								<!-- 热门种类 -->
-								<div v-for="item in items.children">
-									
-									<h3 class="title">{{item.cat_name}}</h3>
-									<ul class="pro-items">
-										<router-link
-											tag="li"
-											to="/details"
-											v-for="(it,index) of item.children"
-											:key="index"
-										>
-										<div class="picture">
-												<img :src="baseUrl + it.img">
-											</div>
-											<p>{{it.cat_name}}</p>
-										</router-link>
-									</ul>
-
-								</div>
-
-								<!-- 热销商品 -->
-								<div v-for="item in items.goods">
-									<h3 class="title">热销商品</h3>
-									<ul class="singleList">
-										<router-link 
-											tag="li"
-											to="/details"
-										>
-											<div class="img-wrap">
-												<img :src="baseUrl + item.img">
-											</div>
-											<div class="text">
-												<h3>{{item.attr_name}}</h3>
-												<span class="sign">热卖</span>
-												<div class="line3">
-													<span class="price">¥{{item.price}}</span>
-													<span class="commentNum">评论{{item.comment}}条</span>
-												</div>
-											</div>
-										</router-link>
-									</ul>
-								</div>
-
-							</div>
-							
-							
-
+							>
                             <!-- 热门种类 -->
-                            <!-- <h3 class="title">{{items.cat_name}}</h3> -->
-							<!-- <ul class="pro-items">
+                            <h3 class="title">{{items.hotCategory.title}}</h3>
+							<ul class="pro-items">
 								<router-link 
 									tag="li"
 									to="/Details"
-									v-for="(item,index) of items.children"
+									v-for="(item,index) of items.hotCategory.list"
 									:key="index"
 								>
 									<div class="picture">
-										<img :src="item.img">
+										<img :src="item.imgUrl">
 									</div>
-									<p>{{item.cat_name}}</p>
+									<p>{{item.name}}</p>
 								</router-link>
-							</ul> -->
+							</ul>
 
                             <!-- 热销商品 -->
-                            <!-- <h3 class="title">{{items.hotSingle.title}}</h3>
+                            <h3 class="title">{{items.hotSingle.title}}</h3>
 							<ul class="singleList">
 								<router-link 
 									tag="li"
@@ -110,7 +62,7 @@
 										</div>
 									</div>
 								</router-link>
-							</ul> -->
+							</ul>
 						</li>
 					</ul>
 				</div>
@@ -129,11 +81,9 @@
 	 	data(){
 	 		return{
 	 			menuBar:[],
-				goods:[],
-				resData:[],
+	 			goods:[],
 	 			listHeight:[],
-				scrollY:0,
-				baseUrl:'http://www.zfwl.c3w.cc/upload/images/'
+				scrollY:0
 	 		}
 	 	},
 	 	computed:{
@@ -159,7 +109,6 @@
 					click:true
 				})
 	 			this.proScroll = new BScroll(this.$refs.proBox,{
-					click:true,
 	 				probeType : 3
 	 			})
 	 			this.proScroll.on('scroll',(pos)=>{
@@ -189,23 +138,15 @@
 	 		}
 	 	},
 	 	mounted(){
-	 		this.$axios.get("/api/goods/categoryList")
-	 		// this.axios.get("/api/classify.json")
+	 		this.axios.get("/api/classify.json")
 	 		.then((res)=>{
-				 if(res.status === 200){
-					let resData = res.data.data
-
-					// this.menuBar = resData
-					// this.goods = resData
-					this.resData = resData
-					console.log(this.resData)
-
-					this.$nextTick(()=>{
-						this.initScroll()
-						this.getHeight()
-					})
-				 }
-				
+	 			let resData = res.data
+	 			this.menuBar = resData.menuBar
+                this.goods = resData.goods
+	 			this.$nextTick(()=>{
+					 this.initScroll()
+					 this.getHeight()
+				})
 	 		})
 		 },
 		components:{
@@ -249,18 +190,16 @@
 						.pro-items
 							display flex
 							flex-wrap wrap
-							// justify-content space-between
+							justify-content space-between
 							li
 								width 33%
 								height 274px
 								margin 10px 0
-								margin-right 5px
 								.picture
 									width 100%;
 									height 215px;
 									overflow hidden
 									position relative
-									// border 1px solid #ccc
 									img
 										width 100%
 										position absolute
@@ -286,13 +225,12 @@
 								.img-wrap
 									width 160px
 									height 100%
-									margin-right 10px
 									img 
 										width 99%
 								.text
 									flex 1
 									h3
-										font-size 26px
+										font-size 22px
 										color #000
 										font-weight normal
 										line-height 32px
