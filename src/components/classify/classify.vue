@@ -315,9 +315,7 @@
 										color #ff6600
 									.commentNum
 										font-size 20px	
-										color #999999
-					.pro-classify
-						  pointer-events: none!important								
+										color #999999							
 
 			
 		
