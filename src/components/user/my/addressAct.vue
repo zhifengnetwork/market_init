@@ -69,7 +69,7 @@ import {Toast} from "mint-ui"
     }
  }
  </script>
- <style lang="stylus" >
+ <style lang="stylus">
     .van-cell
          padding 20px 
          font-size 30px
