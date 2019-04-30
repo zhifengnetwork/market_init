@@ -54,6 +54,10 @@ import addressAct from '@/components/user/my/addressAct'
 //账号安全
 import changePwd from '@/components/user/my/changePwd'
 
+//商品列表
+import productLsit from '@/components/goods/productList/product'
+
+
 Vue.use(Router)
 
 export default new Router({
@@ -178,6 +182,13 @@ export default new Router({
 			path:'/my/changePwd',
 			name: 'changePwd',
 			component:changePwd
-		}	
+		},
+		//商品列表
+		{
+			path:'/goods/productLsit',
+			name: 'productLsit',
+			component:productLsit
+		}
+		
   	]
 })

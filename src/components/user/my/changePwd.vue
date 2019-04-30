@@ -124,7 +124,10 @@
                                     <div class="list_item_cnt">
                                         <input id="code" class="list_item_input" type="text" placeholder="验证码">
                                     </div>
-                                    <div class="list_item_extra"><a id="getcode" class="list_item_extra_btn" href="javascript:void(0)">获取验证码</a></div>
+                                    <div class="list_item_extra" @click="getPhoneCode()">
+                                        <a id="getcode" class="list_item_extra_btn" href="javascript:void(0)" v-show="!phone.canGet">{{phone.waitTime+"s后重新获取"}}</a>
+                                         <a id="getcode" class="list_item_extra_btn" href="javascript:void(0)" v-show="phone.canGet">获取手机验证码</a>
+                                        </div>
                                 </div>
                             </div>
 
@@ -182,7 +185,10 @@
                                         <div class="list_item_cnt">
                                             <input id="pay_code" class="list_item_input js_verifyCode" type="text" placeholder="验证码">
                                         </div>
-                                        <div class="list_item_extra"><a id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)">获取验证码</a></div>
+                                        <div class="list_item_extra" @click="getCode()">
+                                             <a id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="!pwd.canGet">{{pwd.waitTime+"s后重新获取"}}</a>
+                                             <a id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="pwd.canGet">获取手机验证码</a>
+                                            </div>
                                     </div>
                                 </div>
 
@@ -224,10 +230,53 @@ import headerView from '../../common/headerView.vue'
 export default {
     data(){
         return{
-          alter:0
+          alter:0,
+           //商城支付
+           tempPwd:{ //定义一个临时对象
+            canGet: true,
+            timer: null,
+            waitTime: 60
+         },
+           //手机
+          tempPhone:{
+            canGet: true,
+            timer: null,
+            waitTime: 60
+          }
         }
     },components:{
         headerView
+    },
+    methods: {
+
+         //获取验证码  商城支付
+         getCode(){
+                    //倒计时开始
+                this.timeCountdown(this.pwd);  //参数为最终对象
+         },
+
+         //获取验证码  手机
+         getPhoneCode(){
+                  //倒计时开始
+                this.timeCountdown(this.phone);  //参数为最终对象
+         }
+    },computed:{
+        pwd(){ //最终对象  商城
+            if(!this.tempPwd.canGet){
+                return this.timeCountdown(this.tempPwd);
+            }else{
+                return this.tempPwd;
+            }
+         },
+         //手机
+        phone(){
+            if(!this.tempPhone.canGet){
+                return this.timeCountdown(this.tempPhone);
+            }else{
+                return this.tempPhone;
+            }
+        }
+
     }
 }
 </script>

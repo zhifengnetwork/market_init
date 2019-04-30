@@ -2,7 +2,7 @@
     <div class='details'>
          <header>
          <headerView custom-title="商品详情" custom-fixed rightNone>
-				<div class="backBtn" slot="backBtn" @click="backBtn($router.go(-1))">
+				<div class="backBtn" slot="backBtn" @click="$router.go(-1)">
 					<img src="../../../static/img/public/backBtn.png" />
 				</div>
                 <div class="rightBtn" slot="rightBtn" @click="showTab">
@@ -38,7 +38,7 @@
                         </li>
                     </ul>
                </div>
-    </header>
+           </header>
     <!-- 商品详情 -->
         <div class="goods">
                 <van-swipe class="goods-swipe" :autoplay="0" indicator-color="#000">
@@ -469,10 +469,11 @@ export default {
         }
 }
 </script>
-<style lang="stylus" >
+<style lang="stylus" scoped>
 @import "../../../static/css/cart/cart.css";
     .details
        background #eee
+       overflow hidden
     .rightBtn>img
        height 50px
        width 50px
@@ -578,30 +579,22 @@ export default {
         .van-swipe-item  img
                margin 30px auto
                height 597px
-      .van-swipe__indicators 
-        background: rgba(0,0,0,.2);
-        border-radius: 1.25rem;
-        line-height: 1.2;
-        padding: 4px  8px;
-      .van-swipe__indicators  .van-swipe__indicator
-                                width 14px
-                                height 14px
-                                background-color #b0b0b0 
+
       .goods-name
-         background-color: #515150; 
-         color: #fff;
-         padding 20px 28px
-         line-height 45px
-         .van-cell__value--alone
-               color: #fff; 
-               font-size 35px
-               .goods-price
-                  color #d0021b
-                  .original
-                    text-decoration line-through
-                    color #b0b0b0
-                    font-size 30px
-                    margin-left 10px
+                background-color: #515150; 
+                color: #fff;
+                padding 20px 28px
+                line-height 45px
+                .van-cell__value--alone
+                    color: #fff; 
+                    font-size 35px
+                    .goods-price
+                        color #d0021b
+                        .original
+                            text-decoration line-through
+                            color #b0b0b0
+                            font-size 30px
+                            margin-left 10px
       .goods-express,.van-cell
          padding 20px 28px
          line-height 45px
