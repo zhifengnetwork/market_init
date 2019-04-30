@@ -7,9 +7,10 @@
 					<img src="static/img/public/backBtn.png" />
 				</div> -->
 			</headerView>
-
+			
 			<div class="scroll">
 				<div class="scroll-menu" ref="menuBox">
+					
 					<ul>
 						<li
 							v-for="(item,index) of resData"
@@ -32,8 +33,8 @@
 									<ul class="pro-items">
 										<router-link
 											tag="li"
-											to="/details"
 											v-for="(it,index) of item.children"
+											to="/details"
 											:key="index"
 										>
 										<div class="picture">
@@ -73,6 +74,7 @@
 				</div>
 			</div>
 		</div>
+		<!-- 底部导航组件 -->
 		<menuBar></menuBar>
 	</div>
 </template>
@@ -92,8 +94,10 @@
 				scrollY:0,
 				baseUrl:'http://www.zfwl.c3w.cc/upload/images/'
 	 		}
-	 	},
+		},
+		 
 	 	computed:{
+			// 当前索引值 
 	 		currentIndex(){
 	 			for(let i = 0;i < this.listHeight.length-1;i++){
 	 				let height1 = this.listHeight[i]
@@ -111,7 +115,7 @@
             backBtn:function(){
                 this.$router.go(-1);
 			},
-			// 初始化Better-Scroll
+			// 初始化Better-Scroll实例
 	 		initScroll(){
 				this.menuScroll = new BScroll(this.$refs.menuBox,{
 					click:true
@@ -124,12 +128,13 @@
 					this.scrollY = Math.abs(Math.round(pos.y))
 	 			})
 			 },
-	
+			// 根据索引点击跳至对应内容
 	 		handleClick(i){
 	 			let proList = this.$refs.proClassify
 				let el = proList[i]
 				this.proScroll.scrollToElement(el,300);
-	 		},
+			 },
+			// 获取内容高度 
 	 		getHeight(){
 				let proList = this.$refs.proClassify
 				let height = 0
@@ -145,7 +150,8 @@
 	 				this.listHeight.push(height)
 				 }
 	 		}
-	 	},
+		 },
+		// dom节点渲染完成后请求接口数据 
 	 	mounted(){
 	 		this.$axios.get("/api/goods/categoryList")
 	 		// this.axios.get("/api/classify.json")
@@ -162,6 +168,7 @@
 				
 	 		})
 		 },
+		// 注册组件 
 		components:{
 			headerView,
 			menuBar
