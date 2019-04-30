@@ -185,7 +185,7 @@ export default new Router({
 		},
 		//商品列表
 		{
-			path:'/goods/productLsit',
+			path:'/productLsit',
 			name: 'productLsit',
 			component:productLsit
 		}

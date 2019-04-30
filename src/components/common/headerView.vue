@@ -72,7 +72,7 @@
         right: .3rem;
         top: 80px
         width: 280px
-        z-index: 2;
+        z-index: 11;
        .ul-arr 
             background-color: #434343;
             -webkit-transform: rotate(45deg);
