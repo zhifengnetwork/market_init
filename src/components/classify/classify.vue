@@ -110,7 +110,8 @@
 			// 后退
             backBtn:function(){
                 this.$router.go(-1);
-            },
+			},
+			// 初始化Better-Scroll
 	 		initScroll(){
 				this.menuScroll = new BScroll(this.$refs.menuBox,{
 					click:true
