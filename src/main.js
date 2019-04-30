@@ -52,7 +52,7 @@ import '../static/css/font/iconfont.css'
 //引入axios库
 import axios from "axios";
 //注册组件
-Vue.prototype.axios = axios;
+Vue.prototype.$axios = axios;
 
 
 /* 设置为 false 以阻止 vue 在启动时生成生产提示。 */
