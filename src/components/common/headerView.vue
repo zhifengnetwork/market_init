@@ -22,8 +22,8 @@
     }
 </script>
 
-<style lang="stylus" scoped>
-.headerView 
+<style lang="stylus" >
+ .headerView 
     width 100%
     height 88px
     line-height 88px
@@ -57,6 +57,61 @@
         justify-content center
         height 100%
         align-items center
+    .rightBtn>img
+       height 50px
+       width 50px
+
+
+.homebuttom 
+        background-size: 100% 100%;
+        color: #fff;
+        height 355px
+        overflow: hidden;
+        padding-top: 17px;
+        position: absolute;
+        right: .3rem;
+        top: 80px
+        width: 280px
+        z-index: 2;
+       .ul-arr 
+            background-color: #434343;
+            -webkit-transform: rotate(45deg);
+            height: 42px
+            position: absolute;
+            right 30px
+            top: .1rem;
+            transform: rotate(45deg);
+            width: 42px
+        .homebuttom   ul 
+               border-radius: .25rem;
+               height: 338px
+               overflow: hidden;
+               padding: 1px 0;
+               width:100%
+               background-image: linear-gradient(#434343,#171717);
+        .homebuttom   ul   li
+                    float: left;
+                    height: 84px
+                    line-height: 84px
+                    overflow: hidden;
+                    padding-left:40px
+                    width: 100%;
+        ul   li   .text
+                            border-bottom: 1px solid #444;
+                            color: #fff;
+                            display: block;
+                            float: left;
+                            font-size: 30px
+                            height: 83px
+                            padding-left: 40px
+                            width: 190px
+                            text-align left
+       .homebuttom ul li .iconfont
+            display: block;
+            float: left;
+            height 40px
+            width 40px
+            margin-top 20px 
 </style>
 
 

@@ -167,7 +167,8 @@
 	 			})
 			 },
 	
-	 		handleClick(e,i){
+	 		handleClick(i){
+				//  console.log(1232)
 	 			let proList = this.$refs.proClassify
 				let el = proList[i]
 				this.proScroll.scrollToElement(el,300);
@@ -315,7 +316,8 @@
 									.commentNum
 										font-size 20px	
 										color #999999
-										
+					.pro-classify
+						  pointer-events: none!important								
 
 			
 		

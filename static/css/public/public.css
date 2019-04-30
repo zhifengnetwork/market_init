@@ -89,3 +89,26 @@ input[type=button], input[type=submit], input[type=file], button {
 *{
 	box-sizing: border-box;
 }
+
+
+/* /my/userinfo */
+.picker-toolbar,.mint-datetime-action{
+		 height:1rem;
+         line-height:1rem;
+}
+
+/* details */
+
+.van-swipe__indicators {
+	background: rgba(0,0,0,.2);
+	border-radius: 1.25rem;
+	line-height: 1.2;
+	padding: 4px  8px;
+}
+
+.van-swipe__indicators  .van-swipe__indicator{
+	width :8px;
+	height :8px;
+	background-color: #b0b0b0; 
+}
+						

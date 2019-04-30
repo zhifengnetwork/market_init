@@ -23,8 +23,9 @@
 						<div class="fav-info-list">
 							<p class="fav-pr">MADNESS REVERSIBLE ECWCS PARKA MODIFIED MADNESS REVERSIBLE ECWCS PARKA</p>
 							<p class="fav-ice">¥2299.00</p>
-							<p class="remove">删除</p>
+							<p class="remove" @click="tellUs"></p>
 						</div>
+						
 					</div>	
 					<!--商品为空时显示-->
 					<div class="null-box" style="width: 100%;display: none;">
@@ -52,11 +53,13 @@
 
 <script>
 	import HeaderView from '../../common/headerView.vue'
+	import { Dialog } from 'vant'
 	export default {
 		data(){
 	        return{
 				// 使用说明
 				arrows:false,
+				show: false,
 				tabr:[
 					{name:'收藏的商品'},{name:'收藏的品牌'}
 				],
@@ -76,7 +79,16 @@
 			tabrs(index){
 				this.indexx=index
 				this.arrows=false
-			}
+			},
+			tellUs() {
+                Dialog.confirm({
+                    message: '您确定要取消收藏吗？'
+                }).then(() => {
+					// on confirm
+                }).catch(() => {
+                    // on cancel
+                });
+            },
 		}
 	}
 </script>
@@ -140,14 +152,15 @@
 	    white-space: nowrap;
 	    line-height: 45px;
 	}
+	.fav-ice {
+		line-height: 65px;
+	}
 	.remove {
-		margin: 25px 0 0 395px;
-		width: 75px;
+		margin: 0 0 0 445px;
+		width: 50px;
 		height: 55px;
-		text-align: center;
-		line-height: 55px;
-		border: 1px solid #b0b0b0;
-		color: red;
+		background: url(../../../../static/img/my/remove.png) no-repeat;
+		background-size: 100% 100%;
 	}
 	.fav-null {
 		margin: 55px auto 35px;

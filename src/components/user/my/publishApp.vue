@@ -23,19 +23,36 @@
                     <div class="good">{{goods}}</div>
               </div>
               <div class="info-input">
-                  <textarea name="" id="" cols="30" rows="5" placeholder="宝贝满足你的期待吗? 说说你的使用心得，分享给想买的他们吧"></textarea>
+                  <textarea name="" id="" cols="30" rows="5" placeholder="宝贝满足你的期待吗? 说说你的使用心得，分享给想买的他们吧" maxlength="250"></textarea>
               </div>
               <!-- 上传图片 -->
               <div class="uploader">
-                    <div class="uploader-add" v-for="(item,index) in imgList" :key="index">
-                        <div class="closeIcon" v-if="isup==false" @click="closeImg(index)">
-                            <img src="../../../../static/img/user/appraise/close.png" alt="" class="close" >
+                    <div class="uploader-add" >
+                        <!-- 显示图片 -->
+                         <!-- <div class="hasPic" v-if="imgUrls.length>0" v-for="(item,index) in imgUrls">
+      <img class="seledPic" ref="picture" :src="item?item:require('../../static/Images/imagebj.jpg')" name="avatar" @click="bigImg(index)">
+      <img class="delect" src="../../static/Images/del.png" @click="delect(index)">
+    </div>   -->
+                        <div class="closeIcon" v-if="imgUrls.length>0" v-for="(item,index) in imgUrls">
+                            <img class="seledPic" :src="item?item:require('../../../../static/img/user/appraise/up.jpg')" name="avatar" @click="bigImg(index)">
+                            <img src="../../../../static/img/user/appraise/close.png" alt="" class="close"  @click="closeImg(index)">
                         </div>
-                        <img src="../../../../static/img/user/appraise/addimg.png" alt="" class="addImg" v-if="isup==true||index==index">
-                        <img :src="addImg" alt="" class="addI"   v-if="isup==false||indexx==index">
-                        <p class="add-img" v-if="isup||index==1">添加图片</p>
-                        <van-uploader :after-read="onRead" >
-                        </van-uploader>
+                        <!-- 浏览显示图片 -->
+                        <div class="imgMask" v-if="showBigImg" @click.stop="showBigImg=!showBigImg">
+                            <div class="showImg">
+                                <mt-swipe :auto="0" :show-indicators="false" @change="handleChange" :continuous="false" :defaultIndex="num">
+                                <mt-swipe-item v-for="(item,index) in imgUrls" :key="item.id">
+                                    <div class="num"  >{{index+1+'/'+imgUrls.length}}</div>
+                                    <img :src="imgUrls[index]" class="img"/>
+                                </mt-swipe-item>
+                                </mt-swipe>
+                            </div>
+                        </div>
+                        <div class="selPic" v-if="imgUrls.length<6"> 
+                            <img src="../../../../static/img/user/appraise/up.jpg" alt="" class="addI"  >
+                                <p class="add-img" >{{pictureNums}}</p>
+                            <input type="file" maxlength="" class="input-file" multiple="multiple" name="avatar" ref="avatarInput" @change="onRead($event)" accept="image/gif,image/jpeg,image/jpg,image/png">
+                        </div>
                     </div>
 
               </div>
@@ -55,29 +72,42 @@
 <script>
 // 公共头部
 import headerView from '../../common/headerView.vue'
+
+import {Swipe, SwipeItem} from 'mint-ui'
+import {MessageBox, Toast} from 'mint-ui'
+
 export default {
     data(){
         return{
          value: 3,
         
-         indexx:1,
-
-         imgList:[
-             {}
-         ],
-
-         isup:true,
-         
-         addImg:'',
-
          goods:'一般',
 
          checkedT:{
              checked:true,
              text:'你的评价能帮助其他小伙伴哟'
-         }
+         },
+
+         //上传图片
+            showBigImg: false,
+            
+            maxImages: 6,
+
+            leftImages: 0,
+
+            pictureNums: '添加图片',
+
+            imgUrls: [],   //循环上传图片
+
+            num: 0,
+
+            avatar: '',
+
+            file: '',
         }
-    }
+    },created () {
+    this.avatar = this.imgUrl
+     }
     ,components:{
         headerView
     },
@@ -99,13 +129,29 @@ export default {
                  this.goods="非常好"
              }
          },
-         onRead(file){
-            // this.indexx=index
-            this.imgList.push(1)
-            this.addImg=file.content
-            this.isup=false;
-            console.log(this.imgList)
+         //上传图片
+         onRead(e){
+                    if (e.target.files.length <= (this.maxImages - this.imgUrls.length)) {
+                    for (var i = 0; i < e.target.files.length; i++) {
+                    let file = e.target.files[i]
+                    this.file = file
+                    console.log(this.file)
+                    let reader = new FileReader()
+                    let that = this
+                    reader.readAsDataURL(file)
+                    reader.onload = function (e) {
+                        console.log(this.result)
+                        that.imgUrls.push(this.result)
+                    }
+                    }
+                    // 剩余张数
+                    this.leftImages = this.maxImages - (this.imgUrls.length + e.target.files.length)
+                    this.pictureNums = String(this.maxImages - (this.imgUrls.length + e.target.files.length)) + '/' + String(this.maxImages)
+                } else {
+                    Toast('只能选择' + (this.maxImages - this.imgUrls.length) + '张了')
+                }
         },
+
          anonymity(){
               this.checkedT.checked=!this.checkedT.checked
               if(this.checkedT.checked){
@@ -117,14 +163,21 @@ export default {
          },
          //删除照片
          closeImg(index){
-             console.log(this.imgList.length==1)
-             if(this.imgList.length==1){
-                   this.isup=true
-              }else{
-                  this.imgList.splice(index,1)
-              }
-              
-         }
+               this.imgUrls.splice(index, 1)
+                this.leftImages++
+                if (this.leftImages === this.maxImages) {
+                    this.pictureNums = '上传图片'
+                } else {
+                    this.pictureNums = String(this.leftImages) + '/' + String(this.maxImages)
+                }
+         },
+         handleChange (index) {
+            this.num = index
+            },
+            bigImg (index) {
+            this.showBigImg = true
+            this.num = index
+            }
     },
 }
 </script>
@@ -142,8 +195,8 @@ export default {
       
    .appraise-info .info-grade
       display flex
-      height 120px
-      line-height 125px
+      height 300px
+      line-height 300px
       padding 10px
       padding-bottom 20px
       justify-content space-around
@@ -156,10 +209,12 @@ export default {
     .info-grade .good
        color #666
        width 100px
+       line-height 270px
        text-align center
 
    .info-grade .agree-with .goods,.anonymity-add>img
-       height 60px
+       height 270px
+       width 200px
        vertical-align: middle;
        margin-bottom  6px
 
@@ -169,19 +224,17 @@ export default {
     .appraise-info .info-input      textarea
        width 100%
        border none
-       font-size 20px
+       font-size 30px
 
     .appraise-info .uploader
        padding 0  20px 20px 20px
        display flex
 
     .appraise-info .uploader .uploader-add
-       width 30%
-       height 200px
-       border 2px solid #c6c2c2
-       border-style dotted
-       position relative
-       margin-left 10px
+       width 100%
+       
+       display flex
+       flex-wrap wrap
          
     .uploader .uploader-add     .add-img
        position absolute
@@ -229,16 +282,72 @@ export default {
     .uploader .uploader-add .addI
           height 100%
           width 100%
+          margin  0 auto
           display: block;
+         
     .closeIcon
+        position relative
+        height 100%
+        z-index 100
+        width 30%
+        height 200px
+        border 2px solid #c6c2c2
+        border-style dotted
+        margin-left 15px
+        margin-top 20px
+    .closeIcon .close
          position absolute
-         right -20px
          top -20px
+         right -20px
          width 50px
          height 50px
-         z-index 100
-    .closeIcon>img
-         width 50px
-         height 50px
+         
+    .closeIcon   .seledPic
+         width 100%
+         height 100%
+
+    .selPic
+        position relative
+        height 100%
+        z-index 100
+        width 30%
+        height 200px
+        margin-left 15px
+        margin-top 20px
+        .input-file
+            position absolute
+            width: 100%
+            height: 100%
+            top 0
+            background: red;
+            opacity: 0;
+      .imgMask
+            position: absolute;
+            height: 100%;
+            width:100%;
+            top:0px;
+            left:0;
+            z-index: 101;
+            background:rgba(0,0,0,1);
+  
+  .num
+            padding-top: 10px;
+            color: white;
+            font-size: 50px
+            font-weight: bold;
+  .showImg
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            align-items: center;
+            left: 0px;
+            top:0;
+  
+  .img
+            object-fit: scale-down;
+            height: auto;
+            width: 100%;
+            height: 100%;
+  
 </style>
 

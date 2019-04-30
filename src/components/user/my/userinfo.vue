@@ -127,7 +127,7 @@ export default {
     },
 }
 </script>
-<style lang="stylus" scope>
+<style lang="stylus" scoped>
     .userinfo
         background #ffffff
 
@@ -199,12 +199,7 @@ export default {
         color: #000
     
     .right-arrow
-        top 2px
-    
-
-    .picker-toolbar,.mint-datetime-action
-         height 70px
-         line-height 70px  
+        top 2px  
 
     // 修改昵称
     .amend-name
