@@ -236,6 +236,23 @@
 				return count;
 			}
         },
+        mounted(){
+            // 处理留言框被键盘遮住
+            this.clientHeight = document.documentElement.clientHeight;
+            const that = this;
+             // 安卓手机键盘吊起挡住输入框
+            window.onresize = function() {
+              if(document.documentElement.clientHeight < that.clientHeight) {
+                // scrollVal为负值
+                let scrollVal = document.documentElement.clientHeight-that.clientHeight;
+                $(".content").css("marginTop",scrollVal);
+                $(".order-bill").hide();
+              }else {
+                $(".content").css("marginTop",0);
+                $(".order-bill").show();
+              }
+            }
+        },
         methods:{
             // 优惠券
             onChange(index) {
@@ -274,7 +291,6 @@
 			headerView
         }
         
-        
     }
 </script>
 
@@ -284,6 +300,7 @@
 .confirmOrder
     .content
         padding-top 88px
+        padding-bottom 98px
         .address
             display flex
             height 170px
@@ -374,7 +391,7 @@
                 box-sizing border-box
                 background-color #fff
                 .van-cell
-                    line-height 70px
+                    line-height 65px
                     padding 0
                     .van-cell__title
                         font-size 26px
@@ -438,7 +455,7 @@
             .msg
                 textarea
                     width 95%
-                    height 200px
+                    height 150px
                     border 2px solid #d1d1d1
                     margin 10px auto
                     display block
