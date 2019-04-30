@@ -11,10 +11,10 @@
 			<div class="scroll">
 				<div class="scroll-menu" ref="menuBox">
 					<ul>
-						<li :data-id="6"
+						<li
 							v-for="(item,index) of resData"
 							:key="index"
-							@click="handleClick($event,index)"
+							@click="handleClick(index)"
 							:class="{on:currentIndex === index }"
 							>{{item.cat_name}}</li>
 					</ul>
@@ -28,7 +28,6 @@
 							<div>
 								<!-- 热门种类 -->
 								<div v-for="item in items.children">
-									
 									<h3 class="title">{{item.cat_name}}</h3>
 									<ul class="pro-items">
 										<router-link
@@ -43,7 +42,6 @@
 											<p>{{it.cat_name}}</p>
 										</router-link>
 									</ul>
-
 								</div>
 
 								<!-- 热销商品 -->
@@ -70,47 +68,6 @@
 								</div>
 
 							</div>
-							
-							
-
-                            <!-- 热门种类 -->
-                            <!-- <h3 class="title">{{items.cat_name}}</h3> -->
-							<!-- <ul class="pro-items">
-								<router-link 
-									tag="li"
-									to="/Details"
-									v-for="(item,index) of items.children"
-									:key="index"
-								>
-									<div class="picture">
-										<img :src="item.img">
-									</div>
-									<p>{{item.cat_name}}</p>
-								</router-link>
-							</ul> -->
-
-                            <!-- 热销商品 -->
-                            <!-- <h3 class="title">{{items.hotSingle.title}}</h3>
-							<ul class="singleList">
-								<router-link 
-									tag="li"
-									to="/Details"
-									v-for="(item,index) of items.hotSingle.list"
-									:key="index"
-								>
-									<div class="img-wrap">
-										<img :src="item.imgUrl">
-									</div>
-									<div class="text">
-										<h3>{{item.proTit}}</h3>
-										<span class="sign">热卖</span>
-										<div class="line3">
-											<span class="price">¥{{item.price}}</span>
-											<span class="commentNum">评论{{item.commentNum}}条</span>
-										</div>
-									</div>
-								</router-link>
-							</ul> -->
 						</li>
 					</ul>
 				</div>
@@ -168,11 +125,9 @@
 			 },
 	
 	 		handleClick(i){
-				//  console.log(1232)
 	 			let proList = this.$refs.proClassify
 				let el = proList[i]
 				this.proScroll.scrollToElement(el,300);
-				console.log(e) 
 	 		},
 	 		getHeight(){
 				let proList = this.$refs.proClassify
@@ -196,12 +151,8 @@
 	 		.then((res)=>{
 				 if(res.status === 200){
 					let resData = res.data.data
-
-					// this.menuBar = resData
-					// this.goods = resData
 					this.resData = resData
 					console.log(this.resData)
-
 					this.$nextTick(()=>{
 						this.initScroll()
 						this.getHeight()
@@ -315,9 +266,7 @@
 										color #ff6600
 									.commentNum
 										font-size 20px	
-										color #999999
-					.pro-classify
-						  pointer-events: none!important								
+										color #999999							
 
 			
 		
