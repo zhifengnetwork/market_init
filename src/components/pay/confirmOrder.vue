@@ -8,40 +8,44 @@
 
         <div class="content">
             <!-- 收货地址 -->
-            <div class="address">
-                <div class="address-icon">
-                    <img src="/static/img/order/address-icon.png" />
+            <router-link to="/my/site">
+                <div class="address">
+                    <div class="address-icon">
+                        <img src="/static/img/order/address-icon.png" />
+                    </div>
+                    <div class="right">
+                        <div class="nameInfo">
+                            <span class="name">小辣鸡</span>
+                            <span class="phone">17875596666</span>
+                        </div>
+                        <div class="addressText">
+                            <p>广东省 广州市 白云区 嘉禾街道嘉禾彭西仁和仁和仁和串钱的二巷69号</p>
+                        </div>
+                    </div> 
+                    <div class="address-rightArrow iconfont">&#xe602;</div>
                 </div>
-                <div class="right">
-                    <div class="nameInfo">
-                        <span class="name">小辣鸡</span>
-                        <span class="phone">17875596666</span>
-                    </div>
-                    <div class="addressText">
-                        <p>广东省 广州市 白云区 嘉禾街道嘉禾彭西仁和仁和仁和串钱的二巷69号</p>
-                    </div>
-                </div> 
-                <div class="address-rightArrow iconfont">&#xe602;</div>
-            </div>
+            </router-link>
 
             <!-- 商品信息 -->
-            <div class="order-item" v-for="(item,index) in orderData" :key="index">
-                <div class="img-wrap">
-                    <img :src="item.img" />
+            <router-link to="/details">
+                <div class="order-item" v-for="(item,index) in orderData" :key="index">
+                    <div class="img-wrap">
+                        <img :src="item.img" />
+                    </div>
+                    <div class="text">
+                        <h3>{{item.goodsName}}</h3>
+                        <p>
+                            <span class="color">颜色:{{item.goodsColor}}</span>
+                            <span class="size">尺码:{{item.goodsSize}}</span>
+                        </p>
+                    </div>
+                    <div class="price-wrap">
+                        <p class="price">{{item.price | toFix | rmb}}</p>
+                        <p class="sale-price">{{item.salePrice | toFix | rmb}}</p>
+                        <p class="count">x{{item.goodsNum}}</p>
+                    </div>
                 </div>
-                <div class="text">
-                    <h3>{{item.goodsName}}</h3>
-                    <p>
-                        <span class="color">颜色:{{item.goodsColor}}</span>
-                        <span class="size">尺码:{{item.goodsSize}}</span>
-                    </p>
-                </div>
-                <div class="price-wrap">
-                    <p class="price">{{item.price | toFix | rmb}}</p>
-                    <p class="sale-price">{{item.salePrice | toFix | rmb}}</p>
-                    <p class="count">x{{item.goodsNum}}</p>
-                </div>
-            </div>
+            </router-link>
             <!-- <div class="order-item">
                 <div class="img-wrap">
                     <img src="/static/img/cart/0003.jpg" />
