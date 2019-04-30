@@ -355,7 +355,7 @@ body {
 }
 /*兄弟元素=>最后一个*/
 .loginPublicTermU:last-child {
-	/*border-bottom: none;*/
+	border-bottom: none;
 }
 /*左*/
 .loginPTLeftU {

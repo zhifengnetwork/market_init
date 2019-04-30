@@ -98,45 +98,23 @@
                         <div>
 
                        
-                     <div class="good-info " data-good-id="" data-id="" data-bp-id="">
+                     <div class="good-info "  v-for="(item,index) in proList" :key="index" :data-good-id="item.pid" :data-id="item.cat_id" :data-bp-id="item.goods_name">
                             <div class="tag-container clearfloat">
                             </div>
                             <div class="good-detail-img">
-                                <a class="good-thumb" href="//m.yohobuy.com/product/52053768.html" title="STORE by NIGO®|男|HUMAN MADE 多袋军事单肩包">
-                                        <img class="lazy" data-original="//img12.static.yhbimg.com/goodsimg/2019/04/02/09/02d2c3373a4d198396826fc2572c8366a4.jpg?imageMogr2/thumbnail/235x314/position/center/quality/60/format/webp" alt="STORE by NIGO®|男|HUMAN MADE 多袋军事单肩包" src="//img12.static.yhbimg.com/goodsimg/2019/04/02/09/02d2c3373a4d198396826fc2572c8366a4.jpg?imageMogr2/thumbnail/235x314/position/center/quality/60/format/webp" style="display: block;">
-                                </a>
+                                <router-link class="good-thumb" :to="'/details?goods_id='+item.goods_id" :title="item.desc">
+                                        <img class="lazy"  :alt="item.goods_name" :src="baseUrl+item.img" style="display: block;">
+                                </router-link>
                                 <div class="similar-c">
                                 <div class="bg"></div>
                                 <a href="//m.yohobuy.com/product/similar?skn=52053768">找相似</a>
                             </div>            </div>
                                         <div class="good-detail-text">
                                 <div class="name">
-                                    <a href="//m.yohobuy.com/product/52053768.html" title="STORE by NIGO®|男|HUMAN MADE 多袋军事单肩包">HUMAN MADE 多袋军事单肩包</a>
+                                    <router-link class="good-thumb" :to="'/details?goods_id='+item.goods_id" :title="item.desc">{{item.goods_name}}</router-link>
                                 </div>
                                 <div class="price">
-                                        <span class="sale-price no-price">¥989.00</span>
-                                </div>
-                                <a class="similar-btn iconfont">&#xe60b;</a>
-                            </div>
-                    </div>
-                     <div class="good-info " data-good-id="" data-id="" data-bp-id="">
-                            <div class="tag-container clearfloat">
-                                <p class="good-tag new-tag">NEW</p>
-                            </div>
-                            <div class="good-detail-img">
-                                <a class="good-thumb" href="//m.yohobuy.com/product/52053768.html" title="STORE by NIGO®|男|HUMAN MADE 多袋军事单肩包">
-                                        <img class="lazy" data-original="//img12.static.yhbimg.com/goodsimg/2019/04/02/09/02d2c3373a4d198396826fc2572c8366a4.jpg?imageMogr2/thumbnail/235x314/position/center/quality/60/format/webp" alt="STORE by NIGO®|男|HUMAN MADE 多袋军事单肩包" src="//img12.static.yhbimg.com/goodsimg/2019/04/02/09/02d2c3373a4d198396826fc2572c8366a4.jpg?imageMogr2/thumbnail/235x314/position/center/quality/60/format/webp" style="display: block;">
-                                </a>
-                                <div class="similar-c">
-                                <div class="bg"></div>
-                                <a href="//m.yohobuy.com/product/similar?skn=52053768">找相似</a>
-                            </div>            </div>
-                                        <div class="good-detail-text">
-                                <div class="name">
-                                    <a href="//m.yohobuy.com/product/52053768.html" title="STORE by NIGO®|男|HUMAN MADE 多袋军事单肩包">HUMAN MADE 多袋军事单肩包</a>
-                                </div>
-                                <div class="price">
-                                        <span class="sale-price no-price">¥989.00</span>
+                                        <span class="sale-price no-price">¥{{item.price}}</span>
                                 </div>
                                 <a class="similar-btn iconfont">&#xe60b;</a>
                             </div>
@@ -154,7 +132,7 @@
                                     <ul  class="sub-classify" data-type="gender">
                                         <li class="sub-item" v-for="(items,index) in item.classify" :key="index" :class="{chosed:items.data==classifyIndex}" @click="classifyI(items.data,items.id)">
                                             {{items.name}}
-                                            <i class="iconfont chosed-icon"> &#xe6ba; </i>
+                                            <i class="iconfont chosed-icon">&#xe6ba;</i>
                                         </li>
                                     </ul>
                                 </li>
@@ -171,6 +149,8 @@ import headerView from '../../common/headerView'
 export default {
     data(){
         return{
+
+            cat_id:this.$route.query.cat_id,
           //头部显示导航
              isHide:true,
 
@@ -188,9 +168,12 @@ export default {
           classifyId:1,
 
           //分类id
-          cat_id:12,
+        //   cat_id:12,
           sort:'ASC',
           page:2,
+        //分类列表
+          proList:[],
+          baseUrl:'http://www.zfwl.c3w.cc/upload/images/',
 
           
 
@@ -257,42 +240,93 @@ export default {
         },
         setlocation(item){
             this.index=item
+
             if(item=='default'){//如果是默认
+            
                 this.drop=!this.drop
+
             }else{
+
                 this.drop=true  
             }
+            
             if(item=="price"){ //如果是价格
-                 this.isCur=!this.isCur
+
+            this.isCur=!this.isCur
+
+            this.getGoodsListPirce()//发送请求
+
             }else{
+
                  this.isCur=false  
             }
+
             if(item=="filter"){
+
                 this.screen=!this.screen
+
             }else{
+
                 this.screen=true
+
             }
            
         },
+
         setloca(item){
             this.indexx=item.data  //选中
             this.list[0].name=item.text  //改变tartext
             this.drop=!this.drop 
+            console.log(item)
+            if(item.name=='折扣从高到低'){
+                this.isCur=true
+                this.getGoodsListPirce()//发送请求
+            }else if(item.name=='折扣从低到高'){
+                this.isCur=false
+                this.getGoodsListPirce()//发送请求
+            }
+            
         },
+
         //筛选左边选中
         classifyNa(name){
           this.classifyName=name
         },
+
         //筛选右边选中
         classifyI(i,s){
           this.classifyIndex=i
           this.classifyId=s
+        },
+
+        getGoodsListPirce(){
+         if(this.isCur){  //升序
+                    var param = {
+                            // 请求时传点击的价格区间数据给后台
+                            sort:this.sort="ASC" // 点击的价格区间
         }
+        }else if(!this.isCur){
+                    var param = {
+                            // 请求时传点击的价格区间数据给后台
+                            sort:this.sort="DESC" // 点击的价格区间
+        }
+        
+        }
+        console.log(param.sort)
+       var url="api/goods/category?sort="+param.sort+'&cat_id='+this.cat_id
+       this.$axios.get(url).then((res)=>{
+           console.log(res.data)
+       })
     },
+    },
+
     mounted(){
+        console.log(this.cat_id)
              var url = "api/goods/category?cat_id="+this.cat_id
                 this.$axios.get(url).then((res)=>{
-                    console.log(res.data)
+                    console.log(res.data.data.cate_list)
+                    this.proList=res.data.data.goods_list
+                    console.log(res.data.data)
                 })
     }
 }

@@ -7,11 +7,12 @@
 					<img src="static/img/public/backBtn.png" />
 				</div> -->
 			</headerView>
-
+			
 			<div class="scroll">
 				<div class="scroll-menu" ref="menuBox">
+					
 					<ul>
-						<li 
+						<li
 							v-for="(item,index) of resData"
 							:key="index"
 							@click="handleClick(index)"
@@ -28,13 +29,12 @@
 							<div>
 								<!-- 热门种类 -->
 								<div v-for="item in items.children">
-									
 									<h3 class="title">{{item.cat_name}}</h3>
 									<ul class="pro-items">
 										<router-link
 											tag="li"
-											to="/details"
 											v-for="(it,index) of item.children"
+											:to="'/productLsit?cat_id='+it.cat_id"
 											:key="index"
 										>
 										<div class="picture">
@@ -43,7 +43,6 @@
 											<p>{{it.cat_name}}</p>
 										</router-link>
 									</ul>
-
 								</div>
 
 								<!-- 热销商品 -->
@@ -52,13 +51,13 @@
 									<ul class="singleList">
 										<router-link 
 											tag="li"
-											to="/details"
+											:to="'/details?cat_id=' + item.cat_id"
 										>
 											<div class="img-wrap">
 												<img :src="baseUrl + item.img">
 											</div>
 											<div class="text">
-												<h3>{{item.attr_name}}</h3>
+												<h3>{{item.goods_name}}</h3>
 												<span class="sign">热卖</span>
 												<div class="line3">
 													<span class="price">¥{{item.price}}</span>
@@ -70,52 +69,12 @@
 								</div>
 
 							</div>
-							
-							
-
-                            <!-- 热门种类 -->
-                            <!-- <h3 class="title">{{items.cat_name}}</h3> -->
-							<!-- <ul class="pro-items">
-								<router-link 
-									tag="li"
-									to="/Details"
-									v-for="(item,index) of items.children"
-									:key="index"
-								>
-									<div class="picture">
-										<img :src="item.img">
-									</div>
-									<p>{{item.cat_name}}</p>
-								</router-link>
-							</ul> -->
-
-                            <!-- 热销商品 -->
-                            <!-- <h3 class="title">{{items.hotSingle.title}}</h3>
-							<ul class="singleList">
-								<router-link 
-									tag="li"
-									to="/Details"
-									v-for="(item,index) of items.hotSingle.list"
-									:key="index"
-								>
-									<div class="img-wrap">
-										<img :src="item.imgUrl">
-									</div>
-									<div class="text">
-										<h3>{{item.proTit}}</h3>
-										<span class="sign">热卖</span>
-										<div class="line3">
-											<span class="price">¥{{item.price}}</span>
-											<span class="commentNum">评论{{item.commentNum}}条</span>
-										</div>
-									</div>
-								</router-link>
-							</ul> -->
 						</li>
 					</ul>
 				</div>
 			</div>
 		</div>
+		<!-- 底部导航组件 -->
 		<menuBar></menuBar>
 	</div>
 </template>
@@ -135,8 +94,10 @@
 				scrollY:0,
 				baseUrl:'http://www.zfwl.c3w.cc/upload/images/'
 	 		}
-	 	},
+		},
+		 
 	 	computed:{
+			// 当前索引值 
 	 		currentIndex(){
 	 			for(let i = 0;i < this.listHeight.length-1;i++){
 	 				let height1 = this.listHeight[i]
@@ -153,7 +114,8 @@
 			// 后退
             backBtn:function(){
                 this.$router.go(-1);
-            },
+			},
+			// 初始化Better-Scroll实例
 	 		initScroll(){
 				this.menuScroll = new BScroll(this.$refs.menuBox,{
 					click:true
@@ -166,13 +128,13 @@
 					this.scrollY = Math.abs(Math.round(pos.y))
 	 			})
 			 },
-	
+			// 根据索引点击跳至对应内容
 	 		handleClick(i){
-				//  console.log(1232)
 	 			let proList = this.$refs.proClassify
 				let el = proList[i]
-	 			this.proScroll.scrollToElement(el,300);
-	 		},
+				this.proScroll.scrollToElement(el,300);
+			 },
+			// 获取内容高度 
 	 		getHeight(){
 				let proList = this.$refs.proClassify
 				let height = 0
@@ -188,19 +150,16 @@
 	 				this.listHeight.push(height)
 				 }
 	 		}
-	 	},
+		 },
+		// dom节点渲染完成后请求接口数据 
 	 	mounted(){
 	 		this.$axios.get("/api/goods/categoryList")
 	 		// this.axios.get("/api/classify.json")
 	 		.then((res)=>{
 				 if(res.status === 200){
 					let resData = res.data.data
-
-					// this.menuBar = resData
-					// this.goods = resData
 					this.resData = resData
 					console.log(this.resData)
-
 					this.$nextTick(()=>{
 						this.initScroll()
 						this.getHeight()
@@ -209,6 +168,7 @@
 				
 	 		})
 		 },
+		// 注册组件 
 		components:{
 			headerView,
 			menuBar
@@ -255,13 +215,11 @@
 								width 33%
 								height 274px
 								margin 10px 0
-								margin-right 5px
 								.picture
 									width 100%;
 									height 215px;
 									overflow hidden
 									position relative
-									// border 1px solid #ccc
 									img
 										width 100%
 										position absolute
@@ -316,9 +274,7 @@
 										color #ff6600
 									.commentNum
 										font-size 20px	
-										color #999999
-					.pro-classify
-						  pointer-events: none!important								
+										color #999999							
 
 			
 		

@@ -91,7 +91,7 @@ export default new Router({
 		{
 			path:'/home',
 			name: 'home',
-			component:home
+			component: (resolve) => require(['@/components/home/home'],resolve)
 		},
 		// 分类
 		{
