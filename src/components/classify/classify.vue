@@ -26,54 +26,52 @@
 							v-for="(items,index) of resData"
 							:key="index"
 							>	
-							<div>
-								<!-- 热门种类 -->
-								<div v-for="item in items.children">
-									<h3 class="title">{{item.cat_name}}</h3>
-									<ul class="pro-items">
-										<router-link
-											tag="li"
-											v-for="(it,index) of item.children"
-											:to="'/productLsit?cat_id='+it.cat_id"
-											:key="index"
-										>
-										<div class="picture">
-												<img :src="baseUrl + it.img">
-											</div>
-											<p>{{it.cat_name}}</p>
-										</router-link>
-									</ul>
-								</div>
+							<!-- 热门种类 -->
+							<div v-for="item in items.children">
+								<h3 class="title">{{item.cat_name}}</h3>
+								<ul class="pro-items">
+									<router-link
+										tag="li"
+										v-for="(it,index) of item.children"
+										to="/details"
+										:key="index"
+									>
+									<div class="picture">
+											<img :src="baseUrl + it.img">
+										</div>
+										<p>{{it.cat_name}}</p>
+									</router-link>
+								</ul>
+							</div>
 
-								<!-- 热销商品 -->
-								<div v-for="item in items.goods">
-									<h3 class="title">热销商品</h3>
-									<ul class="singleList">
-										<router-link 
-											tag="li"
-											:to="'/details?cat_id=' + item.cat_id"
-										>
-											<div class="img-wrap">
-												<img :src="baseUrl + item.img">
+							<!-- 热销商品 -->
+							<div v-for="item in items.goods">
+								<h3 class="title">热销商品</h3>
+								<ul class="singleList">
+									<router-link 
+										tag="li"
+										to="/details"
+									>
+										<div class="img-wrap">
+											<img :src="baseUrl + item.img">
+										</div>
+										<div class="text">
+											<h3>{{item.goods_name}}</h3>
+											<span class="sign">{{item.attr_name[0]}}</span>
+											<div class="line3">
+												<span class="price">¥{{item.price}}</span>
+												<span class="commentNum">评论{{item.comment}}条</span>
 											</div>
-											<div class="text">
-												<h3>{{item.goods_name}}</h3>
-												<span class="sign">热卖</span>
-												<div class="line3">
-													<span class="price">¥{{item.price}}</span>
-													<span class="commentNum">评论{{item.comment}}条</span>
-												</div>
-											</div>
-										</router-link>
-									</ul>
-								</div>
-
+										</div>
+									</router-link>
+								</ul>
 							</div>
 						</li>
 					</ul>
 				</div>
 			</div>
 		</div>
+		
 		<!-- 底部导航组件 -->
 		<menuBar></menuBar>
 	</div>
@@ -203,6 +201,7 @@
 				height calc(100vh - 100px)
 				padding 0 20px
 				.pro
+					padding-bottom 100px
 					.pro-classify
 						.title
 							line-height 100px
