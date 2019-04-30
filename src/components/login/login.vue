@@ -348,14 +348,13 @@ body {
 	padding-top:15px;
 	width: 690px;
 	height: 96px;
-	/* line-height: 96px; */
 	align-items: center;
 	font-size: 30px;
 	border-bottom: 2px solid #dcdcdc;
 }
 /*兄弟元素=>最后一个*/
 .loginPublicTermU:last-child {
-	/*border-bottom: none;*/
+	border-bottom: none;
 }
 /*左*/
 .loginPTLeftU {
@@ -371,7 +370,8 @@ body {
 .loginPTRightU {
 	float: left;
 	width: 549px;
-	line-height: 75px;
+	line-height: 40px;
+	padding: 17px 0;
 }
 /*input*/
 .loginPTRInput {
@@ -410,8 +410,8 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 	outline: none;
 	border: none;
 	width: 300px;
-	height: 75px;
-	line-height: 75px;
+	height: 40;
+	line-height: 40px;
 	font-size: 30px;
 	color: #666;
 	letter-spacing: .01rem;
