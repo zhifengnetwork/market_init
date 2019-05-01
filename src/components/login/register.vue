@@ -287,6 +287,7 @@
 		float: left;
 		width: 511px;
 		height: 67px;
+		line-height: 67px;
 	}
 	/*input*/
 	
@@ -294,7 +295,8 @@
 		outline: none;
 		border: none;
 		width: 500px;
-		height: 67px;
+		/* height: 67px; */
+		height: 40px;
 		font-size: 30px;
 		color: #666;
 		letter-spacing: 1px;

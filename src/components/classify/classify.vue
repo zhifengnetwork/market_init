@@ -1,91 +1,101 @@
 <template>
 	<div class="Classify">
 		<div class="container">
-			 <!-- 头部组件 -->
+			<!-- 头部组件 -->
 			<headerView custom-title="分类" custom-fixed rightNone>
-				<div class="backBtn" slot="backBtn" @click="backBtn">
+				<!-- <div class="backBtn" slot="backBtn" @click="$router.go(-1)">
 					<img src="static/img/public/backBtn.png" />
-				</div>
+				</div> -->
 			</headerView>
-
+			
 			<div class="scroll">
 				<div class="scroll-menu" ref="menuBox">
+					
 					<ul>
-						<li 
-							v-for="(item,index) of menuBar"
+						<li
+							v-for="(item,index) of resData"
 							:key="index"
 							@click="handleClick(index)"
 							:class="{on:currentIndex === index }"
-							>{{item}}</li>
+							>{{item.cat_name}}</li>
 					</ul>
 				</div>
 				<div class="scroll-prolist" ref="proBox">
 					<ul class="pro">
 						<li class="pro-classify" ref="proClassify"
-							v-for="(items,index) of goods"
+							v-for="(items,index) of resData"
 							:key="index"
-							>
-                            <!-- 热门种类 -->
-                            <h3 class="title">{{items.hotCategory.title}}</h3>
-							<ul class="pro-items">
-								<router-link 
-									tag="li"
-									to="/Details"
-									v-for="(item,index) of items.hotCategory.list"
-									:key="index"
-								>
+							>	
+							<!-- 热门种类 -->
+							<div v-for="item in items.children">
+								<h3 class="title">{{item.cat_name}}</h3>
+								<ul class="pro-items">
+									<router-link
+										tag="li"
+										v-for="(it,index) of item.children"
+										to="/details"
+										:key="index"
+									>
 									<div class="picture">
-										<img :src="item.imgUrl">
-									</div>
-									<p>{{item.name}}</p>
-								</router-link>
-							</ul>
-
-                            <!-- 热销商品 -->
-                            <h3 class="title">{{items.hotSingle.title}}</h3>
-							<ul class="singleList">
-								<router-link 
-									tag="li"
-									to="/Details"
-									v-for="(item,index) of items.hotSingle.list"
-									:key="index"
-								>
-									<div class="img-wrap">
-										<img :src="item.imgUrl">
-									</div>
-									<div class="text">
-										<h3>{{item.proTit}}</h3>
-										<span class="sign">热卖</span>
-										<div class="line3">
-											<span class="price">¥{{item.price}}</span>
-											<span class="commentNum">评论{{item.commentNum}}条</span>
+											<img :src="baseUrl + it.img">
 										</div>
-									</div>
-								</router-link>
-							</ul>
+										<p>{{it.cat_name}}</p>
+									</router-link>
+								</ul>
+							</div>
+
+							<!-- 热销商品 -->
+							<div v-for="item in items.goods">
+								<h3 class="title">热销商品</h3>
+								<ul class="singleList">
+									<router-link 
+										tag="li"
+										to="/details"
+									>
+										<div class="img-wrap">
+											<img :src="baseUrl + item.img">
+										</div>
+										<div class="text">
+											<h3>{{item.goods_name}}</h3>
+											<span class="sign">{{item.attr_name[0]}}</span>
+											<div class="line3">
+												<span class="price">¥{{item.price}}</span>
+												<span class="commentNum">评论{{item.comment}}条</span>
+											</div>
+										</div>
+									</router-link>
+								</ul>
+							</div>
 						</li>
 					</ul>
 				</div>
 			</div>
 		</div>
-		<!-- <MenuBar></MenuBar> -->
+		
+		<!-- 底部导航组件 -->
+		<menuBar></menuBar>
 	</div>
 </template>
 
 <script>
 	import BScroll from 'better-scroll'
 	import headerView from '../common/headerView'
+	import menuBar from '../common/menuBar.vue'
 	export default {
 	 	name:"Classify",
 	 	data(){
 	 		return{
 	 			menuBar:[],
-	 			goods:[],
+				goods:[],
+				resData:[],
 	 			listHeight:[],
-				scrollY:0
+				scrollY:0,
+				baseUrl:'http://www.zfwl.c3w.cc/upload/images/'
 	 		}
-	 	},
+		},
+		 
 	 	computed:{
+			// 当前索引值 
 	 		currentIndex(){
 	 			for(let i = 0;i < this.listHeight.length-1;i++){
 	 				let height1 = this.listHeight[i]
@@ -102,24 +112,27 @@
 			// 后退
             backBtn:function(){
                 this.$router.go(-1);
-            },
+			},
+			// 初始化Better-Scroll实例
 	 		initScroll(){
 				this.menuScroll = new BScroll(this.$refs.menuBox,{
 					click:true
 				})
 	 			this.proScroll = new BScroll(this.$refs.proBox,{
+					click:true,
 	 				probeType : 3
 	 			})
 	 			this.proScroll.on('scroll',(pos)=>{
 					this.scrollY = Math.abs(Math.round(pos.y))
 	 			})
 			 },
-	
+			// 根据索引点击跳至对应内容
 	 		handleClick(i){
 	 			let proList = this.$refs.proClassify
 				let el = proList[i]
-	 			this.proScroll.scrollToElement(el,300);
-	 		},
+				this.proScroll.scrollToElement(el,300);
+			 },
+			// 获取内容高度 
 	 		getHeight(){
 				let proList = this.$refs.proClassify
 				let height = 0
@@ -135,21 +148,28 @@
 	 				this.listHeight.push(height)
 				 }
 	 		}
-	 	},
+		 },
+		// dom节点渲染完成后请求接口数据 
 	 	mounted(){
-	 		this.axios.get("/api/classify.json")
+	 		this.$axios.get("/api/goods/categoryList")
+	 		// this.axios.get("/api/classify.json")
 	 		.then((res)=>{
-	 			let resData = res.data
-	 			this.menuBar = resData.menuBar
-                this.goods = resData.goods
-	 			this.$nextTick(()=>{
-					 this.initScroll()
-					 this.getHeight()
-				})
+				 if(res.status === 200){
+					let resData = res.data.data
+					this.resData = resData
+					console.log(this.resData)
+					this.$nextTick(()=>{
+						this.initScroll()
+						this.getHeight()
+					})
+				 }
+				
 	 		})
 		 },
+		// 注册组件 
 		components:{
-            headerView
+			headerView,
+			menuBar
         }
 		 
 	}
@@ -175,12 +195,13 @@
 						font-size 28px
 					li.on
 						color #ff9900
-						background url("~static/img/classify/menu-bg.jpg") no-repeat
+						background url("~/static/img/classify/menu-bg.jpg") no-repeat
 			.scroll-prolist
 				width 516px	
 				height calc(100vh - 100px)
 				padding 0 20px
 				.pro
+					padding-bottom 100px
 					.pro-classify
 						.title
 							line-height 100px
@@ -188,7 +209,7 @@
 						.pro-items
 							display flex
 							flex-wrap wrap
-							justify-content space-between
+							// justify-content space-between
 							li
 								width 33%
 								height 274px
@@ -211,20 +232,25 @@
 									line-height 60px
 									font-size 26px
 									color #000000 
+									overflow: hidden;/*超出部分隐藏*/
+									white-space: nowrap;/*不换行*/
+									text-overflow:ellipsis;/*超出部分文字以...显示*/
 						.singleList
 							li
 								display flex
 								align-items center
 								border-bottom 1px solid #eeeeee
+								padding 10px 0
 								.img-wrap
 									width 160px
 									height 100%
+									margin-right 10px
 									img 
-										width 100%
+										width 99%
 								.text
 									flex 1
 									h3
-										font-size 22px
+										font-size 26px
 										color #000
 										font-weight normal
 										line-height 32px
@@ -247,8 +273,7 @@
 										color #ff6600
 									.commentNum
 										font-size 20px	
-										color #999999
-										
+										color #999999							
 
 			
 		

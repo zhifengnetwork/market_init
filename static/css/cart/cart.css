@@ -27,7 +27,7 @@ a {
     margin-bottom: 1.2rem;
     overflow-x: hidden;
     overflow-y: hidden;
-    padding-top: .88rem;
+    padding-top: 1.173333rem;
 }
 
 .shopping-cart-page .cart-nav.more {
@@ -565,7 +565,7 @@ img {
     -webkit-box-flex: 1;
     -webkit-flex: 1;
     flex: 1;
-    padding-top: .11rem;
+    /* padding-top: .11rem; */
 }
 
 .cart-footer .opts .total .price {
@@ -722,6 +722,7 @@ img {
 }
 
 /* 选择 */
+
 .chose-panel {
     background: rgba(0,0,0,.3);
     bottom: 0;
@@ -741,6 +742,7 @@ img {
     padding-bottom: 1.17rem;
     position: absolute;
     right: 0;
+    transition: all 5s;
 }
 
 .chose-panel .close {
@@ -793,7 +795,7 @@ img {
 
 .chose-panel .text-info .sale-price {
     color: #000;
-    font-size: .33rem;
+    font-size: .4rem;
     margin-right: .18rem;
 }
 
@@ -886,10 +888,10 @@ img {
     border: none;
     color: #fff;
     font-size: .37rem;
-    height: .94rem;
+    height: 1.2rem;
     width: 100%;
     text-align: center;
-    line-height: .94rem;
+    line-height: 1.2rem;
 }
 
 
