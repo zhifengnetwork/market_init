@@ -47,7 +47,8 @@ import { Cell, CellGroup } from 'vant';
 Vue.use(Cell).use(CellGroup);
 
 //css
-import '../static/css/font/iconfont.css'
+// import '../static/css/font/iconfont.css'
+// import '../static/css/font/iconfont.css'
 
 Vue.component(Spinner.name, Spinner);
 
