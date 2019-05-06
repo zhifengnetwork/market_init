@@ -6,9 +6,10 @@ import router from './router'
 import 'mint-ui/lib/style.css'
 
 import 'lib-flexible/flexible.js' 
+
 import { Spinner } from 'mint-ui';
 
-// vant
+// 导入vant所有组件
 import Vant from 'vant';
 import 'vant/lib/index.css';
 Vue.use(Vant);
@@ -23,6 +24,7 @@ import {
   GoodsActionBigBtn,
   GoodsActionMiniBtn
 } from 'vant';
+
 Vue
   .use(GoodsAction)
   .use(GoodsActionBigBtn)
@@ -32,6 +34,7 @@ Vue.component(Spinner.name, Spinner);
 // 优惠券
 import { CouponCell, CouponList } from 'vant';
 Vue.use(CouponCell).use(CouponList);
+
 //mint 时间
 import { DatetimePicker } from 'mint-ui';
 Vue.component(DatetimePicker.name, DatetimePicker);
@@ -39,6 +42,7 @@ Vue.component(DatetimePicker.name, DatetimePicker);
 import { Swipe, SwipeItem } from 'mint-ui';
 Vue.component(Swipe.name, Swipe);
 Vue.component(SwipeItem.name, SwipeItem);
+
 // 单选框 
 import { RadioGroup, Radio } from 'vant';
 Vue.use(RadioGroup);
@@ -46,9 +50,9 @@ Vue.use(Radio);
 import { Cell, CellGroup } from 'vant';
 Vue.use(Cell).use(CellGroup);
 
-//css
-// import '../static/css/font/iconfont.css'
-// import '../static/css/font/iconfont.css'
+// Toast 轻提示
+import { Toast } from 'vant';
+Vue.use(Toast);
 
 Vue.component(Spinner.name, Spinner);
 
@@ -84,6 +88,7 @@ Vue.prototype.timeCountdown = function (obj){
 
 //引入axios库
 import axios from "axios";
+
 //注册组件
 Vue.prototype.$axios = axios;
 

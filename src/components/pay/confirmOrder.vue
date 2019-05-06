@@ -63,9 +63,22 @@
                     <p class="count">x1</p>
                 </div>
             </div> -->
+
+             <!-- 订单留言 -->
+             <div class="dispatch-row" >
+                <van-cell-group>
+                    <van-field
+                        label="订单备注"
+                        type="textarea"
+                        placeholder="选填，请先和商家协商一致"
+                        rows="1"
+                        autosize
+                    />
+                </van-cell-group>
+             </div>
+
             <div class="dispatch-row" >
-                <div class="title">
-                    <!-- 优惠券单元格 -->
+                <!-- 优惠券单元格 -->
                 <van-coupon-cell
                 :coupons="coupons"
                 :chosen-coupon="chosenCoupon"
@@ -82,64 +95,58 @@
                     @exchange="onExchange"
                 />
                 </van-popup>
-                </div>
             </div>
 
             <!-- 支付方式 -->
-            <div class="dispatch-row" >
-                <div class="title" @click = "toggleDrop($event)">
-                    <div class="fl">支付方式</div>
-                    <div class="fr">
-                        <span class="wayText">{{this.payWay}}</span>
-                        <span class="iconfont">&#xe602;</span>
-                    </div>
-                </div>
-                <div class="list">
-                       <van-radio-group v-model="payWay" v-show="isDrop">
-                        <van-cell-group>
-                            <van-cell title="在线支付" clickable   @click="payWay = '在线支付'" >
-                            <van-radio name="在线支付"   @click="payWay = '在线支付'" />
-                            </van-cell>
-                            <van-cell title="货到付款" clickable   @click="payWay = '货到付款'" >
-                            <van-radio name="货到付款" @click="payWay = '货到付款'" />
-                            </van-cell>
-                        </van-cell-group>
-                    </van-radio-group>    
-                </div>  
+            <div class="dispatch-row">
+                <van-cell-group class="goods-cell-group">
+                    <van-cell is-link  @click="showPromotion" >
+                        <template slot="title">
+                            <span style="margin-right: 10px;">支付方式</span>
+                            <span class="wayText" style="float:right" ref="payWay">{{this.payWay}}</span>
+                        </template>
+                    </van-cell>
+                    <!-- 上拉菜单，选择支付方式 -->
+                    <van-actionsheet v-model="show" title="支持以下支付方式" class="select-wrap">
+                        <van-radio-group v-model="payWay">
+                            <van-cell-group>
+                                <van-cell title="在线支付" clickable  @click="selectWay" >
+                                    <van-radio name="在线支付"/>
+                                </van-cell>
+                                <van-cell title="货到付款" clickable  @click="selectWay" >
+                                    <van-radio name="货到付款"/>
+                                </van-cell>
+                            </van-cell-group>    
+                        </van-radio-group>
+                    </van-actionsheet>
+                </van-cell-group>
             </div>
 
             <!-- 配送方式 -->
-            <div class="dispatch-row" >
-                <div class="title" @click = "toggleDrop2($event)">
-                    <div class="fl">配送方式</div>
-                    <div class="fr">
-                        <span class="wayText">{{this.delivery}}</span>
-                        <span class="iconfont">&#xe602;</span>
-                    </div>
-                </div>
-                <div class="list">
-                       <van-radio-group v-model="delivery" v-show="isDrop2">
-                        <van-cell-group>
-                            <van-cell title="普通快递 : 运费¥10" clickable   @click="delivery = '普通快递 : 运费¥10'" >
-                            <van-radio name="普通快递 : 运费¥10"   @click="delivery = '普通快递 : 运费¥10'" />
-                            </van-cell>
-                            <van-cell title="顺丰速运:运费¥15" clickable   @click="delivery = '顺丰速运:运费¥15'" >
-                            <van-radio name="顺丰速运:运费¥15" @click="delivery = '顺丰速运:运费¥15'" />
-                            </van-cell>
-                        </van-cell-group>
-                    </van-radio-group>    
-                </div>  
+            <div class="dispatch-row">
+                <van-cell-group class="goods-cell-group">
+                    <van-cell is-link  @click="showPromotion2" >
+                        <template slot="title">
+                            <span style="margin-right: 10px;">配送方式</span>
+                            <span class="wayText" style="float:right">{{this.delivery}}</span>
+                        </template>
+                    </van-cell>
+                    <!-- 上拉菜单，选择配送方式 -->
+                    <van-actionsheet v-model="show2" title="支持以下配送方式" class="select-wrap">
+                        <van-radio-group v-model="delivery">
+                            <van-cell-group>
+                                <van-cell title="普通快递 : 免运费" clickable  @click="selectWay2" >
+                                    <van-radio name="普通快递 : 免运费"/>
+                                </van-cell>
+                                <van-cell title="顺丰速运:运费¥15" clickable  @click="selectWay2" >
+                                    <van-radio name="顺丰速运:运费¥15"/>
+                                </van-cell>
+                            </van-cell-group>    
+                        </van-radio-group>
+                    </van-actionsheet>
+                </van-cell-group>
             </div>
 
-            <!-- 订单留言 -->
-            <div class="dispatch-row">
-                <div class="title">订单留言</div>
-                <div class="msg">
-                    <textarea placeholder="限300字（若有特殊需求，请联系商城在线客服)"></textarea>
-                </div>
-            </div>
-            
-           
         </div>
 
         <!-- 提交订单 -->
@@ -201,27 +208,15 @@
                 chosenCoupon: -1,
                 coupons: [coupon],
                 disabledCoupons: [coupon],
-                showList:false,
-                isDrop:false,
-                isDrop2:false,
+                showList:false,//优惠券
                 payWay: '在线支付',
-                delivery:"普通快递 : 运费¥10",
-                wayArr:[
-                    {
-                        wayData:{
-                            title:"支付方式",
-                            wayList:["在线支付","货到付款"]
-                        }
-                    },
-                    {
-                        wayData:{
-                            title:"配送方式",
-                            wayList:["普通快递 : 运费¥10","顺丰速运:运费¥15"]
-                        }
-                    },
-                ]
+                delivery:"普通快递 : 免运费",
+                show:false,//是否显示支付方式上拉列表
+                show2:false,//是否显示配送方式上拉列表
+                // total:0
             };
         },
+
         computed:{
             // 总价
             totalPrice(){
@@ -229,7 +224,27 @@
                 for(var i = 0;i<this.orderData.length;i++){
                    total += this.orderData[i].price * this.orderData[i].goodsNum;
                 }
+                // 判断是否使用优惠券
+                if(this.chosenCoupon == 0){
+                    total = total + 10 - coupon.value / 100;
+                }
+           
+                //判断是否选择顺丰快递
+                else if(this.delivery == "顺丰速运:运费¥15"){
+                    total = total + 15;
+                }
+                //判断是否选择普通快递&使用优惠券
+                else if(this.delivery == "普通快递 : 免运费" && this.chosenCoupon == 0){
+                    console.log(1)
+                    // total = total + 10 - coupon.value / 100;
+                }
+                //判断是否选择顺丰快递&使用优惠券
+                else if(this.delivery =="顺丰速运:运费¥15" && this.chosenCoupon == 0){
+                    console.log(2)
+                    // total = total + 15 - coupon.value / 100;
+                }
                 return total;
+                
             },
             // 总数
 			totalCount(){
@@ -240,6 +255,7 @@
 				return count;
 			}
         },
+
         mounted(){
             // 处理留言框被键盘遮住
             this.clientHeight = document.documentElement.clientHeight;
@@ -256,41 +272,56 @@
                 $(".order-bill").show();
               }
             }
+           
         },
+
         methods:{
-            // 优惠券
+            // 优惠券切换回调
             onChange(index) {
                 this.showList = false;
                 this.chosenCoupon = index;
             },
+            // 兑换优惠券回调
             onExchange(code) {
                 this.coupons.push(coupon);
             },
-            // 下拉列表
-            toggleDrop(){
-                this.isDrop = !this.isDrop
+         
+            // 上拉列表:选择支付方式
+            showPromotion() {
+                this.show = true;
             },
-            toggleDrop2(){
-                this.isDrop2 = !this.isDrop2
-            },
-            // 更换支付方式
+            // 选择支付方式
             selectWay(e){
-                var selectText = e.target.children[0].innerText;
-                this.payWay = selectText;
-                this.isDrop = !this.isDrop
+                this.payWay = e.target.innerText;
+                this.show = false;
             },
-       
+
+            // 上拉列表:选择配送方式
+            showPromotion2() {
+                this.show2 = true;
+            },
+            selectWay2(e){
+                this.delivery = e.target.innerText;
+                this.show2 = false;
+            },
+
+            // 提示
+            sorry() {
+                this.$toast('暂无后续逻辑~');   
+            }
         
         },
+
         filters:{
             // 价格过滤器
 			toFix(val){
-				return parseInt(val).toFixed(2)
+				return Number(val).toFixed(2)
 			},
 			rmb(val){
 				return "￥" + val
 			}
-		},
+        },
+        
         components:{
 			headerView
         }
@@ -338,7 +369,8 @@
                 -webkit-line-clamp: 2;
                 font-size 24px 
             .address-rightArrow
-                font-size 40px 
+                font-size 40px
+                color #969799 
         .order-item
             display flex
             padding 20px 30px
@@ -381,92 +413,11 @@
                     color #ee1827
                 .sale-price
                     text-decoration line-through
-    
         .dispatch-row
-            min-height 70px
-            .title
-                min-height 70px
-                display flex
-                align-items center
-                justify-content space-between
-                border-bottom 1px solid #e8e8e8
-                font-size 26px
-                padding 0 30px
-                box-sizing border-box
-                background-color #fff
-                // .van-cell
-                //     line-height 65px
-                //     padding 0
-                //     .van-cell__title
-                //         font-size 26px
-                //     .van-cell__value
-                //         font-size 26px
-                //         color #666
-                //     .van-icon
-                //         font-size 28px
-                //         color #666
-                //     .van-cell__right-icon
-                //         line-height 70px
-                // .van-coupon-list /deep/ .van-cell
-                //     line-height 60px
-                //     .van-coupon-list__exchange
-                //         height 60px
-                //         line-height 60px;
-                // .van-coupon-list /deep/ .van-tabs__wrap
-                //     height 50px
-                //     line-height 50px
-                //     font-size 26px
-                // .van-coupon-list /deep/ .van-tabs__content
-                //     .van-coupon__content
-                //         height 150px
-                //         .van-coupon__head
-                //             h2
-                //                 font-size 36px
-                //                 margin-bottom 10px
-                //             p
-                //                 line-height 30px
-                //         .van-coupon__body
-                //             h2
-                //                 font-size 28px
-                //                 margin-bottom 10px
-                //              p
-                //                 line-height 30px
-                // .van-coupon-list /deep/ .van-button--large
-                //     height 88px
-                //     line-height 88px
-                //     .van-button__text
-                //         font-size 26px
-                        
-                .fr
-                    font-size 0
-                    .wayText
-                        font-size 22px
-                        color #666
-                    .iconfont
-                        font-size 30px
-                        position relative
-                        top 3px
-            // .list
-            //     .van-radio-group /deep/ .van-cell
-            //         line-height 60px
-            //         padding 0 30px
-            //         font-size 24px
-            //         .van-radio__icon 
-            //             i
-            //                 width 32px
-            //                 height 32px
-            //                 line-height 32px
-            .msg
-                textarea
-                    width 95%
-                    height 150px
-                    border 2px solid #d1d1d1
-                    margin 10px auto
-                    display block
-                    padding-left 10px
-                    box-sizing border-box
-                    border-radius 10px
-                    font-family "微软雅黑"
+            .wayText
+                color #969799       
+        .select-wrap /deep/ .van-cell__value
+            flex none
     .order-bill
         width 100%
         height 88px
