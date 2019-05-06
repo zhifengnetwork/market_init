@@ -148,6 +148,9 @@ export default {
         padding-left: 30px
         width: 100%;
 
+    .user-page ul:last-child
+        margin-bottom: 0px;
+
     .user-page ul:first-child li:first-of-type 
         height: 100px
         line-height: 100px

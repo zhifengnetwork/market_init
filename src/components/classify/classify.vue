@@ -33,7 +33,7 @@
 									<router-link
 										tag="li"
 										v-for="(it,index) of item.children"
-										to="/details"
+										:to="'/productLsit?cat_id='+item.cat_id"
 										:key="index"
 									>
 									<div class="picture">
