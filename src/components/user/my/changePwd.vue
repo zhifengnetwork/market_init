@@ -3,7 +3,7 @@
     <div class="change-box">
         <div class="change" v-show="alter==0">
                 <headerView custom-title="账号安全">
-                    <div class="backBtn" slot="backBtn" @click="backBtn($router.go(-1))">
+                    <div class="backBtn" slot="backBtn" @click="$router.go(-1)">
                             <img src="../../../../static/img/public/backBtn.png" />
                     </div>
                 </headerView>

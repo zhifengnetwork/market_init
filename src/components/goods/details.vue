@@ -42,23 +42,23 @@
     <!-- 商品详情 -->
         <div class="goods">
                 <van-swipe class="goods-swipe" :autoplay="0" indicator-color="#000">
-                <van-swipe-item v-for="thumb in goods.thumb" :key="thumb">
-                    <img  :src="thumb" v-lazy="thumb" >       
+                <van-swipe-item v-for="(thumb,index) in goods.img" :key="index">
+                    <img  :src="baseUrl+thumb.picture" v-lazy="baseUrl+thumb.picture" >       
                 </van-swipe-item>
                 </van-swipe>
 
                 <van-cell-group>
                 <van-cell class="goods-name">
-                    <div class="goods-title">{{ goods.title }}</div>
+                    <div class="goods-title">{{ goods.goods_name }}</div>
                     <div class="goods-price">
-                        <span class="price">{{ formatPrice(goods.price) }}</span>
-                        <span class="original">{{ formatPrice(goods.price) }}</span>
+                        <span class="price">{{formatPrice(goods.price)}}</span>
+                        <span class="original">￥{{goods.original_price}}</span>
                     </div>
                     
                 </van-cell>
                 <van-cell class="goods-express">
                     <van-col span="10">运费：{{ goods.express }}</van-col>
-                    <van-col span="14">剩余：{{ goods.remain }}</van-col>
+                    <van-col span="14">剩余：{{ goods.stock }}</van-col>
                 </van-cell>
                 </van-cell-group>
                 <!-- 领取优惠券 -->
@@ -172,22 +172,28 @@
                                                         <span class="sale-price no-price">{{formatPrice(goods.price)}}</span>  
                                                     </p>
                                                     <p class="not-choose"   v-show="pitch==true">请选择颜色、尺码</p>
-                                                    <p class="choosed-info" v-show="pitch==false" >已选择:{{shopItemInfo.color}},{{shopItemInfo.size}}</p>
+                                                    <p class="choosed-info" v-show="pitch==false" >已选择:{{shopItemInfo.color}},{{shopItemInfo.size}},{{shopItemInfo.spec}}</p>
                                                     <p class="size-info hide"></p>
                                                     <p class="size-rec hide"></p>
                                                 </div>
                                             </div>
                                             <div class="chose-items">
                                                     <div class="block-list">
-                                                        <span class="name">颜色</span>
+                                                        <span class="name">{{goods.spec.spec_attr[1].spec_name}}</span>
                                                         <ul class="size-row clearfix">
-                                                            <li class="block "  v-for="(item,index) in goods.color" :key="index" :class="{chosed:colorSelectt==index}" @click="colorSelect(index,item)">{{item}}</li>
+                                                            <li class="block "  v-for="(item,index) in goods.spec.spec_attr[1].res" :key="index" :class="{chosed:colorSelectt==index}" @click="colorSelect(index,item.attr_name)">{{item.attr_name}}</li>
                                                         </ul>
                                                     </div>
                                                     <div class="block-list">
-                                                        <span class="name">规格</span>
+                                                        <span class="name">{{goods.spec.spec_attr[0].spec_name}}</span>
                                                         <ul class="size-row clearfix">
-                                                            <li class="block " v-for="(item,index) in goods.size" :key="index" :class="{chosed:sizeSelectt==index}" @click="sizeSelect(index,item)">{{item}}</li>
+                                                            <li class="block " v-for="(item,index) in goods.spec.spec_attr[0].res" :key="index" :class="{chosed:specSelectt==index}" @click="specification(index,item.attr_name)">{{item.attr_name}}</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="block-list">
+                                                        <span class="name">{{goods.spec.spec_attr[2].spec_name}}</span>
+                                                        <ul class="size-row clearfix">
+                                                            <li class="block " v-for="(item,index) in goods.spec.spec_attr[2].res" :key="index" :class="{chosed:sizeSelectt==index}" @click="sizeSelect(index,item.attr_name)">{{item.attr_name}}</li>
                                                         </ul>
                                                     </div>
                                                 <div class="num">
@@ -300,9 +306,16 @@ import {
 export default {
     data(){
         return{
+            //商品分类id
+            goods_id:this.$route.query.goods_id,
+            
+            //商品图片路径
+            baseUrl:'http://www.zfwl.c3w.cc/upload/images/',
+
             // 选择商品和颜色
-             colorSelectt:-1,
-             sizeSelectt:-1,
+             colorSelectt:-1,//颜色
+             sizeSelectt:-1,//尺寸
+             specSelectt:-1,//规格
              
              //头部显示导航
              isHide:true, 
@@ -337,26 +350,28 @@ export default {
                     color:'',//存放选中的颜色
                     size:'',//存放选中的尺码
                     num:1,//存放选中的数量
+                    spec:'',//存放选中的规格
                 }, 
 
-                goods: {
-                id:1,
-                title: 'Dickies Logo印花短袖T恤',
-                color: '',
-                price: 25900,
-                express: '免运费',
-                remain: 19,
-                color:['黑色','羽灰','酒红色'],
-                size:['S','M','L','XL'],
-                thumb: [
-                '//img13.static.yhbimg.com/goodsimg/2019/03/14/11/02869bc667bca0af6fd949cad0f016ebe2.jpg?imageMogr2/thumbnail/450x600/position/center/quality/60',
-                // '//img11.static.yhbimg.com/goodsimg/2019/03/14/11/01c76dad61f32ce131152abaf8a6daa91a.jpg?imageMogr2/thumbnail/450x600/position/center/quality/60',
-                '//img13.static.yhbimg.com/goodsimg/2019/03/14/16/0291fcb387424349ce13f35c439734f710.jpg?imageMogr2/thumbnail/450x600/position/center/quality/60',
-                // '//img12.static.yhbimg.com/goodsimg/2019/03/14/16/022cbda0d90a9d50384472add456365ebd.jpg?imageMogr2/thumbnail/450x600/position/center/quality/60',
-                '//img11.static.yhbimg.com/goodsimg/2019/03/20/16/0182ad0f097b0d74716a8ce54df26cbe59.jpg?imageMogr2/thumbnail/450x600/position/center/quality/60',
-                // '//img10.static.yhbimg.com/goodsimg/2019/03/20/16/01d1cf392ea68bf289a8602d7fe2a8b83f.jpg?imageMogr2/thumbnail/450x600/position/center/quality/60',
-                ],
-                },
+                goods: []
+                // {
+                // id:1,
+                // title: 'Dickies Logo印花短袖T恤',
+                // color: '',
+                // price: 25900,
+                // express: '免运费',
+                // remain: 19,
+                // color:['黑色','羽灰','酒红色'],
+                // size:['S','M','L','XL'],
+                // thumb: [
+                // '//img13.static.yhbimg.com/goodsimg/2019/03/14/11/02869bc667bca0af6fd949cad0f016ebe2.jpg?imageMogr2/thumbnail/450x600/position/center/quality/60',
+                // // '//img11.static.yhbimg.com/goodsimg/2019/03/14/11/01c76dad61f32ce131152abaf8a6daa91a.jpg?imageMogr2/thumbnail/450x600/position/center/quality/60',
+                // '//img13.static.yhbimg.com/goodsimg/2019/03/14/16/0291fcb387424349ce13f35c439734f710.jpg?imageMogr2/thumbnail/450x600/position/center/quality/60',
+                // // '//img12.static.yhbimg.com/goodsimg/2019/03/14/16/022cbda0d90a9d50384472add456365ebd.jpg?imageMogr2/thumbnail/450x600/position/center/quality/60',
+                // '//img11.static.yhbimg.com/goodsimg/2019/03/20/16/0182ad0f097b0d74716a8ce54df26cbe59.jpg?imageMogr2/thumbnail/450x600/position/center/quality/60',
+                // // '//img10.static.yhbimg.com/goodsimg/2019/03/20/16/01d1cf392ea68bf289a8602d7fe2a8b83f.jpg?imageMogr2/thumbnail/450x600/position/center/quality/60',
+                // ],
+                // },
             
        
     };
@@ -381,7 +396,8 @@ export default {
         },
 
         formatPrice() {
-        return '¥' + (this.goods.price / 100).toFixed(2);
+        // return '¥' + (this.goods.price / 100).toFixed(2);
+        return '¥' + (this.goods.price);
         },
 
         onClickCart() {
@@ -392,14 +408,14 @@ export default {
         sorry() {
             this.is_sku=true; //改变规格弹窗状态为true
             this.byHide=false //改变规格弹窗按钮
-            this.getImg=this.goods.thumb[0];
+             this.getImg=this.baseUrl+this.goods.img[0].picture
         },
 
         //点击立即购买
         buy(){
             this.is_sku=true; //改变规格弹窗状态为true
             this.byHide=true //改变规格弹窗按钮
-            this.getImg=this.goods.thumb[0]
+            this.getImg=this.baseUrl+this.goods.img[0].picture
         },
 
         //点击关闭规格弹窗
@@ -409,7 +425,7 @@ export default {
             this.colorSelectt=-1; //关闭默认全部为0
             this.sizeSelectt=-1;  //关闭默认全部为0
             this.shopItemInfo.num=1; //关闭默认全部为0
-            this.getImg=this.goods.thumb[0]
+            this.getImg=this.baseUrl+this.goods.img[0].picture
         },
 
         //选中颜色
@@ -417,13 +433,20 @@ export default {
             this.colorSelectt=index;//控制选中
             this.shopItemInfo.color=item;//当前选中的颜色
             this.pitch=false //选中就显示已选中的颜色
-            this.getImg=this.goods.thumb[index]
+            this.getImg=this.baseUrl+this.goods.img[index].picture
+        },
+
+        //尺码选中
+        sizeSelect(index,item){
+            this.sizeSelectt=index;//控制选中
+            this.shopItemInfo.size=item;//当前选中的规格
+            this.pitch=false //选中就显示已选中的规格
         },
 
         //规格选中
         sizeSelect(index,item){
-            this.sizeSelectt=index;//控制选中
-            this.shopItemInfo.size=item;//当前选中的规格
+            this.specSelectt=index;//控制选中
+            this.shopItemInfo.spec=item;//当前选中的规格
             this.pitch=false //选中就显示已选中的规格
         },
 
@@ -466,7 +489,16 @@ export default {
                    this.$router.push('/cart')   
         }
        
-        }
+        },
+        created(){
+            console.log(this.goods_id)
+             var url = "api/goods/goodsDetail?goods_id="+this.goods_id
+                this.$axios.get(url).then((res)=>{
+                    console.log(res.data.data)
+                    this.goods = res.data.data
+                    // console.log(this.goods.spec.spec_attr[1].res[0].attr_name)
+                })
+    }
 }
 </script>
 <style lang="stylus" scoped>
