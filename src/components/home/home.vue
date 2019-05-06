@@ -3,16 +3,15 @@
     <!--div 循环-->
       <div class="drag_box" v-for="(v,i) in backData['data']"  >
         <!--轮播图 box-->
-        <div class="modle_box" v-if="v.id == 'rotationId'? true:''" :key="v.id">
-          <div class="slide">
-            <div class="slide_item">
-              <img :src="v.data.images[0].imgUrl" alt="" />
-            </div>
-            <div class="slide_but" :class="v.params.butPosition">
-              <span v-for="(val,index) in v.data.images" :class="v.params.butStyle" :style="{'background':index == 0?v.params.clickColor:v.params.butColor}"></span>
+        <div class="modle_box swiper-container" v-if="v.id == 'rotationId'? true:''" :key="v.id">
+          <div class="slide swiper-wrapper">
+            <div class="slide_item swiper-slide" v-for="(val,index) in v.data.images">
+              <img :src="val.imgUrl" alt="" />
             </div>
           </div>
-
+					<div class="slide_but swiper-pagination" :class="[v.params.butPosition,v.params.butStart]">
+						<span v-for="(val,index) in v.data.images" :class="v.params.butStyle" :style="{'background':index == 0?v.params.clickColor:v.params.butColor}"></span>
+					</div>
         </div>
 
         <!--搜索模块 box-->
@@ -61,10 +60,10 @@
               </div>
               <div class="modle_shop_info">
                 <p class="modle_shop_name">{{item.goods_name}}</p>
-                <p class="modle_shop_price" :class="v.params.price">
+                <div class="modle_shop_price" :class="v.params.price">
                   ￥{{item.price}}<s>￥{{item.original_price}}</s>
-                </p>
-                <div class="modle_shop_buybtn" :class="v.params.btnStyle"></div>
+                	<div class="modle_shop_buybtn" :class="v.params.btnStyle"></div>
+                </div>
               </div>
             </div>
             <!-- 显示多个 -->
@@ -92,7 +91,8 @@
           <div class="notice_move"></div>
           <div class="notice" :style="{backgroundColor:v.params.bgColor}">
             <div class="notice_icon">
-              <img class="vertical_centering" src="/static/img/home/notice-icon.png" />
+              <!-- <img class="vertical_centering" src="v['data']['icon']" /> -->
+							<img class="vertical_centering" src="/static/img/home/notice-icon.png" />
             </div>
 
             <div class="scroll_notice">
@@ -139,6 +139,8 @@
 
 <script>
 import menuBar from "../common/menuBar.vue";
+import Swiper from "swiper";
+import "swiper/dist/css/swiper.css";
 export default {
   name: "home",
   components: {
@@ -152,10 +154,10 @@ export default {
         page_name: "",
         data: [
           /**axios=>页面渲染数据（请求成功-清除第一条数据(初始数据-双向绑定)）**/
-          {
-            params: {},
-            data: {}
-          },
+          // {
+          //   params: {},
+          //   data: {}
+          // },
         ]
       },
       /*加载页面=>隐藏变量{{变量}}*/
@@ -170,13 +172,23 @@ export default {
         id: 12
       })
       .then(function(response) {
-        console.log(response["data"]);
+				console.log(response["data"]);
         if (response["data"]["code"] == 1) {
           /*alert(response['data']['msg']);*/
           /*页面名字*/
           that.backData["page_name"] = response["data"]["data"]["page_name"];
           /*页面渲染数据*/
-          that.backData["data"] = response["data"]["data"]["data"];
+					that.backData["data"] = response["data"]["data"]["data"];
+					/*获取轮播图数据*/ 
+					for(let i=0;i<response.data.data.data.length;i++){
+						if(response.data.data.data[i].id=="rotationId"){
+							/*轮播图设置*/
+							let res=response.data.data.data[i];
+							that.$nextTick(function(){
+								that.carousel(res)
+							});
+						}
+					}
         } else {
           /*保存失败*/
           alert(response["data"]["msg"]);
@@ -187,13 +199,42 @@ export default {
         console.log(error);
       });
 
-  }
+	},
+	methods:{
+		carousel(res){
+			var swiper = new Swiper('.swiper-container', {
+				autoplay: {//自动播放
+					delay: 3000,
+					disableOnInteraction: false,//用户操作swiper之后，是否禁止autoplay。默认为true：停止。
+				},
+				loop: true, // 循环模式选项
+				pagination:{
+						el: '.swiper-pagination',
+						// 自定义分页器，必须的type类型
+						type: 'custom',
+						renderCustom: function(swiper,current, total){
+							var paginationHtml = "";
+							for(var i= 0; i<total; i++) {
+							// 判断是不是激活焦点
+								if(i === (current-1)){
+										paginationHtml += '<span class="'+res.params.butStyle+'" style="background:'+res.params.clickColor+'"></span>';
+									}else{
+										paginationHtml += '<span class="'+res.params.butStyle+'" style="background:'+res.params.butColor+'"></span>';
+									}
+							}
+							return paginationHtml;
+					}
+				}
+			});       
+		},
+	},
 };
 </script>
 
 <style lang="stylus" scoped>
 .home {
 	width:750px;
+	margin-bottom:100px;
   font-size: 34px;
   text-align: center;
 }
@@ -228,7 +269,7 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 .slide {
 	position: relative;
 	width: 100%;
-	height: 400px;
+	height: 500px;
 }
 
 .slide_item,
@@ -328,7 +369,7 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 	width: 40px;
 	height: 40px;
 	background: url(/static/img/home/searchObj/search_ico.png) no-repeat center;
-	background-size: 60%;
+	background-size: 70%;
 	border: 0;
 }
 .search .searchText{
@@ -346,13 +387,13 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 /* 搜索样式一 */
 .search .style1 .searchBtn{
 	top:0;
-	left:0;
+	left:5px;
 	bottom:0;
 }
 /* 搜索样式二 */
 .search .style2 .searchBtn{
 	top:0;
-	right:0;
+	right:5px;
 	bottom:0;
 }
 /* 搜索 -e */
@@ -407,10 +448,7 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 /* 单图-e */
 /* 商品组-s */
 .modle_shop{
-	padding: 5px 10px;
-	box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
+
 }
 .modle_shop_title{
 	line-height: 30px;
@@ -421,6 +459,7 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
   background :#fff;
 	padding: 5px;
 	height: 150px;
+	margin : 2px 0;
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
@@ -437,14 +476,15 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
   text-align :left; 
 	position: relative;
 	float: left;
-	width: 70%;
+	width: 73.6%;
 	height: 100%;
 	margin-left: 10px;
 }
 .modle_shop_item .modle_shop_info .modle_shop_name{
 	font-size: 28px;
 	height: 90px;
-	margin-bottom: 20px;
+	margin-top:5px;
+	margin-bottom: 10px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	display: -webkit-box;
@@ -452,6 +492,7 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 	-webkit-box-orient: vertical;
 }
 .modle_shop_item .modle_shop_info .modle_shop_price{
+	position: relative;
 	width: 100%;
 	font-size: 24px;
 }
@@ -460,10 +501,12 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 .modle_shop_item .modle_shop_info .modle_shop_buybtn{
 	position: absolute;
-	right: 5px;
-	bottom: -5px;
-	width: 40px;
-	height: 40px;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	width: 50px;
+	height: 30px;
 }
 /* 显示俩个 */
 .modle_shop_item2{
@@ -471,7 +514,7 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
   text-align: left;
 	float: left;
 	margin: 0 5px 5px;
-	width: 46.8%;
+	width: 48.6%;
 }
 .modle_shop_item2 .modle_shop_img{
 	height: 300px;
@@ -482,7 +525,7 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
   text-align :left;
 	float: left;
 	margin: 0 5px 5px;
-	width: 30%;
+	width: 31.9%;
 }
 .modle_shop_img{
 	position: relative;
@@ -523,10 +566,14 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 .modle_shop_item2 .modle_shop_price s,.modle_shop_item3 .modle_shop_price s{
 	font-size: 22px;
 }
+.modle_shop_item2 .modle_shop_info,.modle_shop_item3 .modle_shop_info{
+	position: relative;
+	height:40px;
+}
 .modle_shop_item2 .modle_shop_name,.modle_shop_item3 .modle_shop_name{
 	float: left;
 	font-size: 28px;
-	line-height: 20px;
+	line-height: 40px;
 	height: 40px;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -542,9 +589,13 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 .modle_shop_item2 .modle_shop_buybtn,.modle_shop_item3 .modle_shop_buybtn{
 	display: none;
-	float: right;
-  width: 40px;
-  height: 40px;
+	position: absolute;
+	right:0;
+	top:0;
+	bottom:0; 
+	margin:auto;
+  width: 50px;
+  height: 30px;
 }
 /* 商品价格显示 */
 .modle_shop_item .show,.modle_shop_item2 .show,.modle_shop_item3 .show{
@@ -651,7 +702,7 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 	box-align:center;
 	-moz-box-align:center;
 	-webkit-box-align:center;
-    height: 100px;
+    height: 80px;
     background: #fff;
     color: #525252;
 	padding: 10px;
@@ -667,11 +718,11 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 	margin-right: 4px;
 	position: relative;
 	width: 60px;
-	height: 60px;
+	height: 100%;
 	
 }
 .notice .notice_icon img{
-	width: 80%;
+	width: 90%;
 }
 
 .notice .scroll_notice{
@@ -682,8 +733,8 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 	flex: 1;
 	-webkit-flex: 1;
   font-size: 30px;
-	height: 100px;
-	line-height: 100px;
+	height: 100%;
+	line-height: 60px;
 	overflow: hidden; 
 	white-space: nowrap; 
 	text-overflow: ellipsis; 
@@ -696,20 +747,32 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 .notice .scroll_notice marquee{
 	height: 100%;
-	line-height: 100px;
+	line-height: 60px;
 }
 
 .notice .more{
-	width: 80px;
-	height: 40px;
-	padding:0 10px;
+	position: relative;
+	width: 100px;
+	height: 100%;
+	margin-top:-5px;
+	padding:0 10px 0 30px;
 	box-sizing :border-box;
 	-moz-box-sizing :border-box;
 	-webkit-box-sizing :border-box;
   font-size :28px;
-	line-height: 40px;
-	border-left: 2px solid #dddddd;
+	line-height: 66px;
 	text-align: right;
+}
+.notice .more::after{
+	content:"";
+	position: absolute;
+	left:0;
+	top:0;
+	bottom:0;
+	margin:auto;
+	width:2px;
+	height:60%;
+	background #ddd;
 }
 /* 公告 -e */
 /* 辅助空白label 辅助线label -s*/
@@ -781,4 +844,58 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 	display: block;
 }
 /*public -e*/
+</style>
+<style>
+/* 轮播图样式 */
+.slide_but>span {
+	display: inline-block;
+	background: black;
+	margin-right: 5px;
+	-moz-opacity: .5;          
+	-khtml-opacity: .5;          
+	opacity: .5; 
+}
+/* 长方形按钮 */
+.slide_but .rectangle {
+	width: 20px;
+	height: 4px;
+}
+/* 正方形按钮 */
+.slide_but .square {
+	width: 10px;
+	height: 10px;
+}
+/* 线形按钮 */
+.slide_but .linetype {
+	width: 20px;
+	height: 10px;
+}
+/* 圆形按钮 */
+
+.slide_but .roundness {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+}
+
+
+/* 按钮位置 靠左 */
+
+.slide .left {
+	text-align: left;
+}
+
+
+/* 按钮位置 居中 */
+
+.slide .center {
+	text-align: center;
+}
+
+
+/* 按钮位置 靠右 */
+
+.slide .right {
+	text-align: right;
+}
 </style>
