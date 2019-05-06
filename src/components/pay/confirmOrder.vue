@@ -394,68 +394,68 @@
                 padding 0 30px
                 box-sizing border-box
                 background-color #fff
-                .van-cell
-                    line-height 65px
-                    padding 0
-                    .van-cell__title
-                        font-size 26px
-                    .van-cell__value
-                        font-size 26px
-                        color #666
-                    .van-icon
-                        font-size 28px
-                        color #666
-                    .van-cell__right-icon
-                        line-height 70px
-                .van-coupon-list /deep/ .van-cell
-                    line-height 60px
-                    .van-coupon-list__exchange
-                        height 60px
-                        line-height 60px;
-                .van-coupon-list /deep/ .van-tabs__wrap
-                    height 50px
-                    line-height 50px
-                    font-size 26px
-                .van-coupon-list /deep/ .van-tabs__content
-                    .van-coupon__content
-                        height 150px
-                        .van-coupon__head
-                            h2
-                                font-size 36px
-                                margin-bottom 10px
-                            p
-                                line-height 30px
-                        .van-coupon__body
-                            h2
-                                font-size 28px
-                                margin-bottom 10px
-                             p
-                                line-height 30px
-                .van-coupon-list /deep/ .van-button--large
-                    height 88px
-                    line-height 88px
-                    .van-button__text
-                        font-size 26px
+                // .van-cell
+                //     line-height 65px
+                //     padding 0
+                //     .van-cell__title
+                //         font-size 26px
+                //     .van-cell__value
+                //         font-size 26px
+                //         color #666
+                //     .van-icon
+                //         font-size 28px
+                //         color #666
+                //     .van-cell__right-icon
+                //         line-height 70px
+                // .van-coupon-list /deep/ .van-cell
+                //     line-height 60px
+                //     .van-coupon-list__exchange
+                //         height 60px
+                //         line-height 60px;
+                // .van-coupon-list /deep/ .van-tabs__wrap
+                //     height 50px
+                //     line-height 50px
+                //     font-size 26px
+                // .van-coupon-list /deep/ .van-tabs__content
+                //     .van-coupon__content
+                //         height 150px
+                //         .van-coupon__head
+                //             h2
+                //                 font-size 36px
+                //                 margin-bottom 10px
+                //             p
+                //                 line-height 30px
+                //         .van-coupon__body
+                //             h2
+                //                 font-size 28px
+                //                 margin-bottom 10px
+                //              p
+                //                 line-height 30px
+                // .van-coupon-list /deep/ .van-button--large
+                //     height 88px
+                //     line-height 88px
+                //     .van-button__text
+                //         font-size 26px
                         
                 .fr
                     font-size 0
                     .wayText
-                        font-size 24px
+                        font-size 22px
                         color #666
                     .iconfont
                         font-size 30px
                         position relative
                         top 3px
-            .list
-                .van-radio-group /deep/ .van-cell
-                    line-height 60px
-                    padding 0 30px
-                    font-size 24px
-                    .van-radio__icon 
-                        i
-                            width 32px
-                            height 32px
-                            line-height 32px
+            // .list
+            //     .van-radio-group /deep/ .van-cell
+            //         line-height 60px
+            //         padding 0 30px
+            //         font-size 24px
+            //         .van-radio__icon 
+            //             i
+            //                 width 32px
+            //                 height 32px
+            //                 line-height 32px
             .msg
                 textarea
                     width 95%
