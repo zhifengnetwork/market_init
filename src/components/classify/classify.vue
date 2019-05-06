@@ -90,7 +90,7 @@
 				resData:[],
 	 			listHeight:[],
 				scrollY:0,
-				baseUrl:'http://www.zfwl.c3w.cc/upload/images/'
+				baseUrl:'http://api.zfwl.c3w.cc/upload/images/'
 	 		}
 		},
 		 
@@ -151,10 +151,18 @@
 		 },
 		// dom节点渲染完成后请求接口数据 
 	 	mounted(){
+			this.$toast.loading({
+				mask: true,
+				message: '加载中...'
+			});
 	 		this.$axios.get("/api/goods/categoryList")
 	 		// this.axios.get("/api/classify.json")
 	 		.then((res)=>{
 				 if(res.status === 200){
+
+					// 数据加载成功，关闭提示 
+					this.$toast.clear()
+
 					let resData = res.data.data
 					this.resData = resData
 					console.log(this.resData)
@@ -163,8 +171,8 @@
 						this.getHeight()
 					})
 				 }
-				
-	 		})
+			 })
+			 
 		 },
 		// 注册组件 
 		components:{
