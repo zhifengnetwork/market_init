@@ -43,41 +43,104 @@
         <!-- 列表 -->
         <div class="good-list-page">
                 <div class="filter-tab">
-                    <ul class="list-nav clearfloat"  @click.prevent='setlocation($event)'>
-                        <li :class="{active:index=='default'}"  class="default buriedpoint"    data-ip="'default'">
-                            <!-- <router-link to=''> -->
-                                <span>默认</span>
+                    <!-- <ul class="list-nav clearfloat" >
+                        <li :class="{active:index=='default'}"  class="default buriedpoint"  data-ip="default" @click.self='setlocation($event)'>
+                    
+                                
+                                <span >默认</span>
                                 <span class="iconfont drop">&#xe605;</span>
-                            <!-- </router-link> -->
+                           
+                            <div>
+
+                            </div>
                         </li>
-                        <li :class="{active:index=='new'}" class="neww  buriedpoint" data-ip="new">
-                            <!-- <router-link to=''> -->
+                        <li :class="{active:index=='new'}" class="neww  buriedpoint"  data-ip="new">
                                 <span>新品</span>
-                            <!-- </router-link> -->
                         </li>
-                        <li :class="{active:index=='popularity'}" class="popularity  buriedpoint" data-ip="popularity">
-                            <!-- <router-link to=''> -->
+                        <li :class="{active:index=='popularity'}" class="popularity  buriedpoint"  data-ip="popularity">
                                 <span>人气</span>
-                            <!-- </router-link> -->
                         </li>
-                        <li :class="{active:index=='price'}" class="price  buriedpoint"  data-ip="price">
-                            <!-- <router-link to=''> -->
+                        <li :class="{active:index=='price'}" class="price  buriedpoint"   data-ip="price">
                                 <span>价格</span>
                                 <span class="icon">
                                      <i class="iconfont up"   :class="{cur:isCur==false}">&#xe609;</i>
                                      <i class="iconfont down" :class="{cur:isCur==true}">&#xe606;</i>
                                 </span>
-                            <!-- </router-link> -->
                         </li>
-                        <li :class="{active:index=='filter'}" class="filter buriedpoint" data-ip="filter">
-                            <!-- <router-link to=''> -->
+                        <li :class="{active:index=='filter'}" class="filter buriedpoint"  data-ip="filter">
                                 <span>筛选</span>
                                 <span class="iconfont drop">&#xe605;</span>
-                            <!-- </router-link> -->
                         </li>
+                    </ul> -->
+                    <!-- tar -->
+                     <ul class="list-nav clearfloat" >
+                        <li v-for="item in list" :key="item.id" class="buriedpoint" :class="[listId==item.id?'active':'',item.class]"  :data-ip="item.data"   @click='setlocation(item.id,item.data)'>
+                            <a href="javascript:void(0);" >
+                                <span >{{item.name}}</span>
+                                <span class="iconfont drop" v-html="item.s" v-if="!item.isHide">
+                                </span>
+                                <span class="icon" v-if="item.isHide">
+                                     <i class="iconfont up"   :class="{cur:!isCur}">&#xe609;</i>
+                                     <i class="iconfont down" :class="{cur:isCur}">&#xe606;</i>
+                                </span>
+                             </a>
+                         </li>
                     </ul>
+                    <ul class="drop-list "  :class="{hide:drop}">
+                            <li  v-for="item in discount" :key="item.id"  :data-ip="item.data" :data-text="item.name" :class="[indexx==item.id?'active':'',item.class]" @click.stop='setloca(item,)'>
+                                <span>{{item.name}}</span>
+                                <span class="chose"></span>
+                            </li>
+                        </ul>
                 </div>
+                <!-- 列表 -->
+                <div id="goods-container" class="goods-container clearfloat">
+                        <div>
 
+                       
+                     <div class="good-info "  v-for="(item,index) in proList" :key="index" :data-good-id="item.pid" :data-id="item.cat_id" :data-bp-id="item.goods_name">
+                            <div class="tag-container clearfloat">
+                                 <p class="good-tag new-tag" v-if="newState">NEW</p>
+                            </div>
+                            <div class="good-detail-img">
+                                <router-link class="good-thumb" :to="'/details?goods_id='+item.goods_id" :title="item.desc">
+                                        <img class="lazy" v-lazy="baseUrl+item.img"  :alt="item.goods_name" :src="baseUrl+item.img" style="display: block;">
+                                </router-link>
+                                <div class="similar-c">
+                                <div class="bg"></div>
+                                <a href="//m.yohobuy.com/product/similar?skn=52053768">找相似</a>
+                            </div>            </div>
+                                        <div class="good-detail-text">
+                                <div class="name">
+                                    <router-link class="good-thumb" :to="'/details?goods_id='+item.goods_id" :title="item.desc">{{item.goods_name}}</router-link>
+                                </div>
+                                <div class="price">
+                                        <span class="sale-price no-price">¥{{item.price}}</span>
+                                </div>
+                                <a class="similar-btn iconfont">&#xe60b;</a>
+                            </div>
+                    </div>
+                     </div>
+                    <!-- 筛选 -->
+                <div class="filter-mask" style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);" :class="{hide:screen}">
+                  <div class="filter-body">
+                                <ul class="classify">
+                                <li class="classify-item " v-for="item in screenList" :key="item.id" :data-ip="item.data" :class="{active:item.name==classifyName}" @click="classifyNa(item.name)">
+                                    <p class="shower">
+                                         <span class="title">{{item.name}}：</span>
+                                         {{item.title}}
+                                    </p>
+                                    <ul  class="sub-classify" data-type="gender">
+                                        <li class="sub-item" v-for="(items,index) in item.classify" :key="index" :class="{chosed:items.data==classifyIndex}" @click="classifyI(items.data,items.id)">
+                                            {{items.name}}
+                                            <i class="iconfont chosed-icon">&#xe6ba;</i>
+                                        </li>
+                                    </ul>
+                                </li>
+                                </ul>
+                   </div>
+                </div>
+                 </div>
         </div>
     </div>
 </template>
@@ -87,10 +150,83 @@ import headerView from '../../common/headerView'
 export default {
     data(){
         return{
+          //商品分类id
+            cat_id:this.$route.query.cat_id,
+
           //头部显示导航
-             isHide:true, 
-             index:'default',
+             isHide:true,
+
+          //选择默认 
+             drop:true,
+
+          //选中筛选
+             screen:true,
+          
+          //筛选左边
+          classifyName:"性别",
+
+          //筛选右边种类
+          classifyIndex:0,
+          classifyId:1,
+
+          //分类id
+        //   cat_id:12,
+          sort:'ASC',
+          page:2,
+        //分类列表
+          proList:[],
+          baseUrl:'http://www.zfwl.c3w.cc/upload/images/',
+        
+        //默认
+        default:[],
+        defaultId:1,
+
+        // ASC
+        ascList:[],
+        ascState:0,
+
+        //desc
+        descList:[],
+        descState:0,
+
+        //人气
+        popularity:[],
+        popularityState:0,
+
+        //新品
+        newProduct:[],
+        newState:false, //新品状态
+        newStatee:0,
+        
+
+
+             listId:1,
+             indexx:1,
              isCur:false,
+             list:[
+                 {id:1,name:"默认",data:"default",s:"&#xe605",class:'default'},
+                 {id:2,name:"新品",data:"new",s:"",class:'new',},
+                 {id:3,name:"人气",data:"popularity",s:"",class:'popularity',},
+                 {id:4,name:"价格",data:"price",s:"&#xe605",isHide:true,class:'price'},
+                 {id:5,name:"筛选",data:"filter",s:"&#xe605",class:'filter'},
+             ],
+             discount:[
+                 {id:1,name:"默认",text:'默认',data:'default',class:'default'},
+                 {id:2,name:"折扣从高到低",text:'折扣',data:'discountt_0',class:'discount dec'},
+                 {id:3,name:"折扣从低到高",text:'折扣',data:'discountt_1',class:'discount asc'}
+             ],
+             screenList:[
+                 {id:1,name:"价格",data:"classify_所有价格",title:"所有价格",
+                     classify:[
+                     {id:1,name:"所有价格",data:0},
+                     {id:2,name:"￥0-189",data:6},
+                     {id:3,name:"￥190-289",data:7},
+                     {id:4,name:"￥300-769",data:8},
+                     {id:5,name:"￥769以上",data:9},
+                 ]
+                 
+                 },
+             ]
         }
     },components:{
         // 公告头部
@@ -100,11 +236,216 @@ export default {
         showTab(){
             this.isHide=!this.isHide
         },
-        setlocation(e){
+        setlocation(id,ip){
             
-             console.log(e.target.dataset.ip)
-            this.isCur=!this.isCur
+            this.listId=id
+
+            if(this.list[0].data==ip){//如果是默认
+            
+                   this.drop=!this.drop
+
+                // 
+                if(this.indexx==1){ //选中的下标为一
+                     this.proList=this.default
+                }
+                if(this.indexx==2){ //选中的下标为二
+                     
+                     this.isCur=false
+
+                     this.getGoodsListPirce()//发送请求
+                     
+                }else if(this.indexx==3){
+                     
+                      this.isCur=true
+
+                      this.getGoodsListPirce()//发送请求
+                }
+
+            }else{
+
+                this.drop=true  
+            }
+
+            if(this.list[1].data==ip){//新品
+            
+              if(this.newStatee==1){
+
+                       this.proList =  this.newProduct
+
+                       this.newState=true;
+
+              }else{
+                // 取消上一次请求
+                this.cancelRequest();
+            
+                var url="api/goods/category?goods_attr="+2+'&cat_id='+this.cat_id
+
+                this.$axios.get(url).then((res)=>{
+                        if(res.data.status==1){
+                             this.proList=res.data.data.goods_list;
+                             this.newProduct=res.data.data.goods_list;//保存人气商品列表
+                             this.newState=true;
+                        }
+                })
+                this.newStatee=1
+              }
+
+              
+            }else{
+
+                this.newState=false;
+
+            }
+
+            if(this.list[2].data==ip){//人气
+               
+               if(this.popularityState==1){
+
+                   this.proList=this.popularity
+
+               }else{
+                 // 取消上一次请求
+                this.cancelRequest();
+            
+                var url="api/goods/category?goods_attr="+3+'&cat_id='+this.cat_id
+
+                this.$axios.get(url).then((res)=>{
+                        this.proList=res.data.data.goods_list;
+                        this.popularity=res.data.data.goods_list;//保存商品列表
+
+                })
+                this.popularityState=1
+
+               }
+
+            }
+            
+            if(this.list[3].data==ip){ //如果是价格
+
+                this.isCur=!this.isCur
+
+                this.getGoodsListPirce()//发送请求
+
+            }else{
+
+                 this.isCur=false  
+            }
+
+            if(this.list[4].data==ip){ //筛选
+
+                this.screen=!this.screen
+
+            }else{
+
+                this.screen=true
+
+            }
+           
+        },
+
+        setloca(item){
+
+            this.indexx=item.id  //选中
+
+            this.list[0].name=item.text  //改变tabtext
+
+            this.drop=!this.drop 
+
+            if(item.id==2){
+                
+                this.isCur=false
+
+                this.getGoodsListPirce()//发送请求
+
+            }else if(item.id==3){
+
+                this.isCur=true
+
+                this.getGoodsListPirce()//发送请求
+
+            }else{
+                this.proList=this.default
+            }
+            
+        },
+
+        //筛选左边选中
+        classifyNa(name){
+          this.classifyName=name
+        },
+
+        //筛选右边选中
+        classifyI(i,s){
+          this.classifyIndex=i
+          this.classifyId=s
+        },
+
+        getGoodsListPirce(){
+        
+        if(this.isCur){  //升序
+
+                    var param = {
+                            // 请求时传点击的价格区间数据给后台
+                            sort:this.sort="ASC" // 点击的价格区间
         }
+         if(this.ascState==1){
+            
+            this.proList=this.ascList
+            
+        }else{
+       
+       // 取消上一次请求
+            this.cancelRequest();
+
+       var url="api/goods/category?sort="+param.sort+'&cat_id='+this.cat_id
+
+       this.$axios.get(url).then((res)=>{
+            this.proList=res.data.data.goods_list;
+            this.ascList=res.data.data.goods_list;//保存商品列表
+       })
+
+         this.ascState=1;
+        }
+        }else if(!this.isCur){
+
+                    var param = {
+                            // 请求时传点击的价格区间数据给后台
+                            sort:this.sort="DESC" // 点击的价格区间
+        }
+        if(this.descState==1){
+
+            this.proList=this.descList
+
+        }else{
+        
+        // 取消上一次请求
+            this.cancelRequest();
+
+        var url="api/goods/category?sort="+param.sort+'&cat_id='+this.cat_id
+        
+        this.$axios.get(url).then((res)=>{
+            this.proList=res.data.data.goods_list
+            this.descList=res.data.data.goods_list;//保存商品列表
+        })
+
+         this.descState=1;
+
+        }
+        }
+    },
+     cancelRequest(){
+            if(typeof this.source ==='function'){
+                this.source('终止请求')
+            }
+        }
+    },
+
+    mounted(){
+             var url = "api/goods/category?cat_id="+this.cat_id
+                this.$axios.get(url).then((res)=>{
+                    this.proList=res.data.data.goods_list;
+                    this.default=res.data.data.goods_list;//保存默认
+                })
     }
 }
 </script>
@@ -162,5 +503,239 @@ export default {
         
         .good-list-page .list-nav .active>a .iconfont.cur, .good-list-page .list-nav .active>a .iconfont.drop 
             color: #000;
+
+        
+        .good-list-page .drop-list 
+            background: #fff;
+            padding-left: 30px
+            position: absolute;
+            width: 100%;
+            z-index: 10;
+        
+        .good-list-page .drop-list .active 
+            color: #444;
+
+
+        .good-list-page .drop-list li 
+            border-bottom: 1px solid #e0e0e0;
+            color: #b0b0b0;
+            font-size: 25px;
+            height: 87px
+            line-height: 87px
+            width: 100%;
+        
+        .good-list-page .drop-list .active .chose 
+            background-image: url('../../../../static/img/public/chose.7fe7f1efd9.png');
+            background-repeat: no-repeat;
+            background-size: 100%;
+            display: inline-block;
+            float: right;
+            height: 22px;
+            margin-right: 30px;
+            margin-top: 33px;
+            width: 30px;
+
+        
+        // 列表
+        .good-list-page .goods-container 
+            min-height: auto!important;
+            padding-left: 15px
+            padding-top: 8px
+            position: relative;
+
+            .good-info 
+                float: left;
+                height: 526px
+                margin: 10px 15px 40px;
+                width: 45.9%
+
+       .good-info .tag-container 
+                height: 28px
+                overflow: hidden;
+                width: 100%;
+        
+        .good-detail-img 
+                height: 368px
+                position: relative;
+         
+         .good-detail-img img 
+                display: block;
+                height: 368px
+                width: 100%;
+        
+        //找相似
+        .good-detail-img .similar-c 
+            bottom: 0;
+            display: none;
+            height: 100%;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 100%;
+        
+        .good-detail-img .similar-c .bg 
+            background-color: #000;
+            height: 100%;
+            opacity: .6;
+            width: 100%;
+        
+        .good-detail-img .similar-c a 
+            background-color: #d0021b;
+            border-radius: 50%;
+            color: #fff;
+            display: block;
+            font-size: 30px;
+            height: 120px
+            left: 50%;
+            line-height: 120px
+            margin-left: -60px
+            margin-top:-60px
+            position: absolute;
+            text-align: center;
+            top: 50%;
+            width: 120px
+    
+   //
+    .good-detail-text 
+            position: relative;
+    
+
+    .good-detail-text .name a, .good-detail-text .price 
+            -webkit-transform: scale(.9);
+            font-size: 25px
+            transform: scale(.9);
+
+
+        .good-detail-text .name a 
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            color: #444;
+            display: -webkit-box;
+            height: 70px
+            line-height: 25px
+            margin: 15px 10px;
+            min-height: 50px
+            overflow: hidden;
+            padding: 5px 0;
+
+    .good-detail-text .price 
+            line-height: 30px
+            white-space: nowrap;
+    
+    .good-detail-text .price .sale-price.no-price 
+            color: #000;
+
+
+    .good-detail-text .price .sale-price 
+           color: #d62927;
+    
+
+    .good-detail-text .similar-btn 
+            bottom: -32px
+            color: #b0b0b0;
+            font-weight: 700;
+            height: 80px
+            line-height: 80px
+            position: absolute;
+            right: 0;
+            text-align: center;
+            width: 50px
+   
+
+//    新品
+        .good-info .tag-container .good-tag:last-child 
+            margin-right: 0;
+
+        .good-info .tag-container .new-tag 
+            background-color: #78dc7e;
+            color: #fff;
+            width: 60px
+
+        .good-info .tag-container .good-tag 
+            box-sizing: border-box;
+            display: block;
+            float: left;
+            font-size: 25px
+            height: 28px
+            line-height: 28px
+            margin-right: 1px;
+            text-align: center;
+     
+    //  筛选
+    .filter-mask 
+            background: rgba(0,0,0,.1);
+            height: 100%;
+
+
+  .filter-body, .filter-mask  
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            z-index: 12;
+
+   .filter-body 
+            background: #fff;
+            color: #000;
+            cursor: pointer;
+            font-size: 25px;
+            height: 1000px
+    
+    .filter-body .classify 
+            background: #f8f8f8;
+            height: 100%;
+            width: 50%;
+
+    .filter-body .classify>li.active 
+            background: #fff;
+
+    .filter-body .classify>li 
+            height: 120px
+            line-height: 120px
+    
+    .filter-body .classify>li .shower 
+            color: #333;
+            overflow: hidden;
+            padding-left: 1rem;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 100%;
+
+    .filter-body .classify>li>* 
+            box-sizing: border-box;
+   
+    .filter-body .classify>li .title 
+            color: #000;
+            float: left;
+    
+    .filter-body .active>.sub-classify 
+            display: block;
+
+    .filter-body .sub-classify 
+            -webkit-overflow-scrolling: touch;
+            display: none;
+            height: 880px
+            left: 50%;
+            overflow: auto;
+            position: absolute;
+            top: 0;
+            width: 50%;
+    
+    .filter-body .sub-classify>li 
+            border-bottom: 2px solid #e6e6e6;
+            height: 119px
+            line-height: 119px
+            overflow: hidden;
+            padding-left:30px
+            text-overflow: ellipsis;
+            white-space: nowrap;
+    
+    .filter-body .sub-classify .chosed .chosed-icon 
+            display: inline;
+
+
+    .filter-body .sub-classify .chosed-icon 
+            display: none;
 
 </style>

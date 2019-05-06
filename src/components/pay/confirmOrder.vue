@@ -8,40 +8,44 @@
 
         <div class="content">
             <!-- 收货地址 -->
-            <div class="address">
-                <div class="address-icon">
-                    <img src="/static/img/order/address-icon.png" />
+            <router-link to="/my/site">
+                <div class="address">
+                    <div class="address-icon">
+                        <img src="/static/img/order/address-icon.png" />
+                    </div>
+                    <div class="right">
+                        <div class="nameInfo">
+                            <span class="name">小辣鸡</span>
+                            <span class="phone">17875596666</span>
+                        </div>
+                        <div class="addressText">
+                            <p>广东省 广州市 白云区 嘉禾街道嘉禾彭西仁和仁和仁和串钱的二巷69号</p>
+                        </div>
+                    </div> 
+                    <div class="address-rightArrow iconfont">&#xe602;</div>
                 </div>
-                <div class="right">
-                    <div class="nameInfo">
-                        <span class="name">小辣鸡</span>
-                        <span class="phone">17875596666</span>
-                    </div>
-                    <div class="addressText">
-                        <p>广东省 广州市 白云区 嘉禾街道嘉禾彭西仁和仁和仁和串钱的二巷69号</p>
-                    </div>
-                </div> 
-                <div class="address-rightArrow iconfont">&#xe602;</div>
-            </div>
+            </router-link>
 
             <!-- 商品信息 -->
-            <div class="order-item" v-for="(item,index) in orderData" :key="index">
-                <div class="img-wrap">
-                    <img :src="item.img" />
+            <router-link to="/details">
+                <div class="order-item" v-for="(item,index) in orderData" :key="index">
+                    <div class="img-wrap">
+                        <img :src="item.img" />
+                    </div>
+                    <div class="text">
+                        <h3>{{item.goodsName}}</h3>
+                        <p>
+                            <span class="color">颜色:{{item.goodsColor}}</span>
+                            <span class="size">尺码:{{item.goodsSize}}</span>
+                        </p>
+                    </div>
+                    <div class="price-wrap">
+                        <p class="price">{{item.price | toFix | rmb}}</p>
+                        <p class="sale-price">{{item.salePrice | toFix | rmb}}</p>
+                        <p class="count">x{{item.goodsNum}}</p>
+                    </div>
                 </div>
-                <div class="text">
-                    <h3>{{item.goodsName}}</h3>
-                    <p>
-                        <span class="color">颜色:{{item.goodsColor}}</span>
-                        <span class="size">尺码:{{item.goodsSize}}</span>
-                    </p>
-                </div>
-                <div class="price-wrap">
-                    <p class="price">{{item.price | toFix | rmb}}</p>
-                    <p class="sale-price">{{item.salePrice | toFix | rmb}}</p>
-                    <p class="count">x{{item.goodsNum}}</p>
-                </div>
-            </div>
+            </router-link>
             <!-- <div class="order-item">
                 <div class="img-wrap">
                     <img src="/static/img/cart/0003.jpg" />
@@ -158,7 +162,7 @@
         available: 1,
         condition: '无使用门槛\n最多优惠12元',
         reason: '',
-        value: 150,
+        value: 250,
         name: '优惠券名称',
         startAt: 1489104000,
         endAt: 1514592000,
@@ -236,6 +240,23 @@
 				return count;
 			}
         },
+        mounted(){
+            // 处理留言框被键盘遮住
+            this.clientHeight = document.documentElement.clientHeight;
+            const that = this;
+             // 安卓手机键盘吊起挡住输入框
+            window.onresize = function() {
+              if(document.documentElement.clientHeight < that.clientHeight) {
+                // scrollVal为负值
+                let scrollVal = document.documentElement.clientHeight-that.clientHeight;
+                $(".content").css("marginTop",scrollVal);
+                $(".order-bill").hide();
+              }else {
+                $(".content").css("marginTop",0);
+                $(".order-bill").show();
+              }
+            }
+        },
         methods:{
             // 优惠券
             onChange(index) {
@@ -274,7 +295,6 @@
 			headerView
         }
         
-        
     }
 </script>
 
@@ -284,6 +304,7 @@
 .confirmOrder
     .content
         padding-top 88px
+        padding-bottom 98px
         .address
             display flex
             height 170px
@@ -373,72 +394,72 @@
                 padding 0 30px
                 box-sizing border-box
                 background-color #fff
-                .van-cell
-                    line-height 70px
-                    padding 0
-                    .van-cell__title
-                        font-size 26px
-                    .van-cell__value
-                        font-size 26px
-                        color #666
-                    .van-icon
-                        font-size 28px
-                        color #666
-                    .van-cell__right-icon
-                        line-height 70px
-                .van-coupon-list /deep/ .van-cell
-                    line-height 60px
-                    .van-coupon-list__exchange
-                        height 60px
-                        line-height 60px;
-                .van-coupon-list /deep/ .van-tabs__wrap
-                    height 50px
-                    line-height 50px
-                    font-size 26px
-                .van-coupon-list /deep/ .van-tabs__content
-                    .van-coupon__content
-                        height 150px
-                        .van-coupon__head
-                            h2
-                                font-size 36px
-                                margin-bottom 10px
-                            p
-                                line-height 30px
-                        .van-coupon__body
-                            h2
-                                font-size 28px
-                                margin-bottom 10px
-                             p
-                                line-height 30px
-                .van-coupon-list /deep/ .van-button--large
-                    height 88px
-                    line-height 88px
-                    .van-button__text
-                        font-size 26px
+                // .van-cell
+                //     line-height 65px
+                //     padding 0
+                //     .van-cell__title
+                //         font-size 26px
+                //     .van-cell__value
+                //         font-size 26px
+                //         color #666
+                //     .van-icon
+                //         font-size 28px
+                //         color #666
+                //     .van-cell__right-icon
+                //         line-height 70px
+                // .van-coupon-list /deep/ .van-cell
+                //     line-height 60px
+                //     .van-coupon-list__exchange
+                //         height 60px
+                //         line-height 60px;
+                // .van-coupon-list /deep/ .van-tabs__wrap
+                //     height 50px
+                //     line-height 50px
+                //     font-size 26px
+                // .van-coupon-list /deep/ .van-tabs__content
+                //     .van-coupon__content
+                //         height 150px
+                //         .van-coupon__head
+                //             h2
+                //                 font-size 36px
+                //                 margin-bottom 10px
+                //             p
+                //                 line-height 30px
+                //         .van-coupon__body
+                //             h2
+                //                 font-size 28px
+                //                 margin-bottom 10px
+                //              p
+                //                 line-height 30px
+                // .van-coupon-list /deep/ .van-button--large
+                //     height 88px
+                //     line-height 88px
+                //     .van-button__text
+                //         font-size 26px
                         
                 .fr
                     font-size 0
                     .wayText
-                        font-size 24px
+                        font-size 22px
                         color #666
                     .iconfont
                         font-size 30px
                         position relative
                         top 3px
-            .list
-                .van-radio-group /deep/ .van-cell
-                    line-height 60px
-                    padding 0 30px
-                    font-size 24px
-                    .van-radio__icon 
-                        i
-                            width 32px
-                            height 32px
-                            line-height 32px
+            // .list
+            //     .van-radio-group /deep/ .van-cell
+            //         line-height 60px
+            //         padding 0 30px
+            //         font-size 24px
+            //         .van-radio__icon 
+            //             i
+            //                 width 32px
+            //                 height 32px
+            //                 line-height 32px
             .msg
                 textarea
                     width 95%
-                    height 200px
+                    height 150px
                     border 2px solid #d1d1d1
                     margin 10px auto
                     display block

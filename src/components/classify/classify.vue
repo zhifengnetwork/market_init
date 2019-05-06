@@ -7,9 +7,10 @@
 					<img src="static/img/public/backBtn.png" />
 				</div> -->
 			</headerView>
-
+			
 			<div class="scroll">
 				<div class="scroll-menu" ref="menuBox">
+					
 					<ul>
 						<li
 							v-for="(item,index) of resData"
@@ -25,54 +26,53 @@
 							v-for="(items,index) of resData"
 							:key="index"
 							>	
-							<div>
-								<!-- 热门种类 -->
-								<div v-for="item in items.children">
-									<h3 class="title">{{item.cat_name}}</h3>
-									<ul class="pro-items">
-										<router-link
-											tag="li"
-											to="/details"
-											v-for="(it,index) of item.children"
-											:key="index"
-										>
-										<div class="picture">
-												<img :src="baseUrl + it.img">
-											</div>
-											<p>{{it.cat_name}}</p>
-										</router-link>
-									</ul>
-								</div>
+							<!-- 热门种类 -->
+							<div v-for="item in items.children">
+								<h3 class="title">{{item.cat_name}}</h3>
+								<ul class="pro-items">
+									<router-link
+										tag="li"
+										v-for="(it,index) of item.children"
+										:to="'/productLsit?cat_id='+item.cat_id"
+										:key="index"
+									>
+									<div class="picture">
+											<img :src="baseUrl + it.img">
+										</div>
+										<p>{{it.cat_name}}</p>
+									</router-link>
+								</ul>
+							</div>
 
-								<!-- 热销商品 -->
-								<div v-for="item in items.goods">
-									<h3 class="title">热销商品</h3>
-									<ul class="singleList">
-										<router-link 
-											tag="li"
-											to="/details"
-										>
-											<div class="img-wrap">
-												<img :src="baseUrl + item.img">
+							<!-- 热销商品 -->
+							<div v-for="item in items.goods">
+								<h3 class="title">热销商品</h3>
+								<ul class="singleList">
+									<router-link 
+										tag="li"
+										to="/details"
+									>
+										<div class="img-wrap">
+											<img :src="baseUrl + item.img">
+										</div>
+										<div class="text">
+											<h3>{{item.goods_name}}</h3>
+											<span class="sign">{{item.attr_name[0]}}</span>
+											<div class="line3">
+												<span class="price">¥{{item.price}}</span>
+												<span class="commentNum">评论{{item.comment}}条</span>
 											</div>
-											<div class="text">
-												<h3>{{item.goods_name}}</h3>
-												<span class="sign">热卖</span>
-												<div class="line3">
-													<span class="price">¥{{item.price}}</span>
-													<span class="commentNum">评论{{item.comment}}条</span>
-												</div>
-											</div>
-										</router-link>
-									</ul>
-								</div>
-
+										</div>
+									</router-link>
+								</ul>
 							</div>
 						</li>
 					</ul>
 				</div>
 			</div>
 		</div>
+		
+		<!-- 底部导航组件 -->
 		<menuBar></menuBar>
 	</div>
 </template>
@@ -92,8 +92,10 @@
 				scrollY:0,
 				baseUrl:'http://www.zfwl.c3w.cc/upload/images/'
 	 		}
-	 	},
+		},
+		 
 	 	computed:{
+			// 当前索引值 
 	 		currentIndex(){
 	 			for(let i = 0;i < this.listHeight.length-1;i++){
 	 				let height1 = this.listHeight[i]
@@ -111,7 +113,7 @@
             backBtn:function(){
                 this.$router.go(-1);
 			},
-			// 初始化Better-Scroll
+			// 初始化Better-Scroll实例
 	 		initScroll(){
 				this.menuScroll = new BScroll(this.$refs.menuBox,{
 					click:true
@@ -124,12 +126,13 @@
 					this.scrollY = Math.abs(Math.round(pos.y))
 	 			})
 			 },
-	
+			// 根据索引点击跳至对应内容
 	 		handleClick(i){
 	 			let proList = this.$refs.proClassify
 				let el = proList[i]
 				this.proScroll.scrollToElement(el,300);
-	 		},
+			 },
+			// 获取内容高度 
 	 		getHeight(){
 				let proList = this.$refs.proClassify
 				let height = 0
@@ -145,7 +148,8 @@
 	 				this.listHeight.push(height)
 				 }
 	 		}
-	 	},
+		 },
+		// dom节点渲染完成后请求接口数据 
 	 	mounted(){
 	 		this.$axios.get("/api/goods/categoryList")
 	 		// this.axios.get("/api/classify.json")
@@ -162,6 +166,7 @@
 				
 	 		})
 		 },
+		// 注册组件 
 		components:{
 			headerView,
 			menuBar
@@ -196,6 +201,7 @@
 				height calc(100vh - 100px)
 				padding 0 20px
 				.pro
+					padding-bottom 100px
 					.pro-classify
 						.title
 							line-height 100px
