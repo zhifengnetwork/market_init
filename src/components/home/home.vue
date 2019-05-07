@@ -204,7 +204,7 @@ export default {
 	methods:{
 		carousel(res){
 			for(let l=0;l<res.length;l++){
-			console.log(res[l].data.id)
+			console.log(res)
 				if(l==res[l].key){
 					var swiper = new Swiper('.'+res[l].data.id+res[l].key, {
 						autoplay: {//自动播放
