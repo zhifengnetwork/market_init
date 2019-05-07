@@ -3,7 +3,7 @@
     <!--div 循环-->
       <div class="drag_box" v-for="(v,i) in backData['data']"  >
         <!--轮播图 box-->
-        <div class="modle_box swiper-container" v-if="v.id == 'rotationId'? true:''" :key="v.id">
+        <div class="modle_box" :class="v.id+v.key_num" v-if="v.id == 'rotationId'? true:''" :key="v.id">
           <div class="slide swiper-wrapper">
             <div class="slide_item swiper-slide" v-for="(val,index) in v.data.images">
               <img :src="val.imgUrl" alt="" />
@@ -166,10 +166,11 @@ export default {
   },
   /*组件实例创建完成，属性已绑定，但DOM还未生成*/
   created: function() {
+		let res=[];
     var that = this;
     /*axios=>请求-页面数据*/ 
-    that.$axios.post("http://zfwl.zhifengwangluo.c3w.cc/admin/shop/getShopData", {
-        id: 12
+    that.$axios.post("http://zfwl.zhifengwangluo.c3w.cc/shop/getShopData", {
+        id: 39
       })
       .then(function(response) {
 				console.log(response["data"]);
@@ -183,7 +184,7 @@ export default {
 					for(let i=0;i<response.data.data.data.length;i++){
 						if(response.data.data.data[i].id=="rotationId"){
 							/*轮播图设置*/
-							let res=response.data.data.data[i];
+							res.push({'data':response.data.data.data[i],'key':response.data.data.data[i].key_num});
 							that.$nextTick(function(){
 								that.carousel(res)
 							});
@@ -202,30 +203,35 @@ export default {
 	},
 	methods:{
 		carousel(res){
-			var swiper = new Swiper('.swiper-container', {
-				autoplay: {//自动播放
-					delay: 3000,
-					disableOnInteraction: false,//用户操作swiper之后，是否禁止autoplay。默认为true：停止。
-				},
-				loop: true, // 循环模式选项
-				pagination:{
-						el: '.swiper-pagination',
-						// 自定义分页器，必须的type类型
-						type: 'custom',
-						renderCustom: function(swiper,current, total){
-							var paginationHtml = "";
-							for(var i= 0; i<total; i++) {
-							// 判断是不是激活焦点
-								if(i === (current-1)){
-										paginationHtml += '<span class="'+res.params.butStyle+'" style="background:'+res.params.clickColor+'"></span>';
-									}else{
-										paginationHtml += '<span class="'+res.params.butStyle+'" style="background:'+res.params.butColor+'"></span>';
+			for(let l=0;l<res.length;l++){
+			console.log(res[l].data.id)
+				if(l==res[l].key){
+					var swiper = new Swiper('.'+res[l].data.id+res[l].key, {
+						autoplay: {//自动播放
+							delay: 3000,
+							disableOnInteraction: false,//用户操作swiper之后，是否禁止autoplay。默认为true：停止。
+						},
+						loop: true, // 循环模式选项
+						pagination:{
+								el: '.swiper-pagination',
+								// 自定义分页器，必须的type类型
+								type: 'custom',
+								renderCustom: function(swiper,current, total){
+									var paginationHtml = "";
+									for(var i= 0; i<total; i++) {
+									// 判断是不是激活焦点
+										if(i === (current-1)){
+												paginationHtml += '<span class="'+res[l].data.params.butStyle+'" style="background:'+res[l].data.params.clickColor+'"></span>';
+											}else{
+												paginationHtml += '<span class="'+res[l].data.params.butStyle+'" style="background:'+res[l].data.params.butColor+'"></span>';
+											}
 									}
+									return paginationHtml;
 							}
-							return paginationHtml;
-					}
+						}
+					});   
 				}
-			});       
+			}    
 		},
 	},
 };
@@ -292,7 +298,7 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 .slide_but>span {
 	display: inline-block;
 	background: black;
-	margin-right: 5px;
+	margin-right: 15px;
 	-moz-opacity: .5;          
 	-khtml-opacity: .5;          
 	opacity: .5; 
@@ -311,8 +317,8 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 /* 线形按钮 */
 .slide_but .linetype {
-	width: 10px;
-	height: 10px;
+	width: 24px;
+	height: 2px;
 }
 /* 圆形按钮 */
 
@@ -850,7 +856,7 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 .slide_but>span {
 	display: inline-block;
 	background: black;
-	margin-right: 5px;
+	margin-right: 15px;
 	-moz-opacity: .5;          
 	-khtml-opacity: .5;          
 	opacity: .5; 
@@ -867,8 +873,8 @@ input:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 /* 线形按钮 */
 .slide_but .linetype {
-	width: 20px;
-	height: 10px;
+	width: 24px;
+	height: 2px;
 }
 /* 圆形按钮 */
 
