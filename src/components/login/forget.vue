@@ -187,73 +187,73 @@
 					return false;
 				}
 				/*loading(vuex) => 出现*/
-				that.$store.state.loadingState = true;
+//				that.$store.state.loadingState = true;
 				console.log("获取用户输入信息(当前组件):",that.userData);
-				if (!null) {
-					console.log('找回密码!!!');
-					/*整理数据=>后台*/
-					var uDataObj = {
-						/*账号*/
-						userName: that.userData['userName'],
-						/*邮箱验证码*/
-						mailboxCode: that.userData['mailboxCode'],
-						/*新密码*/																		
-						pass: that.userData['passOne'],
-						/*提示弹窗的text(vuex里面的方法只能接受一个参数，所以传个'对象'过去)*/
-						tipsText: that.userData['tipsText'],
-						/*提示弹窗的url*/
-						tipsUrl: that.userData['tipsUrl'],
-					}
-					that.$store.commit('retrievePass',uDataObj);
-					console.log('定时器');
-					var count = 3;
-					/*定时器*/
-//					that.timerUrl = setInterval(function(){
-//						count--;
-//						console.log(count);
-//						if(!count == 0){
-//							$('#rAndWBText').html(count+"秒后自动跳转到-登录页面");
-//						}else {
-//							$('#rAndWBText').html(count+"秒后自动跳转到-登录页面");
-//							/*清除定时器*/
-//							clearInterval(timerUrl);
-//							window.location.href = '登录.html';
-//						}
-//					},1000);
-					
-					/*存储，用户信息=> 初始化*/
-					that.userData = {
-						/*账号*/
-						userName: '',
-						/*邮箱验证码*/
-						mailboxCode: 'hlb999',
-						/*新密码*/
-						passOne: '',
-						/*确认密码*/
-						passTwo: '',
-						/*提示弹窗的text(vuex里面的方法只能接受一个参数，所以传个'对象'过去)*/
-						tipsText: '密码重置成功',
-						/*提示弹窗的url*/
-						tipsUrl: '/login',
-					}
-					return false;
-					
-				} else{
-					
-//					/*判断是否'修改密码'成功*/
-//					var failS = sAFail('img/failIcon.png','找回密码失败','请重新提交正确数据');
-//					/*loading => 隐藏*/
-//					$('.loadingSWrap').hide();
-//					/*放在最外边框的第一位*/
-//					$('.warpperP').prepend(failS);
-//					/*获取遮罩层，屏幕高宽*/
-//					console.log('找回密码失败');
-//					$('.maskWrap').css({
-//						'height': $(window).height(),
-//					});
-					
-					return false;
-				}
+//				if (!null) {
+//					console.log('找回密码!!!');
+//					/*整理数据=>后台*/
+//					var uDataObj = {
+//						/*账号*/
+//						userName: that.userData['userName'],
+//						/*邮箱验证码*/
+//						mailboxCode: that.userData['mailboxCode'],
+//						/*新密码*/																		
+//						pass: that.userData['passOne'],
+//						/*提示弹窗的text(vuex里面的方法只能接受一个参数，所以传个'对象'过去)*/
+//						tipsText: that.userData['tipsText'],
+//						/*提示弹窗的url*/
+//						tipsUrl: that.userData['tipsUrl'],
+//					}
+//					that.$store.commit('retrievePass',uDataObj);
+//					console.log('定时器');
+//					var count = 3;
+//					/*定时器*/
+////					that.timerUrl = setInterval(function(){
+////						count--;
+////						console.log(count);
+////						if(!count == 0){
+////							$('#rAndWBText').html(count+"秒后自动跳转到-登录页面");
+////						}else {
+////							$('#rAndWBText').html(count+"秒后自动跳转到-登录页面");
+////							/*清除定时器*/
+////							clearInterval(timerUrl);
+////							window.location.href = '登录.html';
+////						}
+////					},1000);
+//					
+//					/*存储，用户信息=> 初始化*/
+//					that.userData = {
+//						/*账号*/
+//						userName: '',
+//						/*邮箱验证码*/
+//						mailboxCode: 'hlb999',
+//						/*新密码*/
+//						passOne: '',
+//						/*确认密码*/
+//						passTwo: '',
+//						/*提示弹窗的text(vuex里面的方法只能接受一个参数，所以传个'对象'过去)*/
+//						tipsText: '密码重置成功',
+//						/*提示弹窗的url*/
+//						tipsUrl: '/login',
+//					}
+//					return false;
+//					
+//				} else{
+//					
+////					/*判断是否'修改密码'成功*/
+////					var failS = sAFail('img/failIcon.png','找回密码失败','请重新提交正确数据');
+////					/*loading => 隐藏*/
+////					$('.loadingSWrap').hide();
+////					/*放在最外边框的第一位*/
+////					$('.warpperP').prepend(failS);
+////					/*获取遮罩层，屏幕高宽*/
+////					console.log('找回密码失败');
+////					$('.maskWrap').css({
+////						'height': $(window).height(),
+////					});
+//					
+//					return false;
+//				}
 			},
 			
 		},
@@ -263,8 +263,7 @@
         },
         /*页面挂载完，执行钩子函数*/
 		mounted: function () {
-			/*初始化数据库、链接数据库=> 链接对应的表格=>把信息存储在本地！*/
-			this.$store.commit('createDb');
+			
 		},
         /*销毁监听事件*/
         destroyed: function () {

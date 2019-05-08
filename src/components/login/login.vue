@@ -214,30 +214,30 @@
 				
 				/*出现请求loading(更改vuex里的数据)*/
 				that.$store.state.loadingState = true;
-				/*ajax*/
-				if(!null){
-					console.log(that.landData);
-					/**获取数据=> 校验数据
-					 * 参数1:校验的数据。
-					 * 参数2:（数组形式）['提示文字','跳转的路径（路由跳转）']
-					 * **/
-					that.$store.commit('checkUserData',that.landData);
-					/*初始化，用户信息*/
-					that.landData = {
-						/*账号*/
-						userName: '',
-						/*密码*/
-						userPass: '',
-						/*当前输入=>验证码*/
-						thisCode: '',
-						/*提示弹窗的text(vuex里面的方法只能接受一个参数，所以传个'对象'过去)*/
-						tipsText: '登陆成功',
-						/*提示弹窗的url*/
-						tipsUrl: '/home',
-					}
-					/*调用组件的函数=> 更新-验证码*/
-					that.$refs.mychildFun.setCode();
-				}
+//				/*ajax*/
+//				if(!null){
+//					console.log(that.landData);
+//					/**获取数据=> 校验数据
+//					 * 参数1:校验的数据。
+//					 * 参数2:（数组形式）['提示文字','跳转的路径（路由跳转）']
+//					 * **/
+//					that.$store.commit('checkUserData',that.landData);
+//					/*初始化，用户信息*/
+//					that.landData = {
+//						/*账号*/
+//						userName: '',
+//						/*密码*/
+//						userPass: '',
+//						/*当前输入=>验证码*/
+//						thisCode: '',
+//						/*提示弹窗的text(vuex里面的方法只能接受一个参数，所以传个'对象'过去)*/
+//						tipsText: '登陆成功',
+//						/*提示弹窗的url*/
+//						tipsUrl: '/home',
+//					}
+//					/*调用组件的函数=> 更新-验证码*/
+//					that.$refs.mychildFun.setCode();
+//				}
 				console.log("初始化数据:",that.landData)
 			},
 			/*监听input => 获取焦点(防止键盘把底部（注册密码|忘记密码顶上去
@@ -259,8 +259,7 @@
 		},
 		/*钩子函数*/
 		mounted(){
-			/*初始化数据库*/
-			this.$store.commit('createDb');
+			
 		}
 		
 	}
