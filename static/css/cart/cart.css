@@ -807,8 +807,17 @@ img {
 .chose-panel .block-list, .chose-panel .num {
     font-size: .28rem;
     overflow: hidden;
-    padding-left: .8rem;
+    padding-left: 1rem;
     position: relative;
+}
+
+.chose-panel .num>span.left-num {
+    color: #b0b0b0;
+    overflow: hidden;
+    position: absolute;
+    left: 4.5rem;
+    top:  .2rem;
+    white-space: nowrap;
 }
 
 .chose-panel .block-list>span, .chose-panel .num>span {
@@ -817,8 +826,9 @@ img {
     top: .1rem;
 }
 
+
 .chose-panel .block {
-    border: 1px solid #444;
+    border: 2px solid #444;
     border-radius: 6px;
     box-sizing: border-box;
     display: block;
@@ -837,10 +847,19 @@ img {
     white-space: nowrap;
 }
 
+/* 选中 */
 .chose-panel .block.chosed {
     background: #d0021b;
     border-color: #e10;
     color: #fff;
+}
+/* 禁止选中 */
+.chose-panel .block.noneActive{
+    background: silver;
+    border-color: #e0e0e0;
+    opacity: 0.4;
+    color: #000;
+    pointer-events: none;
 }
 
 .chose-panel .num .btn {
