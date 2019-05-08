@@ -170,6 +170,10 @@
 					})
 				 }
 			 })
+			.catch( error => {
+				this.$store.commit('hideLoading')
+				alert(error)
+            })
 			 
 		 },
 		// 注册组件 
