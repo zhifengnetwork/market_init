@@ -2,12 +2,24 @@
   <div id="app">
   	<!--视图渲染-->
     <router-view/>
+		<!-- loading 加载 -->
+		<Loading v-if="loading"></Loading>
   </div>
 </template>
 
 <script>
+import {mapState} from 'vuex'
+import Loading from '@/components/common/Loading'
 export default {
-  name: 'App'
+	name: 'App',
+	computed:{
+    ...mapState([
+      'loading'
+    ])
+  },
+  components:{
+    Loading
+  }
 }
 </script>
 

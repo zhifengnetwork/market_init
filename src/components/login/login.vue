@@ -213,7 +213,7 @@
 				}
 				
 				/*出现请求loading(更改vuex里的数据)*/
-				that.$store.state.loadingState = true;
+//				that.$store.state.loadingState = true;
 //				/*ajax*/
 //				if(!null){
 //					console.log(that.landData);
