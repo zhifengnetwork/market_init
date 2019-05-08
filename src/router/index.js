@@ -57,7 +57,6 @@ import changePwd from '@/components/user/my/changePwd'
 //商品列表
 import productLsit from '@/components/goods/productList/product'
 
-import list from '@/components/goods/de'
 
 
 
@@ -193,11 +192,6 @@ export default new Router({
 			name: 'productLsit',
 			component:productLsit
 		},
-		{
-			path:'/list',
-			name: 'list',
-			component:list
-		}
 		
   	]
 })
