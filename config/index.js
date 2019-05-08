@@ -13,7 +13,11 @@ module.exports = {
     // proxyTable: {},
     proxyTable: {
 		  "/api": {
+<<<<<<< HEAD
 		    target: " http://api.zfwl.c3w.cc",//接口的域名
+=======
+        target: "http://api.zfwl.c3w.cc",//接口的域名
+>>>>>>> 81b4c7e53b3a9f5c0d468cde4df68d10f1504f6d
 		    // target: "http://localhost:8888",//接口的域名
 		    //secure: false,  //如果是https接口，需要配置这个参数
 		    changeOrigin: true, //如果接口跨域，需要进行这个参数配置

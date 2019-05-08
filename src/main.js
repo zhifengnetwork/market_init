@@ -9,6 +9,8 @@ import 'lib-flexible/flexible.js'
 
 import { Spinner } from 'mint-ui';
 
+import store from './store/store'
+
 // 导入vant所有组件
 import Vant from 'vant';
 import 'vant/lib/index.css';
@@ -102,6 +104,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
-	components: { App },
+  components: { App },
+  store,// 把 store 对象提供给 “store” 选项，这可以把 store 的实例注入所有的子组件
 	template: '<App/>'
 })

@@ -88,6 +88,22 @@
             <div class="order-row">
                 <div class="line">
                     <div class="left">
+                        订单编号:
+                    </div>
+                    <div class="right">
+                        294119778362083616
+                    </div>
+                </div>
+                <div class="line">
+                    <div class="left">
+                        下单时间:
+                    </div>
+                    <div class="right">
+                        2019-05-02 10:28:30
+                    </div>
+                </div>
+                <div class="line">
+                    <div class="left">
                         配送方式:
                     </div>
                     <div class="right">
@@ -109,15 +125,7 @@
                     <div class="right">
                         尽快发货！
                     </div>
-                </div>
-                <div class="line">
-                    <div class="left">
-                        订单编号:
-                    </div>
-                    <div class="right">
-                        294119778362083616
-                    </div>
-                </div>
+                </div>                
                  <div class="line">
                     <div class="left">
                         发票类型:

@@ -184,28 +184,28 @@
 				/*出现请求loading(更改vuex里的数据)*/
 				this.$store.state.loadingState = true;
 				/*ajax*/
-				if(!null){
-					console.log('register',that.userData);
-					/*获取数据=> 插入表格*/
-					that.$store.commit('insertData',that.userData);
-					/*初始化，用户信息*/
-					that.userData = {
-						/*账号*/
-						userName: '',
-						/*邮箱*/
-						mailbox: '',
-						/*新密码*/
-						passOne: '',
-						/*确认密码*/
-						passTwo: '',
-						/*邀请码*/
-						invitationCode: '',
-						/*提示弹窗的text(vuex里面的方法只能接受一个参数，所以传个'对象'过去)*/
-						tipsText: '注册成功',
-						/*提示弹窗的url*/
-						tipsUrl: '/login',
-					}
-				}
+//				if(!null){
+//					console.log('register',that.userData);
+//					/*获取数据=> 插入表格*/
+//					that.$store.commit('insertData',that.userData);
+//					/*初始化，用户信息*/
+//					that.userData = {
+//						/*账号*/
+//						userName: '',
+//						/*邮箱*/
+//						mailbox: '',
+//						/*新密码*/
+//						passOne: '',
+//						/*确认密码*/
+//						passTwo: '',
+//						/*邀请码*/
+//						invitationCode: '',
+//						/*提示弹窗的text(vuex里面的方法只能接受一个参数，所以传个'对象'过去)*/
+//						tipsText: '注册成功',
+//						/*提示弹窗的url*/
+//						tipsUrl: '/login',
+//					}
+//				}
 				
 			},
 			
@@ -214,8 +214,7 @@
 		 *  挂载结束状态
 		 * **/
 		mounted() {
-			/*初始化数据库*/
-			this.$store.commit('createDb');
+			
 		}
 	}
 </script>

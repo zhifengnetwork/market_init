@@ -151,17 +151,15 @@
 		 },
 		// dom节点渲染完成后请求接口数据 
 	 	mounted(){
-			this.$toast.loading({
-				mask: true,
-				message: '加载中...'
-			});
+			// 调用loading 
+			this.$store.commit('showLoading')
+			
 	 		this.$axios.get("/api/goods/categoryList")
 	 		// this.axios.get("/api/classify.json")
 	 		.then((res)=>{
 				 if(res.status === 200){
-
-					// 数据加载成功，关闭提示 
-					this.$toast.clear()
+					// 数据加载成功，关闭loading 
+					this.$store.commit('hideLoading')
 
 					let resData = res.data.data
 					this.resData = resData
@@ -172,6 +170,10 @@
 					})
 				 }
 			 })
+			.catch( error => {
+				this.$store.commit('hideLoading')
+				alert(error)
+            })
 			 
 		 },
 		// 注册组件 
