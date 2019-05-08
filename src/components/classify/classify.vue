@@ -154,7 +154,7 @@
 			// 调用loading 
 			this.$store.commit('showLoading')
 			
-	 		this.$axios.get("/api/goods/categoryList")
+	 		this.$axios.get("/apii/goods/categoryList")
 	 		// this.axios.get("/api/classify.json")
 	 		.then((res)=>{
 				 if(res.status === 200){
@@ -170,6 +170,10 @@
 					})
 				 }
 			 })
+			.catch( error => {
+				this.$store.commit('hideLoading')
+				alert(error)
+            })
 			 
 		 },
 		// 注册组件 
