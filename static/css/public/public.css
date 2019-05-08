@@ -103,12 +103,10 @@ input[type=button], input[type=submit], input[type=file], button {
 	background: rgba(0,0,0,.2);
 	border-radius: 1.25rem;
 	line-height: 1.2;
-	padding: 4px  8px;
+	padding: 10px  10px;
 }
 
 .van-swipe__indicators  .van-swipe__indicator{
-	width :8px;
-	height :8px;
 	background-color: #b0b0b0; 
 }
 						

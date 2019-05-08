@@ -170,7 +170,7 @@
                                                 </div>
                                                 <div class="text-info">
                                                     <p class="price">
-                                                        <span class="sale-price no-price">{{sku_price}}</span>  
+                                                        <span class="sale-price no-price">{{formatPrice(goods.price)}}</span>  
                                                     </p>
                                                     <p class="not-choose"   v-show="pitch==true">请选择颜色、尺码</p>
                                                     <p class="choosed-info" v-show="pitch==false" >已选择:{{shopItemInfo.spec}},{{shopItemInfo.color}},{{shopItemInfo.size}}</p>
@@ -179,14 +179,33 @@
                                                 </div>
                                             </div>
                                             <div class="chose-items">
+                                                 <!-- :class="{chosed:colorSelectt==index}" -->
                                                   <div class="block-list" v-for="(item,n) in good" :key="n">
                                                         <span class="name">{{item.spec_name}}</span>                                
                                                         <ul class="size-row clearfix">
                                                            
-                                                            <li class="block "  v-for="(oItem,index) in item.res" :key="index" :class="[oItem.isShow?'':'noneActive',oItem.isSelect?'chosed':'']" :data-id='oItem.attr_id'  @click="tabInfoChange(n,index,oItem.attr_id,$event)">{{oItem.attr_name}}</li>
+                                                            <li class="block "  v-for="(oItem,index) in item.res" :key="index" :class="[oItem.isShow?'':'noneActive',subIndex[n] == index?'chosed':'']" :data-id='oItem.attr_id'  @click="colorSelect(oItem.attr_name,item.spec_id,n,$event,index)">{{oItem.attr_name}}{{oItem.isShow}}</li>
                                                         </ul>
                                                     </div>
-                                                    
+                                                    <!-- 
+                                                        <div class="block-list">
+                                                        <span class="name">{{goods.spec.spec_attr[1].spec_name}}</span>
+                                                        <ul class="size-row clearfix">
+                                                            <li class="block "  v-for="(item,index) in goods.spec.spec_attr[1].res" :key="index" :class="{chosed:colorSelectt==index}" @click="colorSelect(index,item.attr_name)">{{item.attr_name}}</li>
+                                                        </ul>
+                                                        </div>
+                                                        <div class="block-list">
+                                                            <span class="name">{{goods.spec.spec_attr[0].spec_name}}</span>
+                                                            <ul class="size-row clearfix">
+                                                                <li class="block " v-for="(item,index) in goods.spec.spec_attr[0].res" :key="index" :class="{chosed:specSelectt==index}" @click="specification(index,item.attr_name)">{{item.attr_name}}</li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="block-list">
+                                                            <span class="name">{{goods.spec.spec_attr[2].spec_name}}</span>
+                                                            <ul class="size-row clearfix">
+                                                                <li class="block " v-for="(item,index) in goods.spec.spec_attr[2].res" :key="index" :class="{chosed:sizeSelectt==index}" @click="sizeSelect(index,item.attr_name)">{{item.attr_name}}</li>
+                                                            </ul>
+                                                    </div> -->
                                                 <div class="num">
                                                     <span class="name">数量</span>
                                                     <div class="clearfix">
@@ -198,7 +217,7 @@
                                                            +
                                                         </a>
                                                     </div>
-                                                    <span class="left-num" v-show="sku_stock_s">库存:{{sku_stock}}</span>
+                                                    <span class="left-num">库存:100</span>
                                                     <input id="left-num" type="hidden" value="0">
                                                     <input id="limitNum" type="hidden" value="">
                                                 </div>
@@ -320,22 +339,34 @@ export default {
 
                 is_sku: false,  //规格弹窗
 
-                sku_stock_s: false,     //规格.库存状态
+                skuArr: {},     //规格
 
                 sku_price: 0,   //规格.价格
 
                 sku_stock: 0,   //规格.库存
 
                 sku_num: 1,     //规格.数量
+
+                gid:'',         //规格ID
+
+                yid:'',         //颜色ID
+
+                sid:'',         //尺码ID
                  
-                // selectArr: [], //存放被选中的值
+                selectArr: [], //存放被选中的值
                 
                 shopItemInfo:{}, //存放要和选中的值进行匹配的数据
 
-                // subIndex: [], //是否选中 因为不确定是多规格还是但规格，所以这里定义数组来判断
+                subIndex: [], //是否选中 因为不确定是多规格还是但规格，所以这里定义数组来判断
+
+                // shopItemInfo: {  //存放要和选中的值进行匹配的数据
+                //     color:'',//存放选中的颜色
+                //     size:'',//存放选中的尺码
+                //     num:1,//存放选中的数量
+                //     spec:'',//存放选中的规格
+                // }, 
                 
                 goods: [], //渲染的商品,
-
                 good:[],
 
     };
@@ -360,6 +391,7 @@ export default {
         },
 
         formatPrice() {
+        // return '¥' + (this.goods.price / 100).toFixed(2);
         return '¥' + (this.goods.price);
         },
 
@@ -388,289 +420,104 @@ export default {
             this.sku_num=1;                                    //关闭默认全部为1
             this.getImg=this.baseUrl+this.goods.img[0].picture //关闭默认sku显示的图片为第一张
         },
+        //选中sku
+        colorSelect: function (item, id , n, e, index) {
+                    var self = this;
+                    var pid = parseInt(e.target.dataset.id)//当前点击的id
+                    if (self.selectArr[n] != pid) {
+                        self.selectArr[n] = pid;
+                        self.subIndex[n] = index;
+                    } else {
+                        self.selectArr[n] = "";
+                        self.subIndex[n] = -1; //去掉选中的颜色 
+                    }
+                    self.checkItem(id,pid);
+                },
+                checkItem: function (id,pid,n,index) {
+                    var self = this;
+                    var option = self.goods.spec.spec_attr;
+                    var result = [];  //定义数组存储被选中的值
+                    for (var i in option) {
 
-        //初始化规格数据
-        initializeSpecification(){
-                this.initSKU(); //初始化，得到SKUResult
-                 var that = this;
-                 that.sku_price = this.formatPrice(that.goods.price);
-                for (let i = 0; i < that.good.length; i++) {
-                for (let j = 0; j < that.good[i].res.length; j++) {
-                  that.good[i].res[j].isShow = true;
-                  that.good[i].res[j].isSelect = false;
-                if (that.shopItemInfo[that.good[i].res[j].attr_id] == null) {
-                       that.good[i].res[j].isShow = false;
-                }
-                }
-            }
+                        result[i] = self.selectArr[i] ? self.selectArr[i] : '';
+                    }
+                    for (var i in option) {
+
+                        var last = result[i];  //把选中的值存放到字符串last去
+                        console.log(option[i].res)
+                        for (var k in option[i].res) {
+                            result[i] = option[i].res[k].attr_id; //赋值，存在直接覆盖，不存在往里面添加ID值
+                            option[i].res[k].isShow = self.isMay(result); //在数据里面添加字段isShow来判断是否可以选择
+                        }
+                        result[i] = last; //还原，目的是记录点下去那个值，避免下一次执行循环时避免被覆盖
+                    }
+
+                     if(id==self.gid){  //如果一开始点击的是规格
+                      this.goods.spec.goods_sku.forEach((element,i) => {
+                           var gid = eval('('+element.sku_attr+')')[id]  //拿到sku 1:的id
+                           console.log(gid,pid)
+                           var gide =  eval('('+element.sku_attr+')')[self.yid]  //颜色id
+                           var sid  =  eval('('+element.sku_attr+')')[self.sid]  //尺码id
+                            if(gid==pid){
+                               for (var z in self.good){
+                                    if(self.good[z].spec_id==self.yid){  //判断颜色
+                                        var color = self.good[z]
+                                        for(var j in color.res){
+                                            if(self.good[z].res[j].attr_id!=gide){
+                                               self.good[z].res[j].isShow=false
+                                            }
+                                        }
+                                         
+                                    }
+                                    // if(self.good[z].spec_id==self.sid){   //判断尺码
+                                    // console.log(self.good[z].spec_id==self.sid)
+                                    //     var size = self.good[z]
+                                    //     for(var j in size.res){
+                                    //         if(self.good[z].res[j].attr_id!=sid){
+
+                                    //            self.good[z].res[j].isShow=false
+                                    //         }
+                                    //     }
+                                         
+                                    // }
+                               }
+                            }
+                    });
+                    }
+                    // if(id==self.yid){  //如果一开始点击的是颜色
+                    //   this.goods.spec.goods_sku.forEach((element,i) => {
+                    //        var gid = eval('('+element.sku_attr+')')[id]
+                    //         if(gid==pid){
+                    //           var gide =  eval('('+element.sku_attr+')')[self.gid] //颜色id
+                    //           var sid  = eval('('+element.sku_attr+')')[self.sid]  //尺码id
+                    //            for (var i in self.good){
+                    //                 if(self.good[i].spec_id==self.yid){
+                    //                     var color = self.good[i]
+                    //                     for(var j in color.res){
+                    //                         if(self.good[i].res[j].attr_id!=gide){
+                    //                             console.log(gide)
+                    //                            console.log(self.good[i].res[j].attr_id) 
+                    //                            self.good[i].res[j].isShow=false
+                    //                         }
+                    //                     }
+                                         
+                    //                 }
+                    //            }
+                    //         }
+                    // });
+                    // }
+                    self.$forceUpdate(); //重绘
         },
-       
-          //获得对象的key
-            getObjKeys(obj) {
-            if (obj !== Object(obj)) throw new TypeError("Invalid object");
-            var keys = [];
-            for (var key in obj)
-                if (Object.prototype.hasOwnProperty.call(obj, key))
-                keys[keys.length] = key;
-                 return keys;
-            },
-    
-        //把组合的key放入结果集SKUResult
-        add2SKUResult(combArrItem, sku) {
-        var key = combArrItem.join(";");
-        if (this.shopItemInfo[key]) {
-            //SKU信息key属性·
-            this.shopItemInfo[key].inventory += sku.inventory;
-            this.shopItemInfo[key].prices.push(sku.price);
-        } else {
-            this.shopItemInfo[key] = {
-            inventory: sku.inventory,
-            prices: [sku.price]
-            };
-        }
-        },
 
-          //初始化得到结果集
-    initSKU() {
-      var i,
-        j,
-        skuKeys = this.getObjKeys(this.shopItemInfo);
-      for (i = 0; i < skuKeys.length; i++) {
-        var skuKey = skuKeys[i]; //一条SKU信息key
-        var sku = this.shopItemInfo[skuKey]; //一条SKU信息value
-        var skuKeyAttrs = skuKey.split(","); //SKU信息key属性值数组
-        skuKeyAttrs.sort(function(value1, value2) {
-          return parseInt(value1) - parseInt(value2);
-        });
-        //对每个SKU信息key属性值进行拆分组合
-        var combArr = this.combInArray(skuKeyAttrs);
-        for (j = 0; j < combArr.length; j++) {
-          this.add2SKUResult(combArr[j], sku);
-        }
- 
-        //结果集接放入SKUResult
-        this.shopItemInfo[skuKeyAttrs.join(";")] = {
-          inventory: sku.inventory,
-          prices: [sku.price]
-        };
-      }
-    },
-
-    /**
-     * 从数组中生成指定长度的组合
-     * 方法: 先生成[0,1...]形式的数组, 然后根据0,1从原数组取元素，得到组合数组
-     */
-    combInArray(aData) {
-      if (!aData || !aData.length) {
-        return [];
-      }
- 
-      var len = aData.length;
-      var aResult = [];
- 
-      for (var n = 1; n < len; n++) {
-        var aaFlags = this.getCombFlags(len, n);
-        while (aaFlags.length) {
-          var aFlag = aaFlags.shift();
-          var aComb = [];
-          for (var i = 0; i < len; i++) {
-            aFlag[i] && aComb.push(aData[i]);
-          }
-          aResult.push(aComb);
-        }
-      }
- 
-      return aResult;
-    },
-
-    /**
-     * 得到从 m 元素中取 n 元素的所有组合
-     * 结果为[0,1...]形式的数组, 1表示选中，0表示不选
-     */
-    getCombFlags(m, n) {
-      if (!n || n < 1) {
-        return [];
-      }
- 
-      var aResult = [];
-      var aFlag = [];
-      var bNext = true;
-      var i, j, iCnt1;
- 
-      for (i = 0; i < m; i++) {
-        aFlag[i] = i < n ? 1 : 0;
-      }
- 
-      aResult.push(aFlag.concat());
- 
-      while (bNext) {
-        iCnt1 = 0;
-        for (i = 0; i < m - 1; i++) {
-          if (aFlag[i] == 1 && aFlag[i + 1] == 0) {
-            for (j = 0; j < i; j++) {
-              aFlag[j] = j < iCnt1 ? 1 : 0;
-            }
-            aFlag[i] = 0;
-            aFlag[i + 1] = 1;
-            var aTmp = aFlag.concat();
-            aResult.push(aTmp);
-            if (
-              aTmp
-                .slice(-n)
-                .join("")
-                .indexOf("0") == -1
-            ) {
-              bNext = false;
-            }
-            break;
-          }
-          aFlag[i] == 1 && iCnt1++;
-        }
-      }
-      return aResult;
-    },
-
-    /*商品条件筛选*/
-    tabInfoChange(n,index,cid,$event) {
-      var self = this
-      let orderInfo = this.good; /*所有规格**所有规格*/
-      let orderInfoChild = this.good[n].res; /*当前点击的规格的所有子属性内容*/
-      //选中自己，兄弟节点取消选中
-      if (orderInfoChild[index].isShow = true) {
-        if (orderInfoChild[index].isSelect == true) {
-            orderInfoChild[index].isSelect = false
-        } else {
-            for (let i = 0; i < orderInfoChild.length; i++) {
-                orderInfoChild[i].isSelect = false;
-          }
-              orderInfoChild[index].isSelect = true;
-        }
-      }
-       self.$forceUpdate(); //重绘
- 
-      // //已经选择的节点
-      let haveChangedId = [];
-      for (let i = 0; i < this.good.length; i++) {
-        for (let j = 0; j < this.good[i].res.length; j++) {
-          if (this.good[i].res[j].isSelect == true) {
-            haveChangedId.push(this.good[i].res[j].attr_id);
-            
-          }
-        }
-      }
-      if (haveChangedId.length) {
-        //点击显示库存
-        this.sku_stock_s = true;
-        //获得组合key价格
- 
-        haveChangedId.sort(function(value1, value2) {
-
-          return parseInt(value1) - parseInt(value2);
-        });
-        var len = haveChangedId.length;
-        var prices = this.shopItemInfo[haveChangedId.join(";")].prices;   //价格
-        this.sku_stock = this.shopItemInfo[haveChangedId.join(";")].inventory  //库存
-        var maxPrice = Math.max.apply(Math, prices);
-        var minPrice = Math.min.apply(Math, prices);
-        this.sku_price = 
-              maxPrice > minPrice
-            ? '￥'+(minPrice) + "-" + '￥'+maxPrice
-            : '￥'+maxPrice/*筛选价格*/
-           
-        //用已选中的节点验证待测试节点
-        let daiceshi = []; //待测试节点
-        let daiceshiId = [];
-        for (let i = 0; i < this.good.length; i++) {
-          for (let j = 0; j < this.good[i].res.length; j++) {
-            if (this.good[n].res[index].attr_id != this.good[i].res[j].attr_id ) {
-              console.log(this.good[n].res[index].attr_id, this.good[i].res[j].attr_id)
-              daiceshi.push({
-                index: i,
-                cindex: j,
-                id: this.good[i].res[j].attr_id
-              }) ;
-              daiceshiId.push(this.good[i].res[j].attr_id);
-            }
-          }
-        }
-        for (let i = 0; i < haveChangedId.length; i++) {
-          var indexs = daiceshiId.indexOf(haveChangedId[i]);
-          if (indexs > -1) {
-            daiceshi.splice(indexs, 1);
-          }
-        }
-        for (let i = 0; i < daiceshi.length; i++) {
-          let testAttrIds = []; //从选中节点中去掉选中的兄弟节点
-          let siblingsId = "";
-          for (let m = 0; m < this.good[daiceshi[i].index].res.length; m++) {
-            if (this.good[daiceshi[i].index].res[m].isSelect == true) {
-              siblingsId = this.good[daiceshi[i].index].res[m].attr_id;
-          
-            }
-          }
-
-          if (siblingsId != "") {
-            for (let j = 0; j < len; j++) {
-              haveChangedId[j] != siblingsId && testAttrIds.push(haveChangedId[j]);
-            }
-          } else {
-            testAttrIds = haveChangedId.concat();
-
-          }
-          testAttrIds = testAttrIds.concat(
-            this.good[daiceshi[i].index].res[daiceshi[i].cindex].attr_id
-          );
-          testAttrIds.sort(function(value1, value2) {
-            return parseInt(value1) - parseInt(value2);
-          });
-          // console.log(this.shopItemInfo[testAttrIds.join(";")])
-          if (!this.shopItemInfo[testAttrIds.join(";")] ) {
-            this.good[daiceshi[i].index].res[
-              daiceshi[i].cindex
-            ].isShow = false;
-            this.good[daiceshi[i].index].res[
-              daiceshi[i].cindex
-            ].isSelect = false;
-            console.log(this.good[daiceshi[i].index].res[
-              daiceshi[i].cindex
-            ])
-          } else {
-            // console.log(this.shopItemInfo[testAttrIds.join(";")].inventory)
-            if(this.shopItemInfo[testAttrIds.join(";")].inventory){
-            //   console.log(this.good[daiceshi[i].index].res[
-            //   daiceshi[i].cindex
-            // ])
-            }
-            this.good[daiceshi[i].index].res[
-              daiceshi[i].cindex
-            ].isShow = true;
-          }
-        }
-      } 
-      else {
-        //设置默认价格
-        this.sku_price = this.formatPrice(this.goods.price);
-        //设置默认库存
-        this.sku_stock = 0 ;
-        //设置默认隐藏库存
-        this.sku_stock_s = false;
-        //设置属性状态
-        for (let i = 0; i < this.good.length; i++) {
-          for (let j = 0; j < this.good[i].res.length; j++) {
-            console.log(this.shopItemInfo[this.good[i].res[j].attr_id])
-            if (this.shopItemInfo[this.good[i].res[j].attr_id]) {
-              this.good[i].res[j].isShow = true;
-            } else {
-              this.good[i].res[j].isShow = false;
-              this.good[i].res[j].isSelect = true;
-            }
-          }
-        }
-      }
-    },
-
-
-
+        isMay: function (result) {
+                    for (var i in result) {
+                        // console.log(result[i])
+                        if (result[i] != '') {
+                            return true; //如果数组里有为空的值，那直接返回true
+                        }
+                    }
+                    // return this.shopItemInfo[result].inventory == 0 ? false : true; //匹配选中的数据的库存，若不为空返回true反之返回false
+                },
 
         //规格弹窗 减少数量
         minusNum(){
@@ -694,6 +541,7 @@ export default {
         //加入购物车
         addCart(){
             
+            this.forEach
             // if(this.shopItemInfo.spec==""){
             //      Toast("请选择商品规格噢~")
             //      return;
@@ -724,12 +572,10 @@ export default {
         },
          //点击收藏
         onClickMinicollect(){
+            // console.log(1)
             this.ish!=this.ish
               Toast('收藏成功')  
         },
-        ajaxs(){
-            
-        }
        
         },
         //获取商品规格
@@ -739,15 +585,22 @@ export default {
                 that.$axios.get(url).then((res)=>{
                     that.goods = res.data.data;
                     that.good =  res.data.data.spec.spec_attr;
-             for (var i in that.goods.spec.goods_sku) {  
-             that.shopItemInfo[that.goods.spec.goods_sku[i].sku_attr1] = that.goods.spec.goods_sku[i]; //修改数据结构格式，改成键值对的方式，以方便和选中之后的值进行匹配
-              }
-               //初始化规格
-                this.initializeSpecification();
-                 console.log(this.goods)
+                    that.good.forEach(element => {
+                          if(element.spec_name=='规格'){
+                              that.gid=element.spec_id
+                          }
+                          if(element.spec_name=='颜色'){
+                              that.yid=element.spec_id
+                          }else{
+                              that.sid=element.spec_id
+                          }
+                    });
+                // for (var i in that.goods.spec.goods_sku) {  
+                //     that.shopItemInfo[that.goods.spec.goods_sku[i].sku_attr] = that.goods.spec.goods_sku[i]; //修改数据结构格式，改成键值对的方式，以方便和选中之后的值进行匹配
+                // }
+                that.checkItem();
             })
-            
-    },
+    }
 }
 </script>
 <style lang="stylus" scoped>

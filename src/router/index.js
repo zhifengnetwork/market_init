@@ -56,7 +56,10 @@ import changePwd from '@/components/user/my/changePwd'
 
 //商品列表
 import productLsit from '@/components/goods/productList/product'
-// import list from '@/components/goods/productList/list'
+
+import list from '@/components/goods/de'
+
+
 
 
 Vue.use(Router)
@@ -190,11 +193,11 @@ export default new Router({
 			name: 'productLsit',
 			component:productLsit
 		},
-		// {
-		// 	path:'/list',
-		// 	name: 'list',
-		// 	component:list
-		// }
+		{
+			path:'/list',
+			name: 'list',
+			component:list
+		}
 		
   	]
 })

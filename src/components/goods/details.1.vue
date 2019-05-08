@@ -170,7 +170,7 @@
                                                 </div>
                                                 <div class="text-info">
                                                     <p class="price">
-                                                        <span class="sale-price no-price">{{sku_price}}</span>  
+                                                        <span class="sale-price no-price">{{formatPrice(goods.price)}}</span>  
                                                     </p>
                                                     <p class="not-choose"   v-show="pitch==true">请选择颜色、尺码</p>
                                                     <p class="choosed-info" v-show="pitch==false" >已选择:{{shopItemInfo.spec}},{{shopItemInfo.color}},{{shopItemInfo.size}}</p>
@@ -179,11 +179,12 @@
                                                 </div>
                                             </div>
                                             <div class="chose-items">
+                                                 <!-- :class="{chosed:colorSelectt==index}" -->
                                                   <div class="block-list" v-for="(item,n) in good" :key="n">
                                                         <span class="name">{{item.spec_name}}</span>                                
                                                         <ul class="size-row clearfix">
                                                            
-                                                            <li class="block "  v-for="(oItem,index) in item.res" :key="index" :class="[oItem.isShow?'':'noneActive',oItem.isSelect?'chosed':'']" :data-id='oItem.attr_id'  @click="tabInfoChange(n,index,oItem.attr_id,$event)">{{oItem.attr_name}}</li>
+                                                            <li class="block "  v-for="(oItem,index) in item.res" :key="index" :class="[oItem.isShow?'':'noneActive',subIndex[n] == index?'chosed':'']" :data-id='oItem.attr_id'  @click="tabInfoChange(n,index,oItem.attr_id,$event)">{{oItem.attr_name}}{{oItem.isShow}}</li>
                                                         </ul>
                                                     </div>
                                                     
@@ -198,7 +199,7 @@
                                                            +
                                                         </a>
                                                     </div>
-                                                    <span class="left-num" v-show="sku_stock_s">库存:{{sku_stock}}</span>
+                                                    <span class="left-num">库存:100</span>
                                                     <input id="left-num" type="hidden" value="0">
                                                     <input id="limitNum" type="hidden" value="">
                                                 </div>
@@ -320,7 +321,7 @@ export default {
 
                 is_sku: false,  //规格弹窗
 
-                sku_stock_s: false,     //规格.库存状态
+                skuArr: {},     //规格
 
                 sku_price: 0,   //规格.价格
 
@@ -328,11 +329,11 @@ export default {
 
                 sku_num: 1,     //规格.数量
                  
-                // selectArr: [], //存放被选中的值
+                selectArr: [], //存放被选中的值
                 
                 shopItemInfo:{}, //存放要和选中的值进行匹配的数据
 
-                // subIndex: [], //是否选中 因为不确定是多规格还是但规格，所以这里定义数组来判断
+                subIndex: [], //是否选中 因为不确定是多规格还是但规格，所以这里定义数组来判断
                 
                 goods: [], //渲染的商品,
 
@@ -360,6 +361,7 @@ export default {
         },
 
         formatPrice() {
+        // return '¥' + (this.goods.price / 100).toFixed(2);
         return '¥' + (this.goods.price);
         },
 
@@ -393,11 +395,9 @@ export default {
         initializeSpecification(){
                 this.initSKU(); //初始化，得到SKUResult
                  var that = this;
-                 that.sku_price = this.formatPrice(that.goods.price);
                 for (let i = 0; i < that.good.length; i++) {
                 for (let j = 0; j < that.good[i].res.length; j++) {
                   that.good[i].res[j].isShow = true;
-                  that.good[i].res[j].isSelect = false;
                 if (that.shopItemInfo[that.good[i].res[j].attr_id] == null) {
                        that.good[i].res[j].isShow = false;
                 }
@@ -449,8 +449,9 @@ export default {
         }
  
         //结果集接放入SKUResult
+       
         this.shopItemInfo[skuKeyAttrs.join(";")] = {
-          inventory: sku.inventory,
+          count: sku.inventory,
           prices: [sku.price]
         };
       }
@@ -536,14 +537,11 @@ export default {
       let orderInfo = this.good; /*所有规格**所有规格*/
       let orderInfoChild = this.good[n].res; /*当前点击的规格的所有子属性内容*/
       //选中自己，兄弟节点取消选中
-      if (orderInfoChild[index].isShow = true) {
-        if (orderInfoChild[index].isSelect == true) {
-            orderInfoChild[index].isSelect = false
+      if (orderInfoChild[index].isShow == true) {
+        if (self.subIndex[n] != index) {
+            self.subIndex[n] = index
         } else {
-            for (let i = 0; i < orderInfoChild.length; i++) {
-                orderInfoChild[i].isSelect = false;
-          }
-              orderInfoChild[index].isSelect = true;
+                self.subIndex[n] = -1
         }
       }
        self.$forceUpdate(); //重绘
@@ -552,121 +550,100 @@ export default {
       let haveChangedId = [];
       for (let i = 0; i < this.good.length; i++) {
         for (let j = 0; j < this.good[i].res.length; j++) {
-          if (this.good[i].res[j].isSelect == true) {
-            haveChangedId.push(this.good[i].res[j].attr_id);
-            
+          var last = haveChangedId[i];  //把选中的值存放到字符串last去
+          if (self.subIndex[n] == index) {
+              self.selectArr=cid
+             haveChangedId[i]=cid;
           }
         }
+        haveChangedId[i] = last; 
       }
-      if (haveChangedId.length) {
-        //点击显示库存
-        this.sku_stock_s = true;
-        //获得组合key价格
+      console.log( haveChangedId)
+      // if (haveChangedId.length) {
+      //   //获得组合key价格
+      //   haveChangedId.sort(function(value1, value2) {
+      //     return parseInt(value1) - parseInt(value2);
+      //   });
+      //   var len = haveChangedId.length;
+      //   var prices = this.SKUResult[haveChangedId.join(";")].prices;
+      //   var maxPrice = Math.max.apply(Math, prices);
+      //   var minPrice = Math.min.apply(Math, prices);
+      //   this.nowPrice =
+      //     maxPrice > minPrice
+      //       ? minPrice + "-" + maxPrice
+      //       : maxPrice; /*筛选价格*/
  
-        haveChangedId.sort(function(value1, value2) {
-
-          return parseInt(value1) - parseInt(value2);
-        });
-        var len = haveChangedId.length;
-        var prices = this.shopItemInfo[haveChangedId.join(";")].prices;   //价格
-        this.sku_stock = this.shopItemInfo[haveChangedId.join(";")].inventory  //库存
-        var maxPrice = Math.max.apply(Math, prices);
-        var minPrice = Math.min.apply(Math, prices);
-        this.sku_price = 
-              maxPrice > minPrice
-            ? '￥'+(minPrice) + "-" + '￥'+maxPrice
-            : '￥'+maxPrice/*筛选价格*/
-           
-        //用已选中的节点验证待测试节点
-        let daiceshi = []; //待测试节点
-        let daiceshiId = [];
-        for (let i = 0; i < this.good.length; i++) {
-          for (let j = 0; j < this.good[i].res.length; j++) {
-            if (this.good[n].res[index].attr_id != this.good[i].res[j].attr_id ) {
-              console.log(this.good[n].res[index].attr_id, this.good[i].res[j].attr_id)
-              daiceshi.push({
-                index: i,
-                cindex: j,
-                id: this.good[i].res[j].attr_id
-              }) ;
-              daiceshiId.push(this.good[i].res[j].attr_id);
-            }
-          }
-        }
-        for (let i = 0; i < haveChangedId.length; i++) {
-          var indexs = daiceshiId.indexOf(haveChangedId[i]);
-          if (indexs > -1) {
-            daiceshi.splice(indexs, 1);
-          }
-        }
-        for (let i = 0; i < daiceshi.length; i++) {
-          let testAttrIds = []; //从选中节点中去掉选中的兄弟节点
-          let siblingsId = "";
-          for (let m = 0; m < this.good[daiceshi[i].index].res.length; m++) {
-            if (this.good[daiceshi[i].index].res[m].isSelect == true) {
-              siblingsId = this.good[daiceshi[i].index].res[m].attr_id;
-          
-            }
-          }
-
-          if (siblingsId != "") {
-            for (let j = 0; j < len; j++) {
-              haveChangedId[j] != siblingsId && testAttrIds.push(haveChangedId[j]);
-            }
-          } else {
-            testAttrIds = haveChangedId.concat();
-
-          }
-          testAttrIds = testAttrIds.concat(
-            this.good[daiceshi[i].index].res[daiceshi[i].cindex].attr_id
-          );
-          testAttrIds.sort(function(value1, value2) {
-            return parseInt(value1) - parseInt(value2);
-          });
-          // console.log(this.shopItemInfo[testAttrIds.join(";")])
-          if (!this.shopItemInfo[testAttrIds.join(";")] ) {
-            this.good[daiceshi[i].index].res[
-              daiceshi[i].cindex
-            ].isShow = false;
-            this.good[daiceshi[i].index].res[
-              daiceshi[i].cindex
-            ].isSelect = false;
-            console.log(this.good[daiceshi[i].index].res[
-              daiceshi[i].cindex
-            ])
-          } else {
-            // console.log(this.shopItemInfo[testAttrIds.join(";")].inventory)
-            if(this.shopItemInfo[testAttrIds.join(";")].inventory){
-            //   console.log(this.good[daiceshi[i].index].res[
-            //   daiceshi[i].cindex
-            // ])
-            }
-            this.good[daiceshi[i].index].res[
-              daiceshi[i].cindex
-            ].isShow = true;
-          }
-        }
-      } 
-      else {
-        //设置默认价格
-        this.sku_price = this.formatPrice(this.goods.price);
-        //设置默认库存
-        this.sku_stock = 0 ;
-        //设置默认隐藏库存
-        this.sku_stock_s = false;
-        //设置属性状态
-        for (let i = 0; i < this.good.length; i++) {
-          for (let j = 0; j < this.good[i].res.length; j++) {
-            console.log(this.shopItemInfo[this.good[i].res[j].attr_id])
-            if (this.shopItemInfo[this.good[i].res[j].attr_id]) {
-              this.good[i].res[j].isShow = true;
-            } else {
-              this.good[i].res[j].isShow = false;
-              this.good[i].res[j].isSelect = true;
-            }
-          }
-        }
-      }
+      //   //用已选中的节点验证待测试节点
+      //   let daiceshi = []; //待测试节点
+      //   let daiceshiId = [];
+      //   for (let i = 0; i < this.keys.length; i++) {
+      //     for (let j = 0; j < this.keys[i].value.length; j++) {
+      //       if (this.keys[index].value[cindex].id != this.keys[i].value[j].id) {
+      //         daiceshi.push({
+      //           index: i,
+      //           cindex: j,
+      //           id: this.keys[i].value[j].id
+      //         });
+      //         daiceshiId.push(this.keys[i].value[j].id);
+      //       }
+      //     }
+      //   }
+      //   for (let i = 0; i < haveChangedId.length; i++) {
+      //     var indexs = daiceshiId.indexOf(haveChangedId[i]);
+      //     if (indexs > -1) {
+      //       daiceshi.splice(indexs, 1);
+      //     }
+      //   }
+      //   for (let i = 0; i < daiceshi.length; i++) {
+      //     let testAttrIds = []; //从选中节点中去掉选中的兄弟节点
+      //     let siblingsId = "";
+      //     for (let m = 0; m < this.keys[daiceshi[i].index].value.length; m++) {
+      //       if (this.keys[daiceshi[i].index].value[m].isActiveC == true) {
+      //         siblingsId = this.keys[daiceshi[i].index].value[m].id;
+      //       }
+      //     }
+      //     if (siblingsId != "") {
+      //       for (let j = 0; j < len; j++) {
+      //         haveChangedId[j] != siblingsId &&
+      //           testAttrIds.push(haveChangedId[j]);
+      //       }
+      //     } else {
+      //       testAttrIds = haveChangedId.concat();
+      //     }
+      //     testAttrIds = testAttrIds.concat(
+      //       this.keys[daiceshi[i].index].value[daiceshi[i].cindex].id
+      //     );
+      //     testAttrIds.sort(function(value1, value2) {
+      //       return parseInt(value1) - parseInt(value2);
+      //     });
+      //     if (!this.SKUResult[testAttrIds.join(";")]) {
+      //       this.keys[daiceshi[i].index].value[
+      //         daiceshi[i].cindex
+      //       ].notClick = true;
+      //       this.keys[daiceshi[i].index].value[
+      //         daiceshi[i].cindex
+      //       ].isActiveC = false;
+      //     } else {
+      //       this.keys[daiceshi[i].index].value[
+      //         daiceshi[i].cindex
+      //       ].notClick = false;
+      //     }
+      //   }
+      // } else {
+      //   //设置默认价格
+      //   this.nowPrice = "--";
+      //   //设置属性状态
+      //   for (let i = 0; i < this.keys.length; i++) {
+      //     for (let j = 0; j < this.keys[i].value.length; j++) {
+      //       if (this.SKUResult[this.keys[i].value[j].id]) {
+      //         this.keys[i].value[j].notClick = false;
+      //       } else {
+      //         this.keys[i].value[j].notClick = true;
+      //         this.keys[i].value[j].isActiveC = false;
+      //       }
+      //     }
+      //   }
+      // }
     },
 
 
