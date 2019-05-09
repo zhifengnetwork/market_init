@@ -148,11 +148,14 @@
                                 icon="cart-o"
                                 text="购物车"
                             />
-                            <van-goods-action-mini-btn  
+                            <div data-v-3e366829="" class="van-goods-action-mini-btn van-hairline" :class="{active:ish}" @click="onClickMinicollect">
+                              <div data-v-3e366829="" class="van-icon  van-goods-action-mini-btn__icon iconfont">&#xe60c;</div>
+                              {{enshrine}}</div>
+                            <!-- <van-goods-action-mini-btn  
                                 icon="like-o"
                                 text="收藏"
                                 @click="onClickMinicollect"
-                            />
+                            /> -->
                             <van-goods-action-big-btn text="加入购物车" @click='sorry' />
                             <van-goods-action-big-btn primary text="立即购买" @click='buy'/>
                        </van-goods-action>
@@ -194,7 +197,7 @@
                                                            -
                                                         </button>
                                                         <input id="good-num" class="good-num disabled" type="text" v-model="sku_num" disabled>
-                                                            <button class="btn btn-plus" href="javascript:void(0);" @click="addNum" :disabled='sku_num>10'>
+                                                            <button class="btn btn-plus" href="javascript:void(0);" @click="addNum" :disabled='sku_num>goods.most_buy_number'>
                                                            +
                                                         </button>
                                                     </div>
@@ -295,7 +298,7 @@ import {
 export default {
     data(){
         return{
-             ish:false,
+            
             //商品分类id
             goods_id:this.$route.query.goods_id,
             
@@ -313,6 +316,10 @@ export default {
 
              //显示不同规格图片
              getImg:'',
+
+             //是否收藏商品
+              ish:false,
+              enshrine:'收藏',
 
              //显示加入购物车还是立即购买//规格弹窗的按钮text
              byHide:false,
@@ -379,6 +386,7 @@ export default {
         buy(){
             this.is_sku=true;      //改变规格弹窗状态为true
             this.byHide=true       //改变规格弹窗按钮
+            this.getImg=this.baseUrl+this.goods.img[0].picture //点击加入默认sku显示的图片为第一张
         },
 
         //点击关闭规格弹窗
@@ -819,33 +827,77 @@ export default {
                    }  
                 
                  }
-                 Toast('商品添加购物车成功~')
-                 this.selectArarr.uid = 1
+                 this.selectArarr.token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJEQyIsImlhdCI6MTU1NzQwNjM3NSwiZXhwIjoxNTU3NDQyMzc1LCJ1c2VyX2lkIjo1MH0.BZYXHsBnhXsKgsvfDSTx2CQanB5wy5-Gmb-IwHIvmpc';
                  this.selectArarr.goods_num = this.sku_num
-                 this.$store.commit("increment") 
+                
+                var url = "/api/cart/addCart?token="+this.selectArarr.token+'&sku_id='+this.selectArarr.sku_id+'&cart_number='+this.selectArarr.goods_num;
+                this.$axios.get(url).then((res)=>{
+                  if(res.status === 200){
+                    Toast('商品添加购物车成功~')
+                    this.$store.commit("increment") 
+                    // 数据加载成功，关闭loading 
+					          this.$store.commit('hideLoading')
+                  }
+                })
         },
 
         //立即购买
         purchase(){
-
-                if(this.shopItemInfo.color==""){
-                 Toast("请选择商品颜色噢~")
-                 return;
-                }else if(this.shopItemInfo.size==""){
-                    Toast("请选择商品规格噢~")
-                    return;
-                }
-                   this.$router.push('/cart')   
+                let le = [];
+                let sele = []
+                 if(this.selectArr == ''){
+                      for (let i = 0; i < this.good.length; i++) {
+                        le.push(this.good[i].spec_name) 
+                    }
+                    Toast('请先选择商品'+le.join('-')+'噢~')
+                    return 
+                 }else{
+                   if(this.sku_stock == 0){
+                      Toast('您选中的商品已售罄噢~')
+                      return
+                   }else{
+                        for (let i = 0; i < this.good.length; i++) {
+                        for (let j = 0; j < this.good[i].res.length; j++) {
+                          if(this.good[i].res[j].isShow){
+                             if(this.good[i].res[j].isSelect){
+                               sele.push(this.good[i].spec_name)
+                             }
+                          }
+                    }    
+                    }
+                     for (let i = 0; i < this.good.length; i++) {
+                    if(sele[i]!=this.good[i].spec_name){
+                       Toast('请选择商品'+this.good[i].spec_name+'噢~')
+                       return
+                    }     
+                    }
+                   }  
+              }
+              this.$router.push('confirmOrder');
         },
          //点击收藏
         onClickMinicollect(){
             this.ish!=this.ish
+            if(this.ish==false){
+              this.ish=true
               Toast.success({
                 message:'收藏成功',
                 mask:true,
                 loadingType:'spinner',
                 forbidClick:true
               });
+              this.enshrine="以收藏"
+              //ajax
+
+
+            }else{
+              this.ish=false
+              this.enshrine="收藏"
+              //ajax
+
+
+            }
+              
         },
         optCartCount(){
              return this.$store.getters.optCartCount;
@@ -1024,7 +1076,9 @@ export default {
            font-size 25px
     .van-goods-action-mini-btn__icon
         font-size 35px
-
+    
+    .van-goods-action-mini-btn.active
+        color:#f44
     // 商品评价
       .mod_detail_info_header 
             background-color: #fff;
