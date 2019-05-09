@@ -65,7 +65,6 @@ import '../static/css/font/iconfont.css'
 
 
 
-
 //全局获取倒计时
 Vue.prototype.timeCountdown = function (obj){
   const TIME_COUNT = 60; //默认倒计时秒数

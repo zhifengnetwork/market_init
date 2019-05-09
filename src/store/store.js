@@ -9,7 +9,8 @@ export default new Vuex.Store({
     //strict:true,//严格模式
     // 状态(一般保存数据)
     state:{
-      loading:false
+      loading:false,
+      cartCount:0  //购物车商品的数量
     },
 
     // mutations 类似事件
@@ -19,7 +20,14 @@ export default new Vuex.Store({
         },
         hideLoading(state){
             state.loading = false
-        }
-    }
-
+        },
+        increment(state){state.cartCount++},//数量增加
+        substract(state){state.cartCount--},//数量减少
+    },
+    //获取共享数据
+        getters:{
+          optCartCount:function(state){
+            return state.cartCount
+          }
+     }
   })
