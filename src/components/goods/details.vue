@@ -173,7 +173,7 @@
                                                         <span class="sale-price no-price">{{sku_price}}</span>  
                                                     </p>
                                                     <p class="not-choose"   v-show="pitch==true">请选择颜色、尺码</p>
-                                                    <p class="choosed-info" v-show="pitch==false" >已选择:{{shopItemInfo.spec}},{{shopItemInfo.color}},{{shopItemInfo.size}}</p>
+                                                    <p class="choosed-info" v-show="pitch==false" >已选择:&nbsp;&nbsp;{{selectArr}}</p>
                                                     <p class="size-info hide"></p>
                                                     <p class="size-rec hide"></p>
                                                 </div>
@@ -328,7 +328,7 @@ export default {
 
                 sku_num: 1,     //规格.数量
                  
-                // selectArr: [], //存放被选中的值
+                selectArr: '', //存放被选中的值
                 
                 shopItemInfo:{}, //存放要和选中的值进行匹配的数据
 
@@ -378,15 +378,11 @@ export default {
         buy(){
             this.is_sku=true;      //改变规格弹窗状态为true
             this.byHide=true       //改变规格弹窗按钮
-            this.getImg=this.baseUrl+this.goods.img[0].picture  //点击购买默认sku显示的图片为第一张
         },
 
         //点击关闭规格弹窗
         close(){
             this.is_sku=false;                                 //改变规格弹窗状态为true
-            this.pitch=true                                    //隐藏已选中的颜色
-            this.sku_num=1;                                    //关闭默认全部为1
-            this.getImg=this.baseUrl+this.goods.img[0].picture //关闭默认sku显示的图片为第一张
         },
 
         //初始化规格数据
@@ -397,14 +393,12 @@ export default {
                 for (let i = 0; i < that.good.length; i++) {
                 for (let j = 0; j < that.good[i].res.length; j++) {
                   that.good[i].res[j].isShow = true;
-                  that.good[i].res[j].isSelect = false;
                 if (that.shopItemInfo[that.good[i].res[j].attr_id] == null) {
                        that.good[i].res[j].isShow = false;
                 }
                 }
             }
         },
-       
           //获得对象的key
             getObjKeys(obj) {
             if (obj !== Object(obj)) throw new TypeError("Invalid object");
@@ -529,24 +523,42 @@ export default {
       }
       return aResult;
     },
-
+    
     /*商品条件筛选*/
     tabInfoChange(n,index,cid,$event) {
       var self = this
       let orderInfo = this.good; /*所有规格**所有规格*/
       let orderInfoChild = this.good[n].res; /*当前点击的规格的所有子属性内容*/
+      if(this.good[n].spec_id==1){                                  //如果点击当前的id是规格
+          this.getImg=this.baseUrl+this.goods.img[index].picture    //切换不同的规格商品图片
+      }
       //选中自己，兄弟节点取消选中
       if (orderInfoChild[index].isShow = true) {
         if (orderInfoChild[index].isSelect == true) {
             orderInfoChild[index].isSelect = false
+                this.pitch=true;
         } else {
             for (let i = 0; i < orderInfoChild.length; i++) {
                 orderInfoChild[i].isSelect = false;
+                this.pitch=true;
           }
               orderInfoChild[index].isSelect = true;
+                this.pitch=false;
         }
       }
        self.$forceUpdate(); //重绘
+         let li = []
+         for(let i = 0; i < this.good.length; i++){
+          for(let j = 0; j < this.good[i].res.length; j++){
+                  
+                    if(this.good[i].res[j].isSelect==true){
+                       this.pitch=false;
+                       li.push(this.good[i].res[j].attr_name)
+                    }
+          }
+
+         this.selectArr=li.join('、')
+      }
  
       // //已经选择的节点
       let haveChangedId = [];
@@ -583,7 +595,6 @@ export default {
         for (let i = 0; i < this.good.length; i++) {
           for (let j = 0; j < this.good[i].res.length; j++) {
             if (this.good[n].res[index].attr_id != this.good[i].res[j].attr_id ) {
-              console.log(this.good[n].res[index].attr_id, this.good[i].res[j].attr_id)
               daiceshi.push({
                 index: i,
                 cindex: j,
@@ -623,7 +634,6 @@ export default {
           testAttrIds.sort(function(value1, value2) {
             return parseInt(value1) - parseInt(value2);
           });
-          // console.log(this.shopItemInfo[testAttrIds.join(";")])
           if (!this.shopItemInfo[testAttrIds.join(";")] ) {
             this.good[daiceshi[i].index].res[
               daiceshi[i].cindex
@@ -631,15 +641,8 @@ export default {
             this.good[daiceshi[i].index].res[
               daiceshi[i].cindex
             ].isSelect = false;
-            console.log(this.good[daiceshi[i].index].res[
-              daiceshi[i].cindex
-            ])
           } else {
-            // console.log(this.shopItemInfo[testAttrIds.join(";")].inventory)
             if(this.shopItemInfo[testAttrIds.join(";")].inventory){
-            //   console.log(this.good[daiceshi[i].index].res[
-            //   daiceshi[i].cindex
-            // ])
             }
             this.good[daiceshi[i].index].res[
               daiceshi[i].cindex
@@ -693,7 +696,6 @@ export default {
 
         //加入购物车
         addCart(){
-            
             // if(this.shopItemInfo.spec==""){
             //      Toast("请选择商品规格噢~")
             //      return;
@@ -734,18 +736,28 @@ export default {
         },
         //获取商品规格
         created(){
+          // 调用loading 
+			    this.$store.commit('showLoading')
             var that = this;
             var url = "/api/goods/goodsDetail?goods_id="+this.goods_id
                 that.$axios.get(url).then((res)=>{
+                  if(res.status === 200){
                     that.goods = res.data.data;
                     that.good =  res.data.data.spec.spec_attr;
+                    // 数据加载成功，关闭loading 
+					        this.$store.commit('hideLoading')
+                  }
+                    
              for (var i in that.goods.spec.goods_sku) {  
              that.shopItemInfo[that.goods.spec.goods_sku[i].sku_attr1] = that.goods.spec.goods_sku[i]; //修改数据结构格式，改成键值对的方式，以方便和选中之后的值进行匹配
               }
                //初始化规格
                 this.initializeSpecification();
-                 console.log(this.goods)
             })
+            .catch( error => {
+            this.$store.commit('hideLoading')
+            alert(error)
+                })
             
     },
 }

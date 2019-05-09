@@ -3,7 +3,7 @@
     <div class="productL-box">
           <header>
                 <headerView custom-title="商品列表"  rightNone>
-                        <div class="backBtn" slot="backBtn" @click="backBtn($router.go(-1))">
+                        <div class="backBtn" slot="backBtn" @click="$router.go(-1)">
                             <img src="../../../../static/img/public/backBtn.png" />
                         </div>
                         <div class="rightBtn" slot="rightBtn" @click="showTab">
@@ -43,36 +43,6 @@
         <!-- 列表 -->
         <div class="good-list-page">
                 <div class="filter-tab">
-                    <!-- <ul class="list-nav clearfloat" >
-                        <li :class="{active:index=='default'}"  class="default buriedpoint"  data-ip="default" @click.self='setlocation($event)'>
-                    
-                                
-                                <span >默认</span>
-                                <span class="iconfont drop">&#xe605;</span>
-                           
-                            <div>
-
-                            </div>
-                        </li>
-                        <li :class="{active:index=='new'}" class="neww  buriedpoint"  data-ip="new">
-                                <span>新品</span>
-                        </li>
-                        <li :class="{active:index=='popularity'}" class="popularity  buriedpoint"  data-ip="popularity">
-                                <span>人气</span>
-                        </li>
-                        <li :class="{active:index=='price'}" class="price  buriedpoint"   data-ip="price">
-                                <span>价格</span>
-                                <span class="icon">
-                                     <i class="iconfont up"   :class="{cur:isCur==false}">&#xe609;</i>
-                                     <i class="iconfont down" :class="{cur:isCur==true}">&#xe606;</i>
-                                </span>
-                        </li>
-                        <li :class="{active:index=='filter'}" class="filter buriedpoint"  data-ip="filter">
-                                <span>筛选</span>
-                                <span class="iconfont drop">&#xe605;</span>
-                        </li>
-                    </ul> -->
-                    <!-- tar -->
                      <ul class="list-nav clearfloat" >
                         <li v-for="item in list" :key="item.id" class="buriedpoint" :class="[listId==item.id?'active':'',item.class]"  :data-ip="item.data"   @click='setlocation(item.id,item.data)'>
                             <a href="javascript:void(0);" >
@@ -175,7 +145,7 @@ export default {
           page:2,
         //分类列表
           proList:[],
-          baseUrl:'http://www.zfwl.c3w.cc/upload/images/',
+          baseUrl:'http://api.zfwl.c3w.cc/upload/images/',
         
         //默认
         default:[],

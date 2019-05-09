@@ -88,6 +88,10 @@ export default {
         "25;12;32": {
           price: 406,
           count: 66
+        },
+        "25;13;32": {
+          price: 0,
+          count: 0
         }
       },
       SKUResult: {},
@@ -105,6 +109,7 @@ export default {
       for (let i = 0; i < this.keys.length; i++) {
         for (let j = 0; j < this.keys[i].value.length; j++) {
           if (this.SKUResult[this.keys[i].value[j].id] == null) {
+            console.log(this.SKUResult[this.keys[i].value[j].id])
             this.keys[i].value[j].notClick = true;
           }
         }
