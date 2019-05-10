@@ -7,46 +7,261 @@
 			</headerView> 
     <form action="" class="reg-form">
 		  <div class="form-group account">
-			   <i class="iconfont"></i>
-			   <input type="text" name="userName" placeholder="请输入用户名" class="account-input" autocomplete="off">
+			   <i class="iconfont label">&#xe60f;</i>
+			   <input type="text" name="userName" placeholder="请输入用户名" class="account-input" autocomplete="off" v-model="logOnMessage.userName">
 		  </div>
 		  <div class="form-group mobile">
-			   <i class="iconfont"></i>
-			   <input type="tel" name="mobile" placeholder="请输入手机号码" class="mobile-input" autocomplete="off">
-			   <button id="getVerifyCodeBtn" class="get-verify-code" type="button">获取验证码</button>
+			   <i class="iconfont label">&#xe62c;</i>
+			   <input type="tel" name="mobile" placeholder="请输入手机号" class="mobile-input" autocomplete="off" v-model="logOnMessage.mobile" :disabled="!clickState">
+		  </div>
+		  <div class="form-group verifyCode">
+			   <i class="iconfont label">&#xe645;</i>
+			   <input type="text" name="verifyCode" placeholder="请输入验证码" class="verify-input" autocomplete="off" v-model="logOnMessage.verifyCode" >
+			   <button id="getVerifyCodeBtn" class="get-verify-code" type="button" @click="getCode(logOnMessage.verifyCode)" :disabled="!clickState"  :class="{active:clickState}">{{codeText}}</button>
 		  </div>
 		  <div class="form-group password">
-			   <i class="iconfont"></i>
-			   <input type="password" name="pwd" placeholder="请输入密码" class="password-input" autocomplete="off">
+			   <i class="iconfont label">&#xe60e;</i>
+			   <input type="password" name="pwd" placeholder="请输入密码" class="password-input" autocomplete="off" v-model="logOnMessage.password">
+			   <span id="passwordEyeIcon" class="eye"><i class="iconfont eye-close"></i><i class="iconfont eye-open hide"></i></span>
 		  </div>
 		  <div class="form-group password2">
-			   <i class="iconfont"></i>
-			   <input type="tel" name="pwd2" placeholder="请再次输入密码" class="password-input" autocomplete="off">
+			   <i class="iconfont label">&#xe60e;</i>
+			   <input type="password" name="pwd2" placeholder="请再次输入密码" class="password-input" autocomplete="off" v-model="logOnMessage.passwordTwo">
 		  </div>
 		  <div class="form-group email">
-			   <i class="iconfont"></i>
-			   <input type="text" name="email" placeholder="请输入电子邮箱" class="email-input" autocomplete="off">
+			   <i class="iconfont label">&#xe61c;</i>
+			   <input type="text" name="email" placeholder="请输入电子邮箱" class="email-input" autocomplete="off" v-model="logOnMessage.email">
 		  </div>
 		  <div class="form-group invite-code">
-			   <i class="iconfont"></i>
-			   <input type="text" name="inviteCode" placeholder="邀请口令（非必填）" class="invite-input" autocomplete="off">
+			   <i class="iconfont label">&#xe670;</i>
+			   <input type="text" name="inviteCode" placeholder="邀请口令（非必填）" class="invite-input" autocomplete="off" v-model="logOnMessage.invite">
 		  </div>
-		  <button id="regBtn" class="reg-btn" type="button">注册</button>
+		  <button id="regBtn" class="reg-btn" type="button" @click="registerBut">注册</button>
 	</form>
 	</div>
 </template>
 <script>
 // 公共头部
 import headerView from '../common/headerView.vue'
+
+	/* 引入 mint-ui 弹窗组件 */
+	import {Toast} from "vant"
+	import { Dialog } from 'vant';
+
+		/* md5 */
+	import md5 from 'js-md5';
 export default {
 	data(){
 		return{
+            logOnMessage:{
+				userName:'', 			//用户账号
 
+				mobile:'',              //用户手机号
+
+				verifyCode:'',          //手机验证码
+
+				password:'',            //用户密码
+
+				passwordTwo:'',         //确认密码 二次输入
+
+				email:'',               //用户邮箱
+
+				invite:'',              //用户邀请码
+
+			},
+			//正则
+			regular:{
+				userName:/^\w{3,10}$/, 			             //用户账号正则
+
+				mobile:/^[1]([3-9])[0-9]{9}$/,              //用户手机号正则
+
+				password:/^[a-zA-Z]\w{5,17}$/,             //用户密码正则
+
+				email:/^[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/,               //用户邮箱正则
+			},
+
+			    /*定时器Id*/
+				timer: null,
+				/*获取验证码-倒计时的'时间'*/
+				timerNum: 60,
+				/*'获取验证码的状态'点击，默认:true,同时=>控制'获取验证码'按钮color颜色*/
+				clickState: true,
+				/*获取验证码-text*/
+				codeText: '获取验证码',
 		}
-	},components:{
+	},
+	methods: {
+		   //用户注册
+		   registerBut(){
+				  var that = this;
+
+				  //用户名
+				  if(that.logOnMessage.userName==""){
+						 Dialog.alert({
+						 message: '用户名不能为空噢~!'
+						 })
+						 return
+				  }else if(!that.regular.userName.test(that.logOnMessage.userName)){
+                        Dialog.alert({
+						message: '用户名格式:3-10个字母、数字、下划线!'
+						})
+						return
+				  }
+				 
+				 //用户手机号
+                 if(that.logOnMessage.mobile==""){
+						 Dialog.alert({
+						 message: '手机号不能为空噢~!'
+						 })
+						 return
+				  }else if(!that.regular.mobile.test(that.logOnMessage.mobile)){
+                        Dialog.alert({
+						message: '手机号码输入不规范,请输入正确的手机格式!'
+						})
+						return
+				  }
+
+				  //用户密码
+				  if(that.logOnMessage.password==""){
+						 Dialog.alert({
+						 message: '密码不能为空噢~!'
+						 })
+						 return
+				  }else if(!that.regular.password.test(that.logOnMessage.password)){
+                        Dialog.alert({
+						message: '密码长度要在6~18位之间,且必须以字母开头!'
+						})
+						return
+				  }
+
+				  //二次输入密码
+				  if(that.logOnMessage.passwordTwo==""){
+						 Dialog.alert({
+						 message: '确认密码不能为空噢~!'
+						 })
+						 return
+				  }else if(that.logOnMessage.passwordTwo != that.logOnMessage.password){
+                        Dialog.alert({
+						message: '输入的密码不一致噢~!'
+						})
+						return
+				  }
+
+				  //邮箱
+				//   if(that.logOnMessage.email==""){
+				// 		 Dialog.alert({
+				// 		 message: '邮箱不能为空噢~!'
+				// 		 })
+				// 		 return
+				//   }else
+				   if(that.logOnMessage.email!=""){
+						if(!that.regular.email.test(that.logOnMessage.email)){
+												Dialog.alert({
+												message: '邮箱格式错误，请输入正确邮箱!'
+											})
+												return
+										}
+				   }
+				   
+		   },
+
+		   //获取验证码
+		   getCode(code){
+                    if(code==""){
+						 Dialog.alert({
+						 message: '手机号不能为空噢~!'
+						 })
+						 return
+				  }else if(!this.regular.mobile.test(code)){
+                        Dialog.alert({
+						message: '手机号码输入不规范,请输入正确的手机格式!'
+						})
+						return
+				  }else{
+					    let that = this;
+						var temp='sms_reg';
+						var auth = md5( code + md5(temp+'android+app') );
+                        if (that.clickState) {
+						var url = "/api/PhoneAuth/verifycode?mobile="+code+'&temp='+temp+'&auth='+auth;
+						that.$axios.post(url).then((res)=>{
+							if(res.status === 200){
+							Toast('获取验证码成功~')
+							// that.codeText = '再次获取' + that.timerNum + 's';
+							that.timer = setInterval(that.countDown,1000);
+							/*不能=>获取验证码,同时=>改变'获取验证码'按钮color颜色*/
+							that.clickState = false;
+						}
+						})
+						return false;
+					}
+				  }
+		   },
+
+		   /*(倒计时)获取验证码期间60S=>执行的函数*/
+			countDown(){
+				this.setStorage(this.timerNum);   //localstorage
+				this.timerNum--;
+				this.codeText = '重新获取' + (this.timerNum + 's');
+				// console.log('找回密码=>获取验证码=>定时器:',this.timerNum);
+				console.log(this.timerNum)
+				if(this.timerNum <= 0){
+					/*清除定时器*/
+					clearInterval(this.timer); 
+					/*可以=>再次获取验证码*/
+					this.clickState = true; 
+					this.codeText = '获取验证码';
+					/*初始化，倒计时'时间'*/
+					this.timerNum = 60; 
+					// console.log('可以-获取验证。')
+					return false;
+				}
+			},
+			//写入和读取localstorage:
+			setStorage(parm) {
+	            localStorage.setItem("dalay", parm);
+	            localStorage.setItem("_time", new Date().getTime());
+        	},
+
+        	getStorage() {
+	            let localDelay = {};
+	            localDelay.delay = localStorage.getItem("dalay");
+	            localDelay.sec = localStorage.getItem("_time");
+	            return localDelay;
+            },
+
+			judgeCode() {
+			            let that = this;
+			            let localDelay = that.getStorage();
+			            let secTime = parseInt(
+			                (new Date().getTime() - localDelay.sec) / 1000
+			);
+					let _delay = localDelay.delay - secTime; 
+					console.log(_delay)
+					that.timerNum = _delay;
+					that.timer = setInterval(function() { 
+					if (_delay > 1) { 
+					console.log(_delay)
+					that.clickState = false; 
+					_delay--; 
+					that.setStorage(_delay);
+					that.timerNum = _delay; 
+					that.codeText = '重新获取' + (that.timerNum + 's');
+					} else { 
+								 that.clickState = true;
+								 that.codeText = '获取验证码'
+								 that.timerNum = 60; 
+								 window.clearInterval(that.timer);
+					} 
+						 }, 1000) 
+				},
+	}
+	,components:{
         // 公告头部
         headerView,
-    }
+	},
+	mounted() {
+			this.judgeCode()
+	}
 }
 </script>
 <style lang="stylus" scoped>
@@ -72,7 +287,11 @@ export default {
     border: none;
     box-shadow: none;
     width: 400px;
-  
+    font-size 25px
+
+  .reg-new-page .reg-form>.form-group>input.verify-input
+    width: 260px
+
   .reg-new-page .reg-form>.form-group>.get-verify-code 
     background-color: #b0b0b0;
     border-radius: .625rem;
@@ -83,16 +302,34 @@ export default {
     line-height: 50px
     margin-top: -8px
     padding: 0 16px;
+
+   .reg-new-page .active 
+    background-color: #444!important;
+
    
    .reg-new-page .reg-form .reg-btn 
-    background-color: #b0b0b0;
+    background-color: #323232;
     border-radius: .1rem;
     color: #fff;
-    font-size: 20px
+    font-size: 25px
     height: 68px
-    // margin-top:40px
     width: 588px
     display block
-    margin 40px auto ;
+    margin 40px auto 
+
+   .reg-new-page .reg-form>.form-group>.label
+    font-size 30px
+    color #000000
+    margin-right 36px
+
+   .reg-new-page .reg-form>.form-group.password>.eye 
+    float: right;
+    text-align: center;
+    width: 30px
+
+   .reg-new-page .reg-form>.form-group.password>.eye>i 
+    color: #e0e0e0;
+
+
 
 </style>
