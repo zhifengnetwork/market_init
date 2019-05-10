@@ -165,17 +165,6 @@
 
 <script>
     import headerView from '../common/headerView'
-    // const coupon = {
-    //     available: 1,
-    //     condition: '无使用门槛\n最多优惠12元',
-    //     reason: '',
-    //     value: 250,
-    //     name: '优惠券名称',
-    //     startAt: 1489104000,
-    //     endAt: 1514592000,
-    //     valueDesc: '2.5',
-    //     unitDesc: '元'
-    // };
     export default {
         name:'comfirmOrder',
         data() {
@@ -243,10 +232,10 @@
 
         computed:{
             // 总价
-            totalPrice(){
+            totalPrice(index){   
                 let total = 0;
                 for(var i = 0;i<this.orderData.length;i++){
-                   total += this.orderData[i].price * this.orderData[i].goodsNum;
+                   this.total += this.orderData[i].price * this.orderData[i].goodsNum;
                 }
                 
                 //判断是否选择优惠券               
@@ -265,7 +254,6 @@
                     if(this.delivery == "顺丰速运:运费¥15"){
                         total = total + 15 ;
                     }    
-
                 }
 
                 return total;
@@ -303,11 +291,9 @@
         methods:{
             // 优惠券切换回调
             onChange(index) {
+                var indexx 
                 this.showList = false;
                 this.chosenCoupon = index;
-
-                // this.discountValue = this.coupons[this.chosenCoupon].value
-                //  console.log('优惠金额：'+this.discountValue);
             },
             // 兑换优惠券回调
             onExchange(code) {
@@ -322,6 +308,7 @@
             selectWay(e){
                 this.payWay = e.target.innerText;
                 this.show = false;
+            
             },
 
             // 上拉列表:选择配送方式
@@ -331,6 +318,13 @@
             selectWay2(e){
                 this.delivery = e.target.innerText;
                 this.show2 = false;
+                //判断是否选择顺丰快递
+                 if(this.delivery == "顺丰速运:运费¥15"){
+  
+                    this.total += 15;
+                }else{
+                    this.total -= 15;
+                }
             },
 
             // 提示
@@ -352,8 +346,8 @@
         
         components:{
 			headerView
-        }
-        
+        },
+      
     }
 </script>
 

@@ -58,7 +58,7 @@
                 </van-cell>
                 <van-cell class="goods-express">
                     <van-col span="10">运费：{{ goods.express }}</van-col>
-                    <van-col span="14">剩余：{{ goods.stock }}</van-col>
+                    <van-col span="14">库存：{{ goods.stock }}</van-col>
                 </van-cell>
                 </van-cell-group>
                 <!-- 领取优惠券 -->
@@ -144,15 +144,18 @@
                                 text="客服"
                             />
                             <van-goods-action-mini-btn
-                                info="0"
+                                :info="optCartCount()"
                                 icon="cart-o"
                                 text="购物车"
                             />
-                            <van-goods-action-mini-btn  
-                                :icon="ish?'like-o':'like'"
+                            <div data-v-3e366829="" class="van-goods-action-mini-btn van-hairline" :class="{active:ish}" @click="onClickMinicollect">
+                              <div data-v-3e366829="" class="van-icon  van-goods-action-mini-btn__icon iconfont">&#xe60c;</div>
+                              {{enshrine}}</div>
+                            <!-- <van-goods-action-mini-btn  
+                                icon="like-o"
                                 text="收藏"
                                 @click="onClickMinicollect"
-                            />
+                            /> -->
                             <van-goods-action-big-btn text="加入购物车" @click='sorry' />
                             <van-goods-action-big-btn primary text="立即购买" @click='buy'/>
                        </van-goods-action>
@@ -190,13 +193,13 @@
                                                 <div class="num">
                                                     <span class="name">数量</span>
                                                     <div class="clearfix">
-                                                        <a class="btn btn-minus"   href="javascript:void(0);" @click="minusNum" >
+                                                        <button class="btn btn-minus"   href="javascript:void(0);" @click="minusNum"  :disabled='sku_num>1'>
                                                            -
-                                                        </a>
+                                                        </button>
                                                         <input id="good-num" class="good-num disabled" type="text" v-model="sku_num" disabled>
-                                                            <a class="btn btn-plus" href="javascript:void(0);" @click="addNum" >
+                                                            <button class="btn btn-plus" href="javascript:void(0);" @click="addNum" :disabled='sku_num>goods.most_buy_number'>
                                                            +
-                                                        </a>
+                                                        </button>
                                                     </div>
                                                     <span class="left-num" v-show="sku_stock_s">库存:{{sku_stock}}</span>
                                                     <input id="left-num" type="hidden" value="0">
@@ -290,11 +293,12 @@ import {
   GoodsAction,
   GoodsActionBigBtn,
   GoodsActionMiniBtn,
+  Sku,
 } from 'vant';
 export default {
     data(){
         return{
-             ish:false,
+            
             //商品分类id
             goods_id:this.$route.query.goods_id,
             
@@ -313,6 +317,10 @@ export default {
              //显示不同规格图片
              getImg:'',
 
+             //是否收藏商品
+              ish:false,
+              enshrine:'收藏',
+
              //显示加入购物车还是立即购买//规格弹窗的按钮text
              byHide:false,
              
@@ -328,11 +336,11 @@ export default {
 
                 sku_num: 1,     //规格.数量
                  
-                selectArr: '', //存放被选中的值
+                selectArr: '',  //存放被选中的值
                 
                 shopItemInfo:{}, //存放要和选中的值进行匹配的数据
 
-                // subIndex: [], //是否选中 因为不确定是多规格还是但规格，所以这里定义数组来判断
+                selectArarr:[],  //发给后台
                 
                 goods: [], //渲染的商品,
 
@@ -378,6 +386,7 @@ export default {
         buy(){
             this.is_sku=true;      //改变规格弹窗状态为true
             this.byHide=true       //改变规格弹窗按钮
+            this.getImg=this.baseUrl+this.goods.img[0].picture //点击加入默认sku显示的图片为第一张
         },
 
         //点击关闭规格弹窗
@@ -392,9 +401,11 @@ export default {
                  that.sku_price = this.formatPrice(that.goods.price);
                 for (let i = 0; i < that.good.length; i++) {
                 for (let j = 0; j < that.good[i].res.length; j++) {
-                  that.good[i].res[j].isShow = true;
+                       that.good[i].res[j].isSelect = false;
+                       that.good[i].res[j].isShow = true;
                 if (that.shopItemInfo[that.good[i].res[j].attr_id] == null) {
                        that.good[i].res[j].isShow = false;
+                       that.good[i].res[j].isSelect = true;
                 }
                 }
             }
@@ -418,8 +429,11 @@ export default {
             this.shopItemInfo[key].prices.push(sku.price);
         } else {
             this.shopItemInfo[key] = {
-            inventory: sku.inventory,
-            prices: [sku.price]
+            goods_id:sku.goods_id,    //商品Id
+            sku_id:sku.sku_id,    //skuId  
+            inventory: sku.inventory,  //库存
+            prices: [sku.price],        //sku价格
+            sku_attr:sku.sku_attr       //sku组合
             };
         }
         },
@@ -441,11 +455,13 @@ export default {
         for (j = 0; j < combArr.length; j++) {
           this.add2SKUResult(combArr[j], sku);
         }
- 
         //结果集接放入SKUResult
         this.shopItemInfo[skuKeyAttrs.join(";")] = {
-          inventory: sku.inventory,
-          prices: [sku.price]
+          goods_id:sku.goods_id,          //商品Id
+          sku_id:sku.sku_id,          //skuId
+          inventory: sku.inventory,  //库存
+          prices: [sku.price],        //sku价格
+          sku_attr:sku.sku_attr       //sku组合
         };
       }
     },
@@ -526,16 +542,23 @@ export default {
     
     /*商品条件筛选*/
     tabInfoChange(n,index,cid,$event) {
+
       var self = this
       let orderInfo = this.good; /*所有规格**所有规格*/
       let orderInfoChild = this.good[n].res; /*当前点击的规格的所有子属性内容*/
       if(this.good[n].spec_id==1){                                  //如果点击当前的id是规格
-          this.getImg=this.baseUrl+this.goods.img[index].picture    //切换不同的规格商品图片
+          if(index==this.goods.img.length){
+            this.getImg=this.baseUrl+this.goods.img[0].picture    //切换不同的规格商品图片
+          }else{
+            this.getImg=this.baseUrl+this.goods.img[index].picture    //切换不同的规格商品图片
+          }
+          
       }
       //选中自己，兄弟节点取消选中
       if (orderInfoChild[index].isShow = true) {
         if (orderInfoChild[index].isSelect == true) {
-            orderInfoChild[index].isSelect = false
+            orderInfoChild[index].isSelect = false;
+                this.sku_num = 1,  //只要取消选中 商品选择数量自动默认为1
                 this.pitch=true;
         } else {
             for (let i = 0; i < orderInfoChild.length; i++) {
@@ -543,10 +566,13 @@ export default {
                 this.pitch=true;
           }
               orderInfoChild[index].isSelect = true;
-                this.pitch=false;
+              this.pitch=false;
+                
         }
       }
        self.$forceUpdate(); //重绘
+
+       //已选择的显示已选择的规格
          let li = []
          for(let i = 0; i < this.good.length; i++){
           for(let j = 0; j < this.good[i].res.length; j++){
@@ -604,6 +630,7 @@ export default {
             }
           }
         }
+
         for (let i = 0; i < haveChangedId.length; i++) {
           var indexs = daiceshiId.indexOf(haveChangedId[i]);
           if (indexs > -1) {
@@ -616,13 +643,13 @@ export default {
           for (let m = 0; m < this.good[daiceshi[i].index].res.length; m++) {
             if (this.good[daiceshi[i].index].res[m].isSelect == true) {
               siblingsId = this.good[daiceshi[i].index].res[m].attr_id;
-          
             }
           }
-
+    
           if (siblingsId != "") {
             for (let j = 0; j < len; j++) {
               haveChangedId[j] != siblingsId && testAttrIds.push(haveChangedId[j]);
+
             }
           } else {
             testAttrIds = haveChangedId.concat();
@@ -634,6 +661,7 @@ export default {
           testAttrIds.sort(function(value1, value2) {
             return parseInt(value1) - parseInt(value2);
           });
+
           if (!this.shopItemInfo[testAttrIds.join(";")] ) {
             this.good[daiceshi[i].index].res[
               daiceshi[i].cindex
@@ -642,11 +670,17 @@ export default {
               daiceshi[i].cindex
             ].isSelect = false;
           } else {
-            if(this.shopItemInfo[testAttrIds.join(";")].inventory){
-            }
             this.good[daiceshi[i].index].res[
               daiceshi[i].cindex
             ].isShow = true;
+
+            //如果库存 == 0 的时候 sku组合不可选
+             if(this.shopItemInfo[testAttrIds.join(";")].inventory == 0){
+            this.good[daiceshi[i].index].res[
+              daiceshi[i].cindex
+            ].isShow = false;
+            }
+                this.selectArarr =  this.shopItemInfo[testAttrIds.join(";")]    
           }
         }
       } 
@@ -660,7 +694,6 @@ export default {
         //设置属性状态
         for (let i = 0; i < this.good.length; i++) {
           for (let j = 0; j < this.good[i].res.length; j++) {
-            console.log(this.shopItemInfo[this.good[i].res[j].attr_id])
             if (this.shopItemInfo[this.good[i].res[j].attr_id]) {
               this.good[i].res[j].isShow = true;
             } else {
@@ -673,64 +706,201 @@ export default {
     },
 
 
-
-
         //规格弹窗 减少数量
         minusNum(){
-           if( this.sku_num > 1){  //如果数量小于一
+                 let le = [];
+                 let sele = []
+                 if(this.selectArr == ''){
+                      for (let i = 0; i < this.good.length; i++) {
+                        le.push(this.good[i].spec_name) 
+                    }
+                    Toast('请先选择商品'+le.join('-')+'噢~')
+                    return 
+                 }else{
+                   if(this.selectArarr.inventory == 0){
+                      Toast('您选中的商品已售罄噢~')
+                      return
+                   }
+                    for (let i = 0; i < this.good.length; i++) {
+                        for (let j = 0; j < this.good[i].res.length; j++) {
+                          if(this.good[i].res[j].isShow){
+                             if(this.good[i].res[j].isSelect){
+                               sele.push(this.good[i].spec_name)
+                             }
+                          }
+                    }    
+                    }
+                     for (let i = 0; i < this.good.length; i++) {
+                    if(sele[i]!=this.good[i].spec_name){
+                       Toast('请选择商品'+this.good[i].spec_name+'噢~')
+                       return
+                    }     
+                    }
+                 }
+                   if( this.sku_num > 1){  //如果数量小于一
 
-               this.sku_num--;
+                      this.sku_num--;
 
-           }else{
+                  }else{
 
-               Toast('您选中的数量不能为零噢~')
+                      Toast('您选中的数量不能为零噢~')
 
-           }
+                  }
+          
         },
+
+  
         
         //规格弹窗 增加数量
         addNum(){
-               
-               this.sku_num++;
+                let le = [];
+                let sele = []
+                 if(this.selectArr == ''){
+                      for (let i = 0; i < this.good.length; i++) {
+                        le.push(this.good[i].spec_name) 
+                    }
+                    Toast('请先选择商品'+le.join('-')+'噢~')
+                    return 
+                 }else{
+                   if(this.selectArarr.inventory == 0){
+                      Toast('您选中的商品已售罄噢~')
+                      return
+                   }
+                    for (let i = 0; i < this.good.length; i++) {
+                        for (let j = 0; j < this.good[i].res.length; j++) {
+                          if(this.good[i].res[j].isShow){
+                             if(this.good[i].res[j].isSelect){
+                               sele.push(this.good[i].spec_name)
+                             }
+                          }
+                    }    
+                    }
+                     for (let i = 0; i < this.good.length; i++) {
+                    if(sele[i]!=this.good[i].spec_name){
+                       Toast('请选择商品'+this.good[i].spec_name+'噢~')
+                       return
+                    }     
+                    }
+                 }
+                  if( this.sku_num < 10){  //如果数量小于10
+
+                      this.sku_num++;
+
+                  }else{
+
+                      Toast('您选中的数量不能超过10噢~')
+
+                  }
+
         },
 
         //加入购物车
         addCart(){
-            // if(this.shopItemInfo.spec==""){
-            //      Toast("请选择商品规格噢~")
-            //      return;
-            //  }
-
-            //  if(this.shopItemInfo.color==""){
-            //      Toast("请选择商品颜色噢~")
-            //      return;
-
-            //  }else if(this.shopItemInfo.size==""){
-            //      Toast("请选择商品尺码噢~")
-            //      return;
-            //  }
-            //      Toast('添加购物车成功~')
+            let le = [];
+            let sele = []
+                 if(this.selectArr == ''){
+                      for (let i = 0; i < this.good.length; i++) {
+                        le.push(this.good[i].spec_name) 
+                    }
+                    Toast('请先选择商品'+le.join('-')+'噢~')
+                    return 
+                 }else{
+                   if(this.sku_stock == 0){
+                      Toast('您选中的商品已售罄噢~')
+                      return
+                   }else{
+                        for (let i = 0; i < this.good.length; i++) {
+                        for (let j = 0; j < this.good[i].res.length; j++) {
+                          if(this.good[i].res[j].isShow){
+                             if(this.good[i].res[j].isSelect){
+                               sele.push(this.good[i].spec_name)
+                             }
+                          }
+                    }    
+                    }
+                     for (let i = 0; i < this.good.length; i++) {
+                    if(sele[i]!=this.good[i].spec_name){
+                       Toast('请选择商品'+this.good[i].spec_name+'噢~')
+                       return
+                    }     
+                    }
+                   }  
+                
+                 }
+                 this.selectArarr.token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJEQyIsImlhdCI6MTU1NzQwNjM3NSwiZXhwIjoxNTU3NDQyMzc1LCJ1c2VyX2lkIjo1MH0.BZYXHsBnhXsKgsvfDSTx2CQanB5wy5-Gmb-IwHIvmpc';
+                 this.selectArarr.goods_num = this.sku_num
+                
+                var url = "/api/cart/addCart?token="+this.selectArarr.token+'&sku_id='+this.selectArarr.sku_id+'&cart_number='+this.selectArarr.goods_num;
+                this.$axios.get(url).then((res)=>{
+                  if(res.status === 200){
+                    Toast('商品添加购物车成功~')
+                    this.$store.commit("increment") 
+                    // 数据加载成功，关闭loading 
+					          this.$store.commit('hideLoading')
+                  }
+                })
         },
 
         //立即购买
         purchase(){
-
-                if(this.shopItemInfo.color==""){
-                 Toast("请选择商品颜色噢~")
-                 return;
-                }else if(this.shopItemInfo.size==""){
-                    Toast("请选择商品规格噢~")
-                    return;
-                }
-                   this.$router.push('/cart')   
+                let le = [];
+                let sele = []
+                 if(this.selectArr == ''){
+                      for (let i = 0; i < this.good.length; i++) {
+                        le.push(this.good[i].spec_name) 
+                    }
+                    Toast('请先选择商品'+le.join('-')+'噢~')
+                    return 
+                 }else{
+                   if(this.sku_stock == 0){
+                      Toast('您选中的商品已售罄噢~')
+                      return
+                   }else{
+                        for (let i = 0; i < this.good.length; i++) {
+                        for (let j = 0; j < this.good[i].res.length; j++) {
+                          if(this.good[i].res[j].isShow){
+                             if(this.good[i].res[j].isSelect){
+                               sele.push(this.good[i].spec_name)
+                             }
+                          }
+                    }    
+                    }
+                     for (let i = 0; i < this.good.length; i++) {
+                    if(sele[i]!=this.good[i].spec_name){
+                       Toast('请选择商品'+this.good[i].spec_name+'噢~')
+                       return
+                    }     
+                    }
+                   }  
+              }
+              this.$router.push('confirmOrder');
         },
          //点击收藏
         onClickMinicollect(){
             this.ish!=this.ish
-              Toast('收藏成功')  
+            if(this.ish==false){
+              this.ish=true
+              Toast.success({
+                message:'收藏成功',
+                mask:true,
+                loadingType:'spinner',
+                forbidClick:true
+              });
+              this.enshrine="以收藏"
+              //ajax
+
+
+            }else{
+              this.ish=false
+              this.enshrine="收藏"
+              //ajax
+
+
+            }
+              
         },
-        ajaxs(){
-            
+        optCartCount(){
+             return this.$store.getters.optCartCount;
         }
        
         },
@@ -906,7 +1076,9 @@ export default {
            font-size 25px
     .van-goods-action-mini-btn__icon
         font-size 35px
-
+    
+    .van-goods-action-mini-btn.active
+        color:#f44
     // 商品评价
       .mod_detail_info_header 
             background-color: #fff;

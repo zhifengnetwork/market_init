@@ -28,7 +28,21 @@
 
 				<!--public 隔开上线 box-->
 				<p class="publicSeptum"></p>
+                 <div class="pblicTermWrapP publicButtomLIne">
+					<!--公共的class=>项box-->
+					<div class="publicTermBoxP">
+						<!--左-->	
+						<p class="publicTermLeftP">手机验证码<span class="importantColor">*</span></p>
+						<!--右-->
+						<div class="publicTermRightP shortWidthBox">
+							<!--input-->
+							<input type="text" class="publicTRPInput shortInputWidth" v-model="userData.phone" placeholder="请输入验证码">
+						</div>																		
+						<!--'获取验证码'按钮-->
+						<div v-bind:class="{obtainCodeBut:clickState, obtainCodeNoBut:!clickState}" @click="obtainCode">{{codeText}}</div>
 
+					</div>
+				</div>
 				<!--公共的class=>项Wrap，class="publicButtomLIne"=>(伪类)'底边框线'-->
 				<div class="pblicTermWrapO publicButtomLIne">
 					<!--公共的class=>项box-->
@@ -108,6 +122,10 @@
 	import loadingRequest from '../publicComponents/loadingRequest'
 	/*引用提示对话框*/
 	import tipsAlert from '../publicComponents/tipsAlert.vue'
+	/* 引入 mint-ui 弹窗组件 */
+	import {Toast} from "vant"
+	/* md5 */
+	import md5 from 'js-md5';
 	export default {
 		name: 'register',
 		/*注册*/
@@ -118,6 +136,14 @@
 		},
 		data(){
 			return {
+				/*定时器Id*/
+				timer: null,
+				/*获取验证码-倒计时的'时间'*/
+				timerNum: 60,
+				/*'获取验证码的状态'点击，默认:true,同时=>控制'获取验证码'按钮color颜色*/
+				clickState: true,
+				/*获取验证码-text*/
+				codeText: '获取验证码',
 				/*收集=>用户输入的数据*/
 				userData: {
 					/*账号*/
@@ -134,11 +160,44 @@
 					tipsText: '注册成功',
 					/*提示弹窗的url*/
 					tipsUrl: '/login',
+					/* 手机号 */
+					phone:'',
 				}
 			}
 		},
 		/*钩子函数=> 方法*/
 		methods: {
+			/*获取验证码=>button*/
+			obtainCode(){
+				var temp='sms_reg';
+				var auth = md5( this.userData.phone + md5(temp+'android+app') );
+				if (this.clickState) {
+					var url = "/api/PhoneAuth/verifycode?mobile="+this.userData.phone+'&temp='+temp+'&auth='+auth;
+					this.codeText = '再次获取' + this.timerNum + 's';
+					this.timer = setInterval(this.countDown,1000);
+					/*不能=>获取验证码,同时=>改变'获取验证码'按钮color颜色*/
+					this.clickState = false;
+					// console.log('获取验证码');
+					return false;
+				}
+			},
+			/*(倒计时)获取验证码期间60S=>执行的函数*/
+			countDown(){
+				this.timerNum--;
+				this.codeText = '再次获取' + this.timerNum + 's';
+				console.log('找回密码=>获取验证码=>定时器:',this.timerNum);
+				if(this.timerNum == 0){
+					/*清除定时器*/
+					clearInterval(this.timer); 
+					/*可以=>再次获取验证码*/
+					this.clickState = true; 
+					this.codeText = '获取验证码';
+					/*初始化，倒计时'时间'*/
+					this.timerNum = 60; 
+					// console.log('可以-获取验证。')
+					return false;
+				}
+			},
 			/*注册按钮*/
 			registerBut(){
 				/*保存指向*/
@@ -147,40 +206,59 @@
 				/*账号*/
 				var uName = /^\w{3,10}$/;
 				if(that.userData['userName'] == ''){
-					alert('账号不能为空！');
+					Toast('账号不能为空！');
 					return false;
 				}else if(!uName.test(that.userData['userName'])){
-					alert('账号格式:3-10个字母、数字、下划线！');
+					Toast('账号格式:3-10个字母、数字、下划线！');
 					return false;
 				}
 				/*邮箱*/
 				var mailbox = /^[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/;
 				if(that.userData['mailbox'] == ''){
-					alert('邮箱不能为空！');
+					Toast('邮箱不能为空！');
 					return false;
 				}else if(!mailbox.test(that.userData['mailbox'])){
-					alert('邮箱格式错误，请输入正确邮箱！');
+					Toast('邮箱格式错误，请输入正确邮箱！');
 					return false;
 				}
 				/*新密码*/
 				var pass = /^[a-zA-Z]\w{5,17}$/;
 				if(that.userData['passOne'] == ''){
-					alert('登陆密码不能为空！');
+					Toast('登陆密码不能为空！');
 					return false;
 				}else if(!pass.test(that.userData['passOne'])){
-					alert('密码长度要在6~18位之间,且必须以字母开头！');
+					Toast('密码长度要在6~18位之间,且必须以字母开头！');
 					return false;
 				}
 				/*重复密码*/
 				if(that.userData['passTwo'] != that.userData['passOne']){
-					alert('密码不一致！');
+					Toast('密码不一致！');
 					return false;
 				}
 				/*邀请码*/
 				if(that.userData['invitationCode'] == ''){
-					alert('邀请码不能为空');
+					Toast('邀请码不能为空');
 					return false;
 				}
+
+				// userData: {
+				// 	/*账号*/
+				// 	userName: '',
+				// 	/*邮箱*/
+				// 	mailbox: '',
+				// 	/*新密码*/
+				// 	passOne: '',
+				// 	/*确认密码*/
+				// 	passTwo: '',
+				// 	/*邀请码*/
+				// 	invitationCode: '',
+				// 	/*提示弹窗的text(vuex里面的方法只能接受一个参数，所以传个'对象'过去)*/
+				// 	tipsText: '注册成功',
+				// 	/*提示弹窗的url*/
+				// 	tipsUrl: '/login',
+				// }
+				//注册接口
+				var url =  "/api/User/register?mobile="+that.userData.userName+"&code="+that.userData.invitationCode+"&password"+that.userData.passOne+"&uid="+that.userData.invitationCode;
 				/*出现请求loading(更改vuex里的数据)*/
 				this.$store.state.loadingState = true;
 				/*ajax*/
@@ -351,5 +429,133 @@
 		color: #fff;
 		border-radius: 7px;
 		background-color: #1e82d2;
+	}
+
+	.pblicTermWrapP {
+		position: relative;
+		width: 100%;
+		height: 110px;
+	}
+	/*公共的class=>项(伪类)'底边框线'*/
+	
+	.publicButtomLIne:after {
+		content: " ";
+		width: 690px;
+		height: 2px;
+		border-bottom: 2px solid #dcdcdc;
+		position: absolute;
+		bottom: 0;
+		left: 30px;
+	}
+	/*公共的class=>项box*/
+	
+	.publicTermBoxP {
+		position: relative;
+		padding: 24px 0 0 30px;
+		box-sizing: border-box;
+		width: 100%;
+		height: 110px;
+		font-size: 30px;
+		background-color: #fff;
+	}
+	/*左*/
+	
+	.publicTermLeftP {
+		float: left;
+		width: 230px;
+		height: 67px;
+		color: #666;
+		font: 30px/67px "微软雅黑";
+		text-indent: 3px;
+		letter-spacing: 4px;
+	}
+	/*右*/
+	
+	.publicTermRightP {
+		float: left;
+		width: 460px;
+		height:67px;
+	}
+	/*input*/
+	
+	.publicTRPInput {
+		outline: none;
+		border: none;
+		width: 450px;
+		height: 67px;
+		font-size: 30px;
+		color: #666;
+		letter-spacing: 1px;
+		background-color: #fff;
+	}
+	/*input=>提示文本=>.publicTRPInput::-webkit-input-placeholder*/
+	
+	input::-webkit-input-placeholder {
+		/* WebKit browsers */
+		color: #bbb;
+		font-size: 26px;
+		font-family: "微软雅黑";
+	}
+	
+	input:-moz-placeholder {
+		/* Mozilla Firefox 4 to 18 */
+		color: #bbb;
+		font-size: 26px;
+		font-family: "微软雅黑";
+	}
+	
+	input::-moz-placeholder {
+		/* Mozilla Firefox 19+ */
+		color: #bbb;
+		font-size: 26px;
+		font-family: "微软雅黑";
+	}
+	
+	input:-ms-input-placeholder {
+		/* Internet Explorer 10+ */
+		color: #bbb;
+		font-size: 26px;
+		font-family: "微软雅黑";
+	}
+	/*'输入验证码box'和'input'*/
+	
+	.shortWidthBox,
+	.shortInputWidth {
+		width: 230px;
+	}
+	/* 输入框'|'获取验证码 的竖线=>伪元素 */
+	
+	.shortWidthBox:after {
+		content: " ";
+		width: 1px;
+		height: 70px;
+		border-right: 1px solid #d2d2d2;
+		position: absolute;
+		top: 20px;
+		right: 220px;
+	}
+	/*'获取验证码'按钮*/
+	.obtainCodeBut {
+		position: absolute;
+		bottom: 11px;
+		right: 30px;
+		width: 174px;
+		height: 87px;
+		font: 30px/87px "微软雅黑";
+		letter-spacing: 2px;
+		color: #1e82d2;
+		text-align: center;
+	}
+	/*'获取验证码'倒计时-按钮*/
+	.obtainCodeNoBut {
+		position: absolute;
+		bottom: 11px;
+		right: 30px;
+		width: 174px;
+		height:87px;
+		font: 26px/87px "微软雅黑";
+		letter-spacing: 2px;
+		color: #bbb;
+		text-align: center;
 	}
 </style>

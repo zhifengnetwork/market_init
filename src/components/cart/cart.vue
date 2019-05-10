@@ -431,7 +431,6 @@ export default {
             }else{
                 this.cheackAll=false;
             }
-            console.log(this.cheack)
         },
         /* 多选 */
         slectAll(){
