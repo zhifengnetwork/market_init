@@ -277,7 +277,7 @@
 </div>
 </template>
 <script>
-// 公告头部
+// 公共头部
 import headerView from '../common/headerView.vue'
 
 // vant
