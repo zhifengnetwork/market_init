@@ -153,7 +153,7 @@
         <div class="order-bill">
             <div class="barText">
                 共<span class="red">{{totalCount}}</span>件,
-                总金额&nbsp;<span class="price red">{{  totalPrice  | toFix | rmb}}</span>
+                总金额&nbsp;<span class="price red">{{ totalPrice | toFix | rmb}}</span>
             </div>
             <button class="barBtn">
                 确认订单
@@ -170,7 +170,6 @@
         data() {
             return {
                 // 商品信息
-                total:0,
                 orderData:[
                     {
                         goodsId:1,
@@ -198,73 +197,66 @@
                 chosenCoupon: -1,
                 coupons: [
                     {
-                    available: 1,
-                    condition: '无使用门槛\n最多优惠12元',
-                    reason: '',
-                    value: 500,
-                    name: '优惠券名称',
-                    startAt: 1489104000,
-                    endAt: 1514592000,
-                    valueDesc: '5',
-                    unitDesc: '元',
-                    // total:0,
+                        available: 1,
+                        condition: '无使用门槛\n最多优惠12元',
+                        reason: '',
+                        value: 250,
+                        name: '优惠券名称',
+                        startAt: 1489104000,
+                        endAt: 1514592000,
+                        valueDesc: '2.5',
+                        unitDesc: '元'
                     },
                     {
-                    available: 1,
-                    condition: '无使用门槛\n最多优惠12元',
-                    reason: '',
-                    value: 1000,
-                    name: '优惠券名称',
-                    startAt: 1489104000,
-                    endAt: 1514592000,
-                    valueDesc: '10',
-                    unitDesc: '元',
-                    // total:0,
-                    },
+                        available: 1,
+                        condition: '无使用门槛\n最多优惠10元',
+                        reason: '',
+                        value: 350,
+                        name: '优惠券名称',
+                        startAt: 1489104000,
+                        endAt: 1514592000,
+                        valueDesc: '3.5',
+                        unitDesc: '元'
+                    }
                 ],
                 disabledCoupons: [
-                //     {
-                       
-                //     available: 1,
-                //     condition: '无使用门槛\n最多优惠12元',
-                //     reason: '',
-                //     value: 250,
-                //     name: '优惠券名称',
-                //     startAt: 1489104000,
-                //     endAt: 1514592000,
-                //     valueDesc: '2.5',
-                //     unitDesc: '元',
-                //     // total:0,
-    
-                // }
+
                 ],
                 showList:false,//优惠券
                 payWay: '在线支付',
                 delivery:"普通快递 : 免运费",
                 show:false,//是否显示支付方式上拉列表
                 show2:false,//是否显示配送方式上拉列表
-                // total:0
             };
         },
 
         computed:{
             // 总价
             totalPrice(index){   
-                // let total = 0;
+                let total = 0;
                 for(var i = 0;i<this.orderData.length;i++){
                    this.total += this.orderData[i].price * this.orderData[i].goodsNum;
                 }
-                // 判断是否使用优惠券
-                if(this.chosenCoupon > 0){
-                    this.total = this.total - parseInt(this.coupons[index].valueDesc) 
+                
+                //判断是否选择优惠券               
+                if(this.chosenCoupon == -1){ //不适用优惠券
+                    // 选择顺丰速运
+                    if(this.delivery == "顺丰速运:运费¥15"){
+                        total = total + 15 ;
+                    }
+                }else{// 使用优惠券
+
+                    // 使用优惠券优惠金额
+                    var value = this.coupons[this.chosenCoupon].value / 100 ;
+                    total -= value ;
+
+                    // 选择顺丰速运
+                    if(this.delivery == "顺丰速运:运费¥15"){
+                        total = total + 15 ;
+                    }    
                 }
-           
-                //判断是否选择顺丰快递
-                else if(this.delivery == "顺丰速运:运费¥15"){
-  
-                    this.total += 15;
-                }
-                return this.total;
+
+                return total;
                 
             },
             // 总数
@@ -302,11 +294,10 @@
                 var indexx 
                 this.showList = false;
                 this.chosenCoupon = index;
-                this.totalPrice(index);
             },
             // 兑换优惠券回调
             onExchange(code) {
-                // this.coupons.push(coupon);
+                this.coupons.push(coupon);
             },
          
             // 上拉列表:选择支付方式
