@@ -169,6 +169,7 @@
         name:'comfirmOrder',
         data() {
             return {
+                
                 // 商品信息
                 orderData:[
                     {
@@ -229,15 +230,13 @@
                 show2:false,//是否显示配送方式上拉列表
             };
         },
-
         computed:{
             // 总价
-            totalPrice(index){   
+            totalPrice(index){
                 let total = 0;
                 for(var i = 0;i<this.orderData.length;i++){
-                   this.total += this.orderData[i].price * this.orderData[i].goodsNum;
+                   total += this.orderData[i].price * this.orderData[i].goodsNum;
                 }
-                
                 //判断是否选择优惠券               
                 if(this.chosenCoupon == -1){ //不适用优惠券
                     // 选择顺丰速运
@@ -255,9 +254,7 @@
                         total = total + 15 ;
                     }    
                 }
-
                 return total;
-                
             },
             // 总数
 			totalCount(){
