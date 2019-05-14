@@ -1,15 +1,16 @@
 <template>
 	<div class="reg-new-page">
-		       <headerView custom-title="注册"  rightNone>
+		       <headerView custom-title="注册"  >
 				<div class="backBtn" slot="backBtn" @click="$router.go(-1)">
 					<img src="../../../static/img/public/backBtn.png" />
 				</div>
+				<span class="rightBtn" slot="rightBtn" @click="$router.push('/login')">登录</span>
 			</headerView> 
     <form action="" class="reg-form">
-		  <div class="form-group account">
+		  <!-- <div class="form-group account">
 			   <i class="iconfont label">&#xe60f;</i>
 			   <input type="text" name="userName" placeholder="请输入用户名" class="account-input" autocomplete="off" v-model="logOnMessage.userName">
-		  </div>
+		  </div> -->
 		  <div class="form-group mobile">
 			   <i class="iconfont label">&#xe62c;</i>
 			   <input type="tel" name="mobile" placeholder="请输入手机号" class="mobile-input" autocomplete="off" v-model="logOnMessage.mobile" :disabled="!clickState">
@@ -17,16 +18,19 @@
 		  <div class="form-group verifyCode">
 			   <i class="iconfont label">&#xe645;</i>
 			   <input type="text" name="verifyCode" placeholder="请输入验证码" class="verify-input" autocomplete="off" v-model="logOnMessage.verifyCode" >
-			   <button id="getVerifyCodeBtn" class="get-verify-code" type="button" @click="getCode(logOnMessage.verifyCode)" :disabled="!clickState"  :class="{active:clickState}">{{codeText}}</button>
+			   <button id="getVerifyCodeBtn" class="get-verify-code" type="button" @click="getCode(logOnMessage.mobile)" :disabled="!clickState"  :class="{active:clickState}">{{codeText}}</button>
 		  </div>
 		  <div class="form-group password">
 			   <i class="iconfont label">&#xe60e;</i>
-			   <input type="password" name="pwd" placeholder="请输入密码" class="password-input" autocomplete="off" v-model="logOnMessage.password">
-			   <span id="passwordEyeIcon" class="eye"><i class="iconfont eye-close"></i><i class="iconfont eye-open hide"></i></span>
+			   <input :type="isHide?'password':'text' " name="pwd" placeholder="请输入密码" class="password-input" autocomplete="off" v-model="logOnMessage.password">
+			   <span id="passwordEyeIcon" class="eye" @click="hideShow">
+				   <i class="iconfont eye-close" :class="{hide:isHide==false}">&#xe6f2;</i>
+				   <i class="iconfont eye-open"  :class="{hide:isHide==true}">&#xe657;</i>
+				</span>
 		  </div>
 		  <div class="form-group password2">
 			   <i class="iconfont label">&#xe60e;</i>
-			   <input type="password" name="pwd2" placeholder="请再次输入密码" class="password-input" autocomplete="off" v-model="logOnMessage.passwordTwo">
+			   <input :type="isHide?'password':'text' " name="pwd2" placeholder="请再次输入密码" class="password-input" autocomplete="off" v-model="logOnMessage.passwordTwo">
 		  </div>
 		  <div class="form-group email">
 			   <i class="iconfont label">&#xe61c;</i>
@@ -53,8 +57,10 @@ import headerView from '../common/headerView.vue'
 export default {
 	data(){
 		return{
+			isHide:true,  //是否显示密码
+
             logOnMessage:{
-				userName:'', 			//用户账号
+				// userName:'', 			//用户账号
 
 				mobile:'',              //用户手机号
 
@@ -71,7 +77,7 @@ export default {
 			},
 			//正则
 			regular:{
-				userName:/^\w{3,10}$/, 			             //用户账号正则
+				// userName:/^\w{3,10}$/, 			             //用户账号正则
 
 				mobile:/^[1]([3-9])[0-9]{9}$/,              //用户手机号正则
 
@@ -96,17 +102,17 @@ export default {
 				  var that = this;
 
 				  //用户名
-				  if(that.logOnMessage.userName==""){
-						 Dialog.alert({
-						 message: '用户名不能为空噢~!'
-						 })
-						 return
-				  }else if(!that.regular.userName.test(that.logOnMessage.userName)){
-                        Dialog.alert({
-						message: '用户名格式:3-10个字母、数字、下划线!'
-						})
-						return
-				  }
+				//   if(that.logOnMessage.userName==""){
+				// 		 Dialog.alert({
+				// 		 message: '用户名不能为空噢~!'
+				// 		 })
+				// 		 return
+				//   }else if(!that.regular.userName.test(that.logOnMessage.userName)){
+                //         Dialog.alert({
+				// 		message: '用户名格式:3-10个字母、数字、下划线!'
+				// 		})
+				// 		return
+				//   }
 				 
 				 //用户手机号
                  if(that.logOnMessage.mobile==""){
@@ -120,6 +126,21 @@ export default {
 						})
 						return
 				  }
+
+				  //验证码
+				//    if(that.clickState==true){
+				// 	                        	Dialog.alert({
+				// 								message: '请获手机取验证码!'
+				// 							})
+				// 								return
+				//    }else{
+					   if(that.logOnMessage.verifyCode==""){
+												Dialog.alert({
+												message: '验证码不能为空，请获取验证码!'
+											})
+												return
+				//    }
+				   }
 
 				  //用户密码
 				  if(that.logOnMessage.password==""){
@@ -162,14 +183,41 @@ export default {
 												return
 										}
 				   }
+
+				//注册接口
+					var params = new URLSearchParams();
+						params.append('mobile', that.logOnMessage.mobile);       //你要传给后台的参数值 key/value
+						params.append('code', that.logOnMessage.verifyCode);
+						params.append('password', that.logOnMessage.password);
+						params.append('uid', that.logOnMessage.invite);
+					var url =  "/api/User/register"
+				// ?mobile="+that.logOnMessage.mobile+"&code="+that.logOnMessage.verifyCode+"&password="+that.logOnMessage.password+"&uid="+that.logOnMessage.invite;
+				that.$axios({
+					        method: 'post',
+									url:url,
+									data: params
+				}).then((res)=>{
+					if(res.data.status === 1){
+							Toast('注册成功~')
+							setTimeout(() => {
+								this.$router.push("/login");
+							}, 1000);
+							
+					}else{
+						   	Dialog.alert({
+												message: res.data.msg
+							})
+					}
+				})
 				   
 		   },
 
 		   //获取验证码
 		   getCode(code){
-                    if(code==""){
+
+                  if(code==""){
 						 Dialog.alert({
-						 message: '手机号不能为空噢~!'
+						 message: '请填写手机号码~!'
 						 })
 						 return
 				  }else if(!this.regular.mobile.test(code)){
@@ -181,29 +229,39 @@ export default {
 					    let that = this;
 						var temp='sms_reg';
 						var auth = md5( code + md5(temp+'android+app') );
+						var url = "api/Phone_auth/verifycode"
+						var params = new URLSearchParams();
+						params.append('mobile', code);       //你要传给后台的参数值 key/value
+						params.append('temp', temp);
+						params.append('auth', auth);
                         if (that.clickState) {
-						var url = "/api/PhoneAuth/verifycode?mobile="+code+'&temp='+temp+'&auth='+auth;
-						that.$axios.post(url).then((res)=>{
-							if(res.status === 200){
-							Toast('获取验证码成功~')
-							// that.codeText = '再次获取' + that.timerNum + 's';
+						that.$axios({
+							method: 'post',
+							url:url,
+							data: params
+						}).then((res)=>{
+							if(res.data.status == 1){
+							Toast(res.data.msg)
 							that.timer = setInterval(that.countDown,1000);
-							/*不能=>获取验证码,同时=>改变'获取验证码'按钮color颜色*/
-							that.clickState = false;
+							/*不能=>获取验证码*/
+							this.clickState = false;
+						    }else{
+							Dialog.alert({
+							message: res.data.msg
+							})
 						}
 						})
-						return false;
 					}
 				  }
 		   },
 
 		   /*(倒计时)获取验证码期间60S=>执行的函数*/
 			countDown(){
-				this.setStorage(this.timerNum);   //localstorage
+				// this.setStorage(this.timerNum);   //localstorage
 				this.timerNum--;
 				this.codeText = '重新获取' + (this.timerNum + 's');
 				// console.log('找回密码=>获取验证码=>定时器:',this.timerNum);
-				console.log(this.timerNum)
+
 				if(this.timerNum <= 0){
 					/*清除定时器*/
 					clearInterval(this.timer); 
@@ -216,51 +274,60 @@ export default {
 					return false;
 				}
 			},
-			//写入和读取localstorage:
-			setStorage(parm) {
-	            localStorage.setItem("dalay", parm);
-	            localStorage.setItem("_time", new Date().getTime());
-        	},
+// 			//写入和读取localstorage:
+// 			setStorage(parm) {
+// 	            localStorage.setItem("dalay", parm);
+// 	            localStorage.setItem("_time", new Date().getTime());
+//         	},
 
-        	getStorage() {
-	            let localDelay = {};
-	            localDelay.delay = localStorage.getItem("dalay");
-	            localDelay.sec = localStorage.getItem("_time");
-	            return localDelay;
-            },
+//         	getStorage() {
+// 	            let localDelay = {};
+// 	            localDelay.delay = localStorage.getItem("dalay");
+// 	            localDelay.sec = localStorage.getItem("_time");
+// 	            return localDelay;
+//             },
 
-			judgeCode() {
-			            let that = this;
-			            let localDelay = that.getStorage();
-			            let secTime = parseInt(
-			                (new Date().getTime() - localDelay.sec) / 1000
-			);
-					let _delay = localDelay.delay - secTime; 
-					console.log(_delay)
-					that.timerNum = _delay;
-					that.timer = setInterval(function() { 
-					if (_delay > 1) { 
-					console.log(_delay)
-					that.clickState = false; 
-					_delay--; 
-					that.setStorage(_delay);
-					that.timerNum = _delay; 
-					that.codeText = '重新获取' + (that.timerNum + 's');
-					} else { 
-								 that.clickState = true;
-								 that.codeText = '获取验证码'
-								 that.timerNum = 60; 
-								 window.clearInterval(that.timer);
-					} 
-						 }, 1000) 
-				},
+// 			judgeCode() {
+// 			            let that = this;
+// 			            let localDelay = that.getStorage();
+// 			            let secTime = parseInt(
+// 			                (new Date().getTime() - localDelay.sec) / 1000
+// 			);
+// 					let _delay = localDelay.delay - secTime; 
+// 					that.timerNum = _delay;
+// 					that.timer = setInterval(function() { 
+// 					if (_delay > 1) { 
+// 					that.clickState = false; 
+// 					_delay--; 
+// 					that.setStorage(_delay);
+// 					that.timerNum = _delay; 
+// 					that.codeText = '重新获取' + (that.timerNum + 's');
+// 					} else { 
+// 								 that.clickState = true;
+// 								 that.codeText = '获取验证码'
+// 								 that.timerNum = 60; 
+// 								 window.clearInterval(that.timer);
+// 					} 
+// 						 }, 1000) 
+// 				},
+			
+			//是否显示密码
+			hideShow(){ 
+
+				 if(this.isHide==true){
+					 this.isHide=false
+				 }else{
+					 this.isHide=true
+				 }
+
+			}
 	}
 	,components:{
         // 公告头部
         headerView,
 	},
 	mounted() {
-			this.judgeCode()
+			// this.judgeCode()
 	}
 }
 </script>
@@ -328,7 +395,8 @@ export default {
     width: 30px
 
    .reg-new-page .reg-form>.form-group.password>.eye>i 
-    color: #e0e0e0;
+    color: #000000;
+    font-size 40px
 
 
 

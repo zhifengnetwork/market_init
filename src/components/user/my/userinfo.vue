@@ -36,6 +36,12 @@
                        <span>生日</span>
                        <span   @click="openPicker">{{birthday}}</span>
                         <i class="right-arrow"></i>
+                          <mt-datetime-picker
+                            ref="picker"
+                            v-model="pickerVisible"
+                            type="date"
+                            @confirm="getTime">
+                    </mt-datetime-picker>
                    </li>
                </ul>
                <ul>
@@ -92,6 +98,7 @@
 <script>
 // 公共头部
 import headerView from '../../common/headerView.vue'
+
 export default {
     data(){
         return{
@@ -113,7 +120,6 @@ export default {
         
         //点击修改生日后确定
           getTime(){
-              console.log(123)
               let y = this.pickerVisible.getFullYear() //年
               let m = this.pickerVisible.getMonth()+1 //月
               let d = this.pickerVisible.getDate()    //日    

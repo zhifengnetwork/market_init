@@ -252,7 +252,7 @@ export default {
          //获取验证码  商城支付
          getCode(){
                     //倒计时开始
-                this.timeCountdown(this.pwd);  //参数为最终对象
+                    this.timeCountdown(this.pwd);  //参数为最终对象
          },
 
          //获取验证码  手机

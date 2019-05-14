@@ -7,6 +7,11 @@ import 'mint-ui/lib/style.css'
 
 import 'lib-flexible/flexible.js' 
 
+
+// 引入全部组件
+import Mint from 'mint-ui';
+Vue.use(Mint);
+
 import { Spinner } from 'mint-ui';
 
 import store from './store/store'
@@ -19,6 +24,7 @@ Vue.use(Vant);
 // 懒加载
 import { Lazyload } from 'mint-ui';
 Vue.use(Lazyload);
+
 
 // 商品导航
 import {
@@ -41,9 +47,10 @@ Vue.use(CouponCell).use(CouponList);
 import { DatetimePicker } from 'mint-ui';
 Vue.component(DatetimePicker.name, DatetimePicker);
 
-import { Swipe, SwipeItem } from 'mint-ui';
+import { Swipe, SwipeItem, MessageBox } from 'mint-ui';
 Vue.component(Swipe.name, Swipe);
 Vue.component(SwipeItem.name, SwipeItem);
+Vue.component(MessageBox.name, MessageBox);
 
 // 单选框 
 import { RadioGroup, Radio } from 'vant';
@@ -61,6 +68,7 @@ Vue.component(Spinner.name, Spinner);
 
 //字体图标css
 import '../static/css/font/iconfont.css'
+
 
 
 
@@ -90,9 +98,8 @@ Vue.prototype.timeCountdown = function (obj){
 }
 
 //引入axios库
-import axios from "axios";
-
-//注册组件
+import axios from "./axios/request";
+// //注册组件
 Vue.prototype.$axios = axios;
 
 

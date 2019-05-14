@@ -17,13 +17,13 @@
                 </headerView>
                 <div class="shopping-cart-page cart-page ">
                      <div class="cart-box">
-                              <div class="cart-nav clearfix more" v-if="list[0].title!= ''">
+                              <div class="cart-nav clearfix more" v-if="list.length>0">
                                     <div class="nav-item active" id="common-cart-nav" data-type="ordinary">
                                             <span>普通商品({{getnumber}})</span>
                                         </div>
                               </div> 
                               <!-- 购物车列表 -->
-                              <div class="cart-content normal-good active" v-if="list[0].title!= ''">
+                              <div class="cart-content normal-good active" v-if="list.length>0">
                                     <a class="tips clearfix" href="" >
                                         <div>
                                             购物满¥000.00 已免运费
@@ -34,54 +34,54 @@
                                     </a>
                                 <div class="normal-box" >
                                         <div class="cart-brand  good-pools-data"  >
-                                                <div class="good-list" v-for="(item,index) in list" :key="index" >
-                                                        <div class="good-item"  v-if='item["title"] != ""'>
+                                                <div class="good-list" v-for="(item,index) in list" :key="index"  :data-id="item.goods_id" :data-skn="item.sku_id">
+                                                        <div class="good-item"  >
                                                             <div class="opt">
                                                                    <img :src="item.ischeack?'../../../static/img/cart/check-circle-fill.png':'../../../static/img/cart/clos.png'" alt="" class="iconfont  chk" :data-id="item.id" @click="imgselect(item,$event,index)">
                                                                     <!-- <div class=" iconfont  chk  select"></div>
                                                                     <div class=" iconfont  chk  edit"></div> -->
                                                             </div>
                                                             <div class="good-new-info">
-                                                                <a href="javascript:;" class="img-a">
+                                                                <router-link :to="'/details?goods_id='+item.goods_id" class="img-a">
                                                                     <div class="img">
-                                                                        <img class="thumb lazy" :src='item.url' style="display: block;">
+                                                                        <img class="thumb lazy" :src='baseUrl+item.img' style="display: block;">
                                                                     </div>
-                                                                </a>
-                                                                <div class="info">
+                                                                </router-link>
+                                                                <div class="info" >
                                                                     <div class="fixed-height">
                                                                         <div class="intro intro-name">
                                                                             <div class="name-row">
                                                                                 <div class="name">
-                                                                                    <a href="javascript:;">{{item.title}}</a>
+                                                                                    <router-link :to="'/details?goods_id='+item.goods_id">{{item.goods_name}}</router-link>
                                                                                 </div>
                                                                             </div>
-                                                                            <p class="color-size-row"><span class="color">颜色:{{item.selectedColor}}</span><span class="size">尺码:{{item.selecteSize}}</span></p>
+                                                                            <p class="color-size-row"><span class="color">{{item.spec_key_name}}</span></p>
                                                                         </div>
-                                                                        <div class="intro intro-edit">
+                                                                        <div class="intro intro-edit" >
                                                                             <div class="edit-box">
                                                                                     <div class="num-opt">
                                                                                 
-                                                                                        <a href="javascript:;" class="btn btn-opt-minus"  @click="subtract" :data-id="item.id">
+                                                                                        <a href="javascript:;" class="btn btn-opt-minus"  @click="subtract(index,$event)" :data-id="item.sku_id">
                                                                                             -
                                                                                             </a>
-                                                                                        <input type="text" class="good-num" disabled="true"  data-min="1" data-max="16" v-model="item.num">
-                                                                                        <a href="javascript:;" class="btn btn-opt-plus"   @click="push"     :data-id="item.id">
+                                                                                        <input type="text" class="good-num" disabled="true"  data-min="1" data-max="16" v-model="item.goods_num">
+                                                                                        <a href="javascript:;" class="btn btn-opt-plus"   @click="push(index,$event)"     :data-id="item.sku_id">
                                                                                             +
                                                                                         </a>
                                                                                     </div>
-                                                                                <div class="edit-size-info  edit-size-info-notop " @click="changeInfo(index)" :data-id="item.id"> 
-                                                                                    <div class="txt">颜色:{{item.selectedColor}} 尺码:{{item.selecteSize}}</div>
-                                                                                    <div class="down">
+                                                                                <div class="edit-size-info  edit-size-info-notop "  :data-id="item.id"> 
+                                                                                    <div class="txt">{{item.spec_key_name}}</div>
+                                                                                    <!-- <div class="down">
                                                                                         <img  src="../../../static/img/cart/xiajiantou.png" class="iconfont">
-                                                                                    </div>
+                                                                                    </div> -->
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="count">x{{item.num}}</div>
+                                                                        <div class="count">x{{item.goods_num}}</div>
                                                                     </div>
                                                                     <div class="bottom">
                                                                         <div class="price">
-                                                                            <span class="market-price">¥{{item.price}}.00</span>  
+                                                                            <span class="market-price">¥{{item.goods_price}}</span>  
                                                                         </div>
                                                                         <div class="tags">
                                                                         </div>
@@ -93,20 +93,21 @@
                                         </div>
                                 </div>
                               </div>
-                              <div class="cart-zero" v-if="list[0].title==''">
+                              <div class="cart-zero"  v-if="list.length===0">
                                 <i class="iconfont"></i>
                                 <p>您的购物车暂无商品</p>
-                                <a href="javascript:;">随便逛逛</a>
+                                <!-- <a href="javascript:;">随便逛逛</a> -->
+                                <router-link to="/classify">随便逛逛</router-link>
                              </div>
                               <!--  total box -->   
-                              <div class="total box">
+                              <div class="total box" v-if="list.length>0">
                                     <div class="price-compute">
                                         <p>总计¥{{getSubTotal}}.00=商品金额¥{{getSubTotal}}.00</p>
                                     </div>
                                 </div>
                              
                               <!-- 结算 -->
-                              <div class="cart-footer">
+                              <div class="cart-footer"   v-if="list.length>0">
                                     <div class="check-all">
                                          <img :src="cheackAll?'../../../static/img/cart/check-circle-fill.png':'../../../static/img/cart/clos.png'" alt="" class="iconfont  chk"  @click="slectAll">
                                             <!-- <div  class="iconfont chk select "></div>
@@ -122,68 +123,12 @@
                                             <p class="intro">不含运费</p>
                                         </div>
 
-                                        <router-link to="/confirmOrder">
-                                            <div class="btn btn-red btn-balance">结算</div>
-                                        </router-link>
+                                        <!-- <router-link to="/confirmOrder"> -->
+                                            <div class="btn btn-red btn-balance" @click="closeOrder">结算</div>
+                                        <!-- </router-link> -->
                                     </div>
                                 </div>
                               <!-- 选择 -->
-                             <div class="chose-panel" :class="{hide:isHide}"  @click="isHide=true" @touchmove.prevent>
-                                    <div class="main" @click.stop="userClick=false">
-                                        <div class="close iconfont" @click="closeInfo">
-                                            <img src="../../../static/img/cart/close.png" alt="">
-                                        </div>
-                                        <div class="infos">
-                                            <div class="basic-info">
-                                                <div class="thumb-img">
-                                                    <img class="thumb" :src="list[specification].url">
-                                                </div>
-                                                <div class="text-info">
-                                                    <p class="price">
-                                 
-                                                        <span class="sale-price no-price">¥{{list[specification].price}}.00</span>  
-                                                    </p>
-                                                    <p class="not-choose"   :class="{hide:selected==false}">请选择颜色、尺码</p>
-                                                    <p class="choosed-info" :class="{hide:selected}">已选择:{{newList.color}},{{newList.size}}</p>
-                                                    <p class="size-info hide"></p>
-                                                    <p class="size-rec hide"></p>
-                                                </div>
-                                            </div>
-                                            <div class="chose-items">
-                                                    <div class="block-list">
-                                                        <span class="name">颜色</span>
-                                                        <ul class="size-row clearfix">
-                                                            <li class="block " v-for="(color,index) in list[specification].color" :key="index" :class="{chosed:colorSelectt==index}" @click="colorSelect(index,color)">{{color}}</li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="block-list">
-                                                        <span class="name">尺码</span>
-                                                        <ul class="size-row clearfix">
-                                                            <li class="block " v-for="(size,index) in list[specification].size" :key="index" :class="{chosed:sizeSelectt==index}" @click="sizeSelect(index,size)">{{size}}</li>
-                                                        </ul>
-                                                    </div>
-                                                <div class="num">
-                                                    <span class="name">数量</span>
-                                                    <div class="clearfix">
-                                                        <a class="btn btn-minus " href="javascript:void(0);"  @click="subtractt" :data-id="list[specification].id">
-                                                           -
-                                                        </a>
-                                                        <input id="good-num" class="good-num disabled" type="text"  v-model:value="newList.num"  disabled="true">
-                                                            <a class="btn btn-plus" href="javascript:void(0);" @click="pushh"   :data-id="list[specification].id">
-                                                           +
-                                                        </a>
-                                                    </div>
-                                                    <span class="left-num"></span>
-                                                    <input id="left-num" type="hidden" value="0">
-                                                    <input id="limitNum" type="hidden" value="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="btn-wrap">
-                                                <div id="chose-btn-sure" class="btn btn-sure" @click="affirm">确认</div>
-                                        </div>
-                                    </div>
-                                </div>
                      </div>
                               <!-- 为你优选 -->
                               <div class="recommend-for-you box hide" style="display: block;">    
@@ -262,13 +207,15 @@
 </template>
 <script>
 /* 引入 mint-ui 弹窗组件 */
-import {Toast} from "mint-ui"
+import {Toast,Dialog} from "vant"
 import { MessageBox } from 'mint-ui';
 import { Indicator } from 'mint-ui';
 import headerView from '../common/headerView.vue'
 export default {
     data() {
         return {
+                //商品图片路径
+                baseUrl:'http://api.zfwl.c3w.cc/upload/images/',
               /* 编辑 */
               redactText:'编辑',
               /* 编辑状态 */
@@ -280,41 +227,42 @@ export default {
               /* 全选选中 */
               cheackAll:false,
               /* 更换尺码颜色状态 */
-              isHide:true,
-              /* 更换下标 */
-              specification:0,
-              /* 颜色选中 */
-              colorSelectt:-1,
-              /* 尺码选中 */
-              sizeSelectt:-1,
-              /* 已选中颜色与尺码 */
-              selected:true,
-              /* 已选中颜色状态 */
-              selcolor:false,
-              /* 已选中颜色下标 */
-              selcolorIndex:0,
-              /* 已选中尺码状态 */
-              selSize:false,
-              /* 已选中尺码下标 */
-              selSizeIndex:0,
-              /* 修改数据 */
-              newList:
-                  {size:'',color:'',num:''}
-              ,
               /* 加载 */
               loding:false,
             /*数据*/
-              list:[ 
-                   {id:1,title:'HUMAN MADE  海军蓝棒球帽',size:['F','S','M'],color:['海军蓝','草原绿'],price:449,info:'',num:3,url:"../../../static/img/cart/0001.jpg",selecteSize:'F',selectedColor:'海军蓝'},
-                   {id:2,title:'Dickies 简约纯色长袖衬衫',size:['F','S','M'],color:['卡其色','黑色'],price:559,info:'',num:3,url:"../../../static/img/cart/0003.jpg",selecteSize:'F',selectedColor:'卡其色'},
-                   {id:3,title:'Dickies 简约纯色长袖衬衫',size:['F','S','M'],color:['卡其色','黑色'],price:559,info:'',num:3,url:"../../../static/img/cart/0003.jpg",selecteSize:'F',selectedColor:'卡其色'},
-                   {id:4,title:'FUTURA 系列 原子球印花滑板板面',size:['F','S','M'],color:['卡其色','黑色'],price:1089,info:'',num:3,url:"../../../static/img/cart/0002.jpg",selecteSize:'F',selectedColor:'黑色'},
-              ],
+              list:[],
+              
         }
+    },
+    created(){
+               //获取购物车列表
+               var url = 'cart/cartlist'
+               var token = localStorage.Authorization;
+               	var params = new URLSearchParams();
+				params.append('token', token);       //你要传给后台的参数值 key/value
+               this.$axios({
+                    method:"post",
+                    url:url,
+                    data: params
+               }).then((res)=>{
+                 if(res.data.status === 1){
+                       this.list = res.data.data
+                 }
+               })
+
     },
     methods: {
         // 删除商品
         cancel(){
+            // 删除购物车 cart/delCart
+            // 参数：
+            // token
+            // id	//购物车id
+            var url = 'cart/delCart'
+            if(this.list.length===0){
+                 Toast('你的购物车为空噢！ 快去挑选喜欢的商品吧~')
+                return false;
+            }
             if(this.cheack==''){
                 Toast('请至少选择一件商品')
                 return false;
@@ -324,82 +272,40 @@ export default {
                 for(var i = this.list.length-1; i>=0;i--){
                     var item = this.list[i];
                     if(item.ischeack){
-                        var index=this.list.indexOf(item);
-                        // console.log(index)
-                        this.list.splice(index,1);
-                        if(this.list.length==1){
-                            this.list.splice(index,1,{id:0,title:'',size:[],color:[],url:"",num:0});
-                        }
-                        Toast({
-                        message: '删除成功',
-                        iconClass: 'icon icon-success',
-                        duration:1000
-                        });
+                        var params = new URLSearchParams();
+                        params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value    tokne
+                        params.append('id', item.id);                //你要传给后台的参数值 key/value             购物车id
+                        
+                        this.$axios({
+                            method:"post",
+                            url:url,
+                            data: params
+                        }).then((res)=>{
+                            if(res.data.status=== 1){
+                            var index=this.list.indexOf(item);
+                            this.list.splice(index,1);
+                            Toast({
+                            message: '删除成功',
+                            iconClass: 'icon icon-success',
+                            duration:1000
+                            });
+                            }else{
+                                Dialog.alert({
+                                message:res.data.msg
+                                });
+                            }
+                            
+                        })
                         this.cheack=[];
                         this.cheackAll=false;
                     }
                 }
                   })
+                  .catch(() => {
+                });  
             }
         },
-        /* 修改确认 */
-        affirm(){
-            if(!this.selcolor){
-                Toast("请选择颜色~");
-                 return;
-            }else if(!this.selSize){
-                Toast("请选择尺码~");
-               return;
-            }
-            //当前的尺码改变成编辑后的
-            this.list[this.specification].selecteSize = this.newList.size 
-            //当前的颜色改变成编辑后的
-            this.list[this.specification].selectedColor = this.newList.color
-            //当前的数量改变成编辑后的
-            this.list[this.specification].num = this.newList.num
-            //关闭更尺码颜色状态
-            this.isHide=true
-            this.selected=true
-            this.colorSelectt=-1
-            this.sizeSelectt=-1
-            this.selcolor=false
-            this.selSize=false
-            this.liding()
-        },
-        /* 颜色选中 */
-        colorSelect(index,color){
-         this.colorSelectt=index;
-         this.selected=false
-         this.newList.color = color;
-         //选中改变状态
-         this.selcolor = true;
-        },
-        /* 尺码选中 */
-        sizeSelect(index,size){
-         this.sizeSelectt=index;
-         this.selected=false
-         this.newList.size = size
-         //选中改变状态
-         this.selSize = true;
-        },
-        /* 更换尺码颜色状态 */
-        changeInfo(index){
-           this.isHide = false
-           this.specification = index;
-           this.newList.num  = this.list[this.specification].num;
-           this.liding()
-        },
-        /* 关闭尺码颜色选择 */
-        closeInfo(){
-           this.isHide=true
-           this.selected=true
-           this.colorSelectt=-1
-           this.sizeSelectt=-1
-           this.selected=true
-           this.selcolor=''
-           this.selSize=''
-           this.liding()
-        },
+        
         /* 编辑 */
         redact(){
               if(this.redactText=='编辑'){
@@ -414,7 +320,6 @@ export default {
         imgselect(item,e,index){
             this.liding()
             var i=e.target.dataset.id
-            console.log(i)
             if(typeof item.ischeack == "undefined"){
                 this.$set(item,"ischeack",true)
             }else{
@@ -452,60 +357,126 @@ export default {
             });
         },
         /* 减 */
-    subtract(e) {
+        
+    subtract(index,e) {
+        var than = this
+
         var id = e.target.dataset.id;
+
         for (var item of this.list) {
-        if (item.id == id && item.num > 1) {
-          item.num--;
-           this.liding()
+
+        if (item.sku_id == id ) {
+
+          if (item.goods_num == 1) {
+
+            Toast("修改的商品不能为零噢~");
+
+            return;
+          }
+            var num = item.goods_num
+            item.goods_num--;
+            var url = 'cart/addCart'
+            var params = new URLSearchParams();
+            params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value    tokne
+            params.append('sku_id', item.sku_id);                //你要传给后台的参数值 key/value             sku id
+            params.append('cart_number', item.goods_num);       //你要传给后台的参数值 key/value              数量
+            params.append('act', 'edit');       //你要传给后台的参数值 key/value              修改购物车
+           this.$axios({
+                   method:"post",
+                   url:url,
+                   data: params
+                }).then((res)=>{
+                    if(res.data.status === 1){
+                        
+                    }else{
+                        Dialog.alert({
+                        message:res.data.msg
+                        });
+                        item.goods_num = num
+                    }
+                })
+
+          this.liding()
           break;
-        }
-        if (item.num == 1) {
-          Toast("修改的商品不能为零噢~");
         }
       }
     },
-    /* 修改减  */
-    subtractt(e) {
-        var id = e.target.dataset.id;
-        for (var item of this.list) {
-        if (item.id == id && this.newList.num > 1) {
-          this.newList.num--;
-          break;
-        }
-        if (this.newList.num == 1) {
-          Toast("修改的商品不能为零噢~");
-        }
-      }
-    },
+
         /* 加 */
-    push(e) {
+    push(index,e) {
       var id = e.target.dataset.id;
       for (var item of this.list) {
-        if (item.id == id) {
-          item.num++;
+        if (item.sku_id == id) {
+            
+            var num = item.goods_num
+            item.goods_num++;
+            var url = 'cart/addCart'
+            var params = new URLSearchParams();
+            params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value    tokne
+            params.append('sku_id', item.sku_id);                //你要传给后台的参数值 key/value             sku id
+            params.append('cart_number', item.goods_num);       //你要传给后台的参数值 key/value              数量
+            params.append('act', 'edit');       //你要传给后台的参数值 key/value              修改购物车
+            this.$axios({
+                   method:"post",
+                   url:url,
+                   data: params
+                }).then((res)=>{
+                    if(res.data.status === 1){
+                    }else{
+                        Dialog.alert({
+                        message:res.data.msg
+                        });
+                        item.goods_num = num
+                    }
+                })
           this.liding()
           break;
         }
       }
       
     },
-    /* 修改加*/
-    pushh(e) {
-    var id = e.target.dataset.id;
-    for (var item of this.list) {
-        if (item.id == id) {
-          this.newList.num++;
-          break;
-        }
-      }
-    },
     // 加载
     liding(){
             this.loding=true;
             setTimeout(() => {
                 this.loding = false
-            }, 500)
+            }, 300)
+    }
+    ,
+    //结算
+    closeOrder(){
+        // 购物车提交订单	order/temporary
+        // 参数：
+        // token
+        // cart_id
+            var url = "order/temporary"
+            for(var i = this.list.length-1; i>=0;i--){
+                    var item = this.list[i];
+                    if(item.ischeack){
+                        var params = new URLSearchParams();
+                        params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value    tokne
+                        params.append('id', item.id);                //你要传给后台的参数值 key/value             购物车id
+                        this.$axios({
+                            method:"post",
+                            url:url,
+                            data: params
+                        }).then((res)=>{
+                            if(res.data.status=== 1){
+                               console.log(res)
+                            }else{
+                                Dialog.alert({
+                                message:res.data.msg
+                                });
+                            }
+                            
+                        })
+                    }else{
+                                // Dialog.alert({
+                                // message:'请先勾选商品'
+                                // });
+                                Toast('请先勾选商品')
+                    }
+                }
     }
     },computed:{
         /*  商品总和*/
@@ -514,7 +485,7 @@ export default {
       for (var i = 0; i < this.list.length; i++) {
         var item = this.list[i];
         if(item.ischeack){
-        sum += item.price * item.num;
+          sum += item.goods_price * item.goods_num;
         }else{
           sum += 0;
         }
@@ -527,7 +498,7 @@ export default {
       for (var i = 0; i < this.list.length; i++) {
         var item = this.list[i];
         if(item.ischeack){
-        sum += item.num;
+        sum += item.goods_num;
       }else{
         sum += 0
       }
@@ -539,7 +510,8 @@ export default {
       var sum = 0;
       for (var i = 0; i < this.list.length; i++) {
         var item = this.list[i];
-        sum += item.num;
+        sum += item.goods_num;
+        
     }
     return sum;
     }

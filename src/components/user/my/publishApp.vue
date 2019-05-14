@@ -76,6 +76,7 @@ import headerView from '../../common/headerView.vue'
 import {Swipe, SwipeItem} from 'mint-ui'
 import {MessageBox, Toast} from 'mint-ui'
 
+
 export default {
     data(){
         return{

@@ -8,6 +8,8 @@ import forget from '@/components/login/forget'
 // 首页
 import home from '@/components/home/home'
 
+import { Dialog } from 'vant';
+
 // 商品分类
 import classify from '@/components/classify/classify'
 
@@ -65,7 +67,7 @@ import list from '@/components/goods/productList/list'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
 	/*去除掉，路径#号*/
 	mode: 'history',
   	routes: [
@@ -96,110 +98,163 @@ export default new Router({
 		{
 			path:'/home',
 			name: 'home',
-			component: (resolve) => require(['@/components/home/home'],resolve)
+			component: (resolve) => require(['@/components/home/home'],resolve),
+			meta:{requireAuth:true}
 		},
 		// 分类
 		{
 			path:'/classify',
 			name: 'classify',
-			component:classify
+			component:classify,
+			meta:{requireAuth:true}   //是否需要登录
 		},
 		// 商品详情
 		{
 			path:'/details',
 			name:'details',
-			component:details
+			component:details,
+			meta:{requireAuth:true}   //是否需要登录
 		},
 		// 购物车
 		{
 			path:'/cart',
 			name: 'cart',
-			component:cart
+			component:cart,
+			meta:{requireAuth:true}   //是否需要登录
 		},
 		// 用户中心
 		{
 			path:'/user',
 			name: 'user',
-			component:user
+			component:user,
+			// meta:{requireAuth:true}   //是否需要登录
 		},
 		// 订单
 		{
 			path:'/order',
 			name: 'order',
-			component:order
+			component:order,
+			meta:{requireAuth:true}   //是否需要登录
 		},
 		// 订单详情
 		{
 			path: '/orderDetails', 
 			name: 'orderDetails', 
-			component:orderDetails
+			component:orderDetails,
+			meta:{requireAuth:true}   //是否需要登录
 		},
 		// 我的优惠券
 		{
 			path:'/my/coupon',
 			name: 'coupon',
-			component:coupon
+			component:coupon,
+			meta:{requireAuth:true}   //是否需要登录
 		},
 		// 我的收藏
 		{
 			path:'/collection',
 			name:'collection',
-			component:collection
+			component:collection,
+			meta:{requireAuth:true}   //是否需要登录
 		},
 		//商品评价
 		{
 			path:'/details/evaluate',
 			name:'evaluate',
-			component:evaluate
+			component:evaluate,
+			meta:{requireAuth:true}   //是否需要登录
 		},
 		//发布评价
 		{
 			path:'/my/appraise',
 			name:'appraise',
-			component:appraise
+			component:appraise,
+			meta:{requireAuth:true}   //是否需要登录
 		},
 		// 确认订单
 		{
 			path:'/confirmOrder',
 			name: 'confirmOrder',
-			component:confirmOrder
+			component:confirmOrder,
+			meta:{requireAuth:true}   //是否需要登录
 		},
 		//个人信息
 		{
 			path:'/my/userinfo',
 			name: 'userinfo',
-			component:userinfo
+			component:userinfo,
+			meta:{requireAuth:true}   //是否需要登录
 		},
 		//个人地址管理
 		{
 			path:'/my/site',
 			name: 'site',
-			component:site
+			component:site,
+			meta:{requireAuth:true}   //是否需要登录
 		},
 		//添加地址
 		{
 			path:'/my/addressAct',
 			name: 'addressAct',
-			component:addressAct
+			component:addressAct,
+			meta:{requireAuth:true}   //是否需要登录
 		},
 		//账号安全
 		{
 			path:'/my/changePwd',
 			name: 'changePwd',
-			component:changePwd
+			component:changePwd,
+			meta:{requireAuth:true}   //是否需要登录
 		},
 		//商品列表
 		{
 			path:'/productLsit',
 			name: 'productLsit',
-			component:productLsit
+			component:productLsit,
+			meta:{requireAuth:true}   //是否需要登录
 		},
 		//商品列表
 		{
 			path:'/list',
 			name: 'list',
-			component:list
+			component:list,
+			meta:{requireAuth:true}   //是否需要登录
 		},
 		
   	]
 })
+
+
+// 导航守卫
+// 使用 router.beforeEach 注册一个全局前置守卫，判断用户是否登陆
+router.beforeEach((to, from, next) => {
+
+	if (to.matched.some(r => r.meta.requireAuth)) { 
+
+	// if (to.path === '/login' || to.path === '/register') {
+
+	//   next();
+
+	// } else {
+
+	  let token = localStorage.getItem('Authorization');
+	  if (token === null || token === '') {
+		
+		Dialog.alert({
+			message: '请登录 !'
+		}).then(() => {
+			next('/login');	
+		  });
+
+	  } else {
+
+		next();
+
+	  }
+	// }
+}else{
+		next();
+}
+  });
+
+export default router;

@@ -193,7 +193,7 @@
                                                 <div class="num">
                                                     <span class="name">数量</span>
                                                     <div class="clearfix">
-                                                        <button class="btn btn-minus"   href="javascript:void(0);" @click="minusNum"  :disabled='sku_num>1'>
+                                                        <button class="btn btn-minus"   href="javascript:void(0);" @click="minusNum"  :disabled='sku_num==1'>
                                                            -
                                                         </button>
                                                         <input id="good-num" class="good-num disabled" type="text" v-model="sku_num" disabled>
@@ -280,6 +280,10 @@
 // 公共头部
 import headerView from '../common/headerView.vue'
 
+		/* md5 */
+  import md5 from 'js-md5';
+  
+   	import { mapMutations } from 'vuex';
 // vant
 import {
   Tag,
@@ -298,7 +302,8 @@ import {
 export default {
     data(){
         return{
-            
+            //用户信息 
+            userInfo:'',
             //商品分类id
             goods_id:this.$route.query.goods_id,
             
@@ -708,6 +713,7 @@ export default {
 
         //规格弹窗 减少数量
         minusNum(){
+       
                  let le = [];
                  let sele = []
                  if(this.selectArr == ''){
@@ -736,7 +742,8 @@ export default {
                        return
                     }     
                     }
-                 }
+                 } 
+           
                    if( this.sku_num > 1){  //如果数量小于一
 
                       this.sku_num--;
@@ -827,18 +834,29 @@ export default {
                    }  
                 
                  }
-                 this.selectArarr.token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJEQyIsImlhdCI6MTU1NzQwNjM3NSwiZXhwIjoxNTU3NDQyMzc1LCJ1c2VyX2lkIjo1MH0.BZYXHsBnhXsKgsvfDSTx2CQanB5wy5-Gmb-IwHIvmpc';
-                 this.selectArarr.goods_num = this.sku_num
-                
-                var url = "/api/cart/addCart?token="+this.selectArarr.token+'&sku_id='+this.selectArarr.sku_id+'&cart_number='+this.selectArarr.goods_num;
-                this.$axios.get(url).then((res)=>{
-                  if(res.status === 200){
-                    Toast('商品添加购物车成功~')
-                    this.$store.commit("increment") 
-                    // 数据加载成功，关闭loading 
-					          this.$store.commit('hideLoading')
-                  }
-                })
+                  this.selectArarr.token = localStorage.Authorization;
+                  this.selectArarr.goods_num = this.sku_num;
+                  var params = new URLSearchParams();
+                  params.append('token', this.selectArarr.token);           //token
+                  params.append('sku_id',this.selectArarr.sku_id );         //添加商品规格
+                  params.append('cart_number', this.selectArarr.goods_num); //添加数量
+                   var url = "/cart/addCart"
+                    this.$axios({
+                        method:"post",
+                        url:url,
+                        data: params
+                    }).then((res)=>{
+                      console.log(res.data.status)
+                      if(res.data.status === 1){
+                        console.log(res)
+                        Toast('商品添加购物车成功~')
+                        this.$store.commit("increment") 
+                        // 数据加载成功，关闭loading 
+                        this.$store.commit('hideLoading')
+                      }else{
+                        Toast(res.data.msg)
+                      }
+                    })
         },
 
         //立即购买
@@ -872,8 +890,30 @@ export default {
                     }     
                     }
                    }  
-              }
-              this.$router.push('confirmOrder');
+              };
+              // this.selectArarr.token = localStorage.Authorization;
+              //     this.selectArarr.goods_num = this.sku_num;
+              //     var params = new URLSearchParams();
+              //     params.append('token', this.selectArarr.token);           //token
+              //     params.append('sku_id',this.selectArarr.sku_id );         //添加商品规格
+              //     params.append('cart_number', this.selectArarr.goods_num); //添加数量
+              //      var url = "/cart/addCart"
+              //       this.$axios({
+              //           method:"post",
+              //           url:url,
+              //           data: params
+              //       }).then((res)=>{
+              //         if(res.data.status === 200){
+              //           console.log(res)
+              //           Toast('商品添加购物车成功~')
+              //           this.$store.commit("increment") 
+              //           // 数据加载成功，关闭loading 
+              //           this.$store.commit('hideLoading')
+              //         }else{
+              //           Toast(res.data.msg)
+              //         }
+              //       })
+              // this.$router.push('confirmOrder');
         },
          //点击收藏
         onClickMinicollect(){
@@ -901,21 +941,80 @@ export default {
         },
         optCartCount(){
              return this.$store.getters.optCartCount;
-        }
+        },
+        ...mapMutations(['changeLogin',]),
+        //token
+        // askToken(){
+        //   // user_id
+        //   // token
+        //   // mobile
+        //   // token1 	md5(user_id+参数mobile参数+token参数)
+        //   var params = new URLSearchParams();
+        //   params.append('user_id', this.userInfo.uid);
+        //   params.append('token', this.userInfo.Authorization);
+        //   params.append('mobile', this.userInfo.phone);
+        //   params.append('token1', md5(this.userInfo.uid+this.userInfo.phone+this.userInfo.Authorization));
+        //       var url = "/user/login"
+        //       this.$axios({
+        //             method:"post",
+        //             url:url,
+        //             data: params
+        //       }).then((res)=>{
+        //             if(res.data.status===1){
+        //                 this.userToken = res.data.data.token;  //token
+        //                 this.mobile = res.data.data.mobile                 //phone
+        //                 this.uid = res.data.data.id
+        //                 localStorage.removeItem('Authorization');
+        //                 // 将用户token保存到vuex中
+        //                 this.changeLogin({ Authorization: this.userToken,
+        //                 mobile:this.mobile,
+        //                 uid:this.uid
+        //                 });
+        //               // 将用户手机号保存到vuex中
+        //              }
+        //       })
+        // },
        
         },
         //获取商品规格
         created(){
+          // this.userInfo = this.$store.getters.optuser
+          // this.askToken();
           // 调用loading 
-			    this.$store.commit('showLoading')
-            var that = this;
-            var url = "/api/goods/goodsDetail?goods_id="+this.goods_id
-                that.$axios.get(url).then((res)=>{
-                  if(res.status === 200){
+            this.$store.commit('showLoading')
+                  var params = new URLSearchParams();
+                  params.append('goods_id', this.goods_id);       //你要传给后台的参数值 key/value
+                  var that = this;
+            var url = "/goods/goodsDetail"
+                that.$axios({
+                   method:"post",
+                   url:url,
+                   data: params
+                }).then((res)=>{
+                  if(res.data.status === 1){
                     that.goods = res.data.data;
                     that.good =  res.data.data.spec.spec_attr;
                     // 数据加载成功，关闭loading 
-					        this.$store.commit('hideLoading')
+					          this.$store.commit('hideLoading')
+                  }
+                  // else if(res.data.status === 2){
+                  //     //重新请求token
+                  //     // that.askToken();
+                      
+                  // }
+                  else{
+                    if(res.status === 401){
+                      Dialog.alert({
+                      message:res.data.msg
+                    }).then(()=>{
+                    
+                    })
+                    }
+                    else {
+                    Dialog.alert({
+                    message:res.data.msg
+                    })
+                   }
                   }
                     
              for (var i in that.goods.spec.goods_sku) {  
