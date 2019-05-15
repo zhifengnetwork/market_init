@@ -15,35 +15,35 @@
 			</ul>
 			<div class="fav-content">
 				<div class="fav-type fav-product-list" v-if="indexx==0">
-					<div class="fav-box">
+					<div class="fav-box" v-for="(item,index) in list" :key="index" v-show="list!=''">
 						<div class="fav-img-box">
-							<img src="../../../../static/img/0004.png" />
+							<img :src="baseUrl+item.img" />
 						</div>
 						
 						<div class="fav-info-list">
-							<p class="fav-pr">MADNESS REVERSIBLE ECWCS PARKA MODIFIED MADNESS REVERSIBLE ECWCS PARKA</p>
-							<p class="fav-ice">¥2299.00</p>
-							<p class="remove" @click="tellUs"></p>
+							<p class="fav-pr">{{item.goods_name}}</p>
+							<p class="fav-ice">¥{{item.price}}</p>
+							<p class="remove" @click="tellUs(item.goods_id,index)"></p>
 						</div>
 						
 					</div>	
 					<!--商品为空时显示-->
-					<div class="null-box" style="width: 100%;display: none;">
+					<div class="null-box" style="width: 100%;" v-show="list.length===0">
 						<div class="fav-null-box">
 							<div class="fav-null" style="margin: 5px 0 15px 135px;"></div>
 							<p class="p-tit">您暂无收藏任何品牌</p>
 						</div>
-						<a class="go-shopping">随便逛逛</a>
+						<router-link to="/classify" class="go-shopping">随便逛逛</router-link>
 					</div>
 				</div>
-				<div class="fav-type" v-if="indexx==1">
+				    <div class="fav-type" v-if="indexx==1">
 					<!--商品为空时显示-->
 					<div class="fav-null-box">
 						<div class="fav-null"></div>
 						<p class="p-tit ">您暂无收藏任何品牌</p>
 					</div>
 					
-					<a class="go-shopping">随便逛逛</a>
+					<router-link to="/classify" class="go-shopping">随便逛逛</router-link>
 					
 				</div>
 			</div>
@@ -57,6 +57,8 @@
 	export default {
 		data(){
 	        return{
+				//商品图片路径
+           		 baseUrl:'http://api.zfwl.c3w.cc/upload/images/',
 				// 使用说明
 				arrows:false,
 				show: false,
@@ -64,7 +66,8 @@
 					{name:'收藏的商品'},{name:'收藏的品牌'}
 				],
 				 //默认为零 默认显示第一个未使用
-				indexx:0
+				indexx:0,
+				list:[],
 	        }
 	   	},
 		components:{
@@ -80,15 +83,55 @@
 				this.indexx=index
 				this.arrows=false
 			},
-			tellUs() {
+			tellUs(id,index) {
                 Dialog.confirm({
                     message: '您确定要取消收藏吗？'
                 }).then(() => {
-					// on confirm
+	                var url = 'Collection/collection'
+					var params = new URLSearchParams();
+						params.append('token', this.$store.getters.optuser.Authorization);           //token
+						params.append('goods_id',id);                                   //商品ID
+					this.$axios({
+							method:"post",
+							url:url,
+							data: params
+					}).then((res)=>{
+						if(res.data.status === 1){
+						this.list.splice(index,1)
+						Toast.success({
+						message:res.data.msg,
+						mask:true,
+						loadingType:'spinner',
+						forbidClick:true
+						});
+						}
+					})
                 }).catch(() => {
                     // on cancel
                 });
             },
+		},
+		created(){
+			   //请求收藏列表
+			    // 收藏列表 Collection/collection_list
+				// 参数：
+				// token
+			   var url = 'Collection/collection_list';
+               var params = new URLSearchParams();
+				   params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value
+			    this.$axios({
+							method:"post",
+                            url:url,
+                            data: params
+				}).then((res)=>{
+					if(res.data.status===1){
+                      this.list = res.data.data
+					}else{
+					    Dialog.alert({
+						message:res.data.msg
+						})	
+					}
+				})
 		}
 	}
 </script>
@@ -133,6 +176,7 @@
 	.fav-product-list div img {
 		display: block;
 		margin: 0 auto;
+		height 100%;
 		max-width: 100%;
 	}
 	.fav-img-box {

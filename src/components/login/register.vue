@@ -190,7 +190,7 @@ export default {
 						params.append('code', that.logOnMessage.verifyCode);
 						params.append('password', that.logOnMessage.password);
 						params.append('uid', that.logOnMessage.invite);
-					var url =  "/api/User/register"
+					var url =  "/User/register"
 				// ?mobile="+that.logOnMessage.mobile+"&code="+that.logOnMessage.verifyCode+"&password="+that.logOnMessage.password+"&uid="+that.logOnMessage.invite;
 				that.$axios({
 					        method: 'post',
@@ -229,7 +229,7 @@ export default {
 					    let that = this;
 						var temp='sms_reg';
 						var auth = md5( code + md5(temp+'android+app') );
-						var url = "api/Phone_auth/verifycode"
+						var url = "/Phone_auth/verifycode"
 						var params = new URLSearchParams();
 						params.append('mobile', code);       //你要传给后台的参数值 key/value
 						params.append('temp', temp);

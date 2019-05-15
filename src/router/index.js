@@ -60,7 +60,7 @@ import changePwd from '@/components/user/my/changePwd'
 import productLsit from '@/components/goods/productList/product'
 
 //商品列表
-import list from '@/components/goods/productList/list'
+// import list from '@/components/goods/productList/list'
 
 
 
@@ -213,13 +213,13 @@ const router = new Router({
 			component:productLsit,
 			meta:{requireAuth:true}   //是否需要登录
 		},
-		//商品列表
-		{
-			path:'/list',
-			name: 'list',
-			component:list,
-			meta:{requireAuth:true}   //是否需要登录
-		},
+		// //商品列表
+		// {
+		// 	path:'/list',
+		// 	name: 'list',
+		// 	component:list,
+		// 	meta:{requireAuth:true}   //是否需要登录
+		// },
 		
   	]
 })

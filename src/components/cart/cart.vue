@@ -96,7 +96,6 @@
                               <div class="cart-zero"  v-if="list.length===0">
                                 <i class="iconfont"></i>
                                 <p>您的购物车暂无商品</p>
-                                <!-- <a href="javascript:;">随便逛逛</a> -->
                                 <router-link to="/classify">随便逛逛</router-link>
                              </div>
                               <!--  total box -->   
@@ -123,9 +122,9 @@
                                             <p class="intro">不含运费</p>
                                         </div>
 
-                                        <!-- <router-link to="/confirmOrder"> -->
+                                        <router-link :to="'/confirmOrder?id='+cheack">
                                             <div class="btn btn-red btn-balance" @click="closeOrder">结算</div>
-                                        <!-- </router-link> -->
+                                        </router-link>
                                     </div>
                                 </div>
                               <!-- 选择 -->
@@ -215,7 +214,7 @@ export default {
     data() {
         return {
                 //商品图片路径
-                baseUrl:'http://api.zfwl.c3w.cc/upload/images/',
+              baseUrl:'http://api.zfwl.c3w.cc/upload/images/',
               /* 编辑 */
               redactText:'编辑',
               /* 编辑状态 */
@@ -236,8 +235,8 @@ export default {
     },
     created(){
                //获取购物车列表
-               var url = 'cart/cartlist'
-               var token = localStorage.Authorization;
+                var url = 'cart/cartlist'
+                var token = localStorage.Authorization;
                	var params = new URLSearchParams();
 				params.append('token', token);       //你要传给后台的参数值 key/value
                this.$axios({
@@ -455,14 +454,14 @@ export default {
                     if(item.ischeack){
                         var params = new URLSearchParams();
                         params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value    tokne
-                        params.append('id', item.id);                //你要传给后台的参数值 key/value             购物车id
+                        params.append('cart_id', item.id);                //你要传给后台的参数值 key/value             购物车id
                         this.$axios({
                             method:"post",
                             url:url,
                             data: params
                         }).then((res)=>{
                             if(res.data.status=== 1){
-                               console.log(res)
+                         
                             }else{
                                 Dialog.alert({
                                 message:res.data.msg

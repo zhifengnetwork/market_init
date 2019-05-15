@@ -11,6 +11,8 @@ const store =  new Vuex.Store({
     state:{
       loading:false,
       cartCount:0,  //购物车商品的数量
+      //购物车列表
+      goodsList:localStorage["goodsList"]?JSON.parse(localStorage["goodsList"]):[],
       // // 存储token
       // Authorization: localStorage.getItem('Authorization') ? localStorage.getItem('Authorization') : '',
       //用户信息

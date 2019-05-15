@@ -356,7 +356,7 @@ export default {
     border-radius: .625rem;
     color: #fff;
     float: right;
-    font-size: 12px
+    font-size: 20px
     height: 50px
     line-height: 50px
     margin-top: -8px

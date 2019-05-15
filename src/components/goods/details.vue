@@ -148,9 +148,9 @@
                                 icon="cart-o"
                                 text="购物车"
                             />
-                            <div data-v-3e366829="" class="van-goods-action-mini-btn van-hairline" :class="{active:ish}" @click="onClickMinicollect">
+                            <div data-v-3e366829="" class="van-goods-action-mini-btn van-hairline" :class="{active:goods.collection===1}" @click="onClickMinicollect">
                               <div data-v-3e366829="" class="van-icon  van-goods-action-mini-btn__icon iconfont">&#xe60c;</div>
-                              {{enshrine}}</div>
+                              {{goods.collection===1?'以收藏':'收藏'}}</div>
                             <!-- <van-goods-action-mini-btn  
                                 icon="like-o"
                                 text="收藏"
@@ -320,11 +320,8 @@ export default {
              getCoupon:false,
 
              //显示不同规格图片
-             getImg:'',
+              getImg:'',
 
-             //是否收藏商品
-              ish:false,
-              enshrine:'收藏',
 
              //显示加入购物车还是立即购买//规格弹窗的按钮text
              byHide:false,
@@ -384,14 +381,14 @@ export default {
         sorry() {
              this.is_sku=true;                                  //改变规格弹窗状态为true
              this.byHide=false                                  //改变规格弹窗按钮
-             this.getImg=this.baseUrl+this.goods.img[0].picture //点击加入默认sku显示的图片为第一张
+            //  this.getImg=this.baseUrl+this.goods.img[0].picture //点击加入默认sku显示的图片为第一张
         },
 
         //点击立即购买
         buy(){
             this.is_sku=true;      //改变规格弹窗状态为true
             this.byHide=true       //改变规格弹窗按钮
-            this.getImg=this.baseUrl+this.goods.img[0].picture //点击加入默认sku显示的图片为第一张
+            // this.getImg=this.baseUrl+this.goods.img[0].picture //点击加入默认sku显示的图片为第一张
         },
 
         //点击关闭规格弹窗
@@ -551,14 +548,14 @@ export default {
       var self = this
       let orderInfo = this.good; /*所有规格**所有规格*/
       let orderInfoChild = this.good[n].res; /*当前点击的规格的所有子属性内容*/
-      if(this.good[n].spec_id==1){                                  //如果点击当前的id是规格
-          if(index==this.goods.img.length){
-            this.getImg=this.baseUrl+this.goods.img[0].picture    //切换不同的规格商品图片
-          }else{
-            this.getImg=this.baseUrl+this.goods.img[index].picture    //切换不同的规格商品图片
-          }
+      // if(this.good[n].spec_id==1){                                  //如果点击当前的id是规格
+      //     if(index==this.goods.img.length){
+      //       this.getImg=this.baseUrl+this.goods.img[0].picture    //切换不同的规格商品图片
+      //     }else{
+      //       this.getImg=this.baseUrl+this.goods.img[index].picture    //切换不同的规格商品图片
+      //     }
           
-      }
+      // }
       //选中自己，兄弟节点取消选中
       if (orderInfoChild[index].isShow = true) {
         if (orderInfoChild[index].isSelect == true) {
@@ -846,9 +843,7 @@ export default {
                         url:url,
                         data: params
                     }).then((res)=>{
-                      console.log(res.data.status)
                       if(res.data.status === 1){
-                        console.log(res)
                         Toast('商品添加购物车成功~')
                         this.$store.commit("increment") 
                         // 数据加载成功，关闭loading 
@@ -891,51 +886,74 @@ export default {
                     }
                    }  
               };
-              // this.selectArarr.token = localStorage.Authorization;
-              //     this.selectArarr.goods_num = this.sku_num;
-              //     var params = new URLSearchParams();
-              //     params.append('token', this.selectArarr.token);           //token
-              //     params.append('sku_id',this.selectArarr.sku_id );         //添加商品规格
-              //     params.append('cart_number', this.selectArarr.goods_num); //添加数量
-              //      var url = "/cart/addCart"
-              //       this.$axios({
-              //           method:"post",
-              //           url:url,
-              //           data: params
-              //       }).then((res)=>{
-              //         if(res.data.status === 200){
-              //           console.log(res)
-              //           Toast('商品添加购物车成功~')
-              //           this.$store.commit("increment") 
-              //           // 数据加载成功，关闭loading 
-              //           this.$store.commit('hideLoading')
-              //         }else{
-              //           Toast(res.data.msg)
-              //         }
-              //       })
+              this.selectArarr.token = localStorage.Authorization;
+                  this.selectArarr.goods_num = this.sku_num;
+                  var params = new URLSearchParams();
+                  params.append('token', this.selectArarr.token);           //token
+                  params.append('sku_id',this.selectArarr.sku_id );         //添加商品规格
+                  params.append('cart_number', this.selectArarr.goods_num); //添加数量
+                   var url = "/cart/addCart"
+                    this.$axios({
+                        method:"post",
+                        url:url,
+                        data: params
+                    }).then((res)=>{
+                      if(res.data.status === 1){
+                        this.$router.push('confirmOrder?id='+res.data.data);
+                      }else{
+                        Toast(res.data.msg)
+                      }
+                    })
               // this.$router.push('confirmOrder');
         },
          //点击收藏
         onClickMinicollect(){
             this.ish!=this.ish
-            if(this.ish==false){
-              this.ish=true
-              Toast.success({
-                message:'收藏成功',
-                mask:true,
-                loadingType:'spinner',
-                forbidClick:true
-              });
-              this.enshrine="以收藏"
-              //ajax
-
-
+            var url = 'Collection/collection'
+            // 收藏|取消收藏
+            // Collection/collection
+            // 参数：
+            // token
+            // goods_id
+            if(this.goods.collection===0){
+              var params = new URLSearchParams();
+                  params.append('token', this.$store.getters.optuser.Authorization);           //token
+                  params.append('goods_id',this.goods_id );                                   //商品ID
+              this.$axios({
+                      method:"post",
+                      url:url,
+                      data: params
+              }).then((res)=>{
+                if(res.data.status === 1){
+                  this.goods.collection=1
+                  Toast.success({
+                  message:res.data.msg,
+                  mask:true,
+                  loadingType:'spinner',
+                  forbidClick:true
+                  });
+                  }
+              })
             }else{
-              this.ish=false
-              this.enshrine="收藏"
               //ajax
-
-
+              var params = new URLSearchParams();
+                  params.append('token', this.$store.getters.optuser.Authorization);           //token
+                  params.append('goods_id',this.goods_id );                                   //商品ID
+              this.$axios({
+                      method:"post",
+                      url:url,
+                      data: params
+              }).then((res)=>{
+                if(res.data.status === 1){
+                  this.goods.collection=0
+                  Toast.success({
+                  message:res.data.msg,
+                  mask:true,
+                  loadingType:'spinner',
+                  forbidClick:true
+                  });
+                  }
+              })
             }
               
         },
@@ -984,6 +1002,7 @@ export default {
             this.$store.commit('showLoading')
                   var params = new URLSearchParams();
                   params.append('goods_id', this.goods_id);       //你要传给后台的参数值 key/value
+                  params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value
                   var that = this;
             var url = "/goods/goodsDetail"
                 that.$axios({

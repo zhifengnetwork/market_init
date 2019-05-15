@@ -8,72 +8,55 @@
 
         <div class="content">
             <!-- 收货地址 -->
-            <router-link to="/my/site">
-                <div class="address">
-                    <div class="address-icon">
+            <!-- <router-link :to="'/my/site?site='+site"> -->
+                <div class="address" @click="openSite">
+                    <div class="address-icon" >
                         <img src="/static/img/order/address-icon.png" />
                     </div>
                     <div class="right">
                         <div class="nameInfo">
-                            <span class="name">小辣鸡</span>
-                            <span class="phone">17875596666</span>
+                            <span class="name">{{tacitlySite.consignee}}</span>
+                            <span class="phone">{{tacitlySite.mobile}}</span>
                         </div>
                         <div class="addressText">
-                            <p>广东省 广州市 白云区 嘉禾街道嘉禾彭西仁和仁和仁和串钱的二巷69号</p>
+                            <p>{{tacitlySite.address}}</p>
                         </div>
                     </div> 
                     <div class="address-rightArrow iconfont">&#xe602;</div>
                 </div>
-            </router-link>
+            <!-- </router-link> -->
 
             <!-- 商品信息 -->
-            <router-link to="/details">
-                <div class="order-item" v-for="(item,index) in orderData" :key="index">
+            <router-link :to="'/details?goods_id='+orderData.goods_id">
+                <div class="order-item" v-for="(item,index) in orderData.spec" :key="index">
                     <div class="img-wrap">
-                        <img :src="item.img" />
+                        <img :src="baseUrl+orderData.img" />    
                     </div>
                     <div class="text">
-                        <h3>{{item.goodsName}}</h3>
+                        <h3>{{item.goods_name}}</h3>
                         <p>
-                            <span class="color">颜色:{{item.goodsColor}}</span>
-                            <span class="size">尺码:{{item.goodsSize}}</span>
+                            <span class="color">{{item.spec_key_name}}</span>
+                            <!-- <span class="size">尺码:{{item.goodsSize}}</span> -->
                         </p>
                     </div>
                     <div class="price-wrap">
-                        <p class="price">{{item.price | toFix | rmb}}</p>
-                        <p class="sale-price">{{item.salePrice | toFix | rmb}}</p>
-                        <p class="count">x{{item.goodsNum}}</p>
+                        <p class="price">{{item.goods_price | toFix | rmb}}</p>
+                        <!-- <p class="sale-price">{{item.salePrice | toFix | rmb}}</p> -->
+                        <p class="count">x{{item.goods_num}}</p>
                     </div>
                 </div>
             </router-link>
-            <!-- <div class="order-item">
-                <div class="img-wrap">
-                    <img src="/static/img/cart/0003.jpg" />
-                </div>
-                <div class="text">
-                    <h3>COMBACK 随身便携小挎包随身便携小挎包随身便携小挎包</h3>
-                    <p>
-                        <span class="color">颜色:黑色</span>
-                        <span class="size">尺码:L</span>
-                    </p>
-                </div>
-                <div class="price-wrap">
-                    <p class="price">¥79.00</p>
-                    <p class="sale-price">¥98.00</p>
-                    <p class="count">x1</p>
-                </div>
-            </div> -->
-
              <!-- 订单留言 -->
              <div class="dispatch-row" >
                 <van-cell-group>
-                    <van-field
-                        label="订单备注"
-                        type="textarea"
-                        placeholder="选填，请先和商家协商一致"
-                        rows="1"
-                        autosize
-                    />
+                <van-field
+                    v-model="message"
+                    label="订单备注"
+                    type="textarea"
+                    placeholder="选填，请先和商家协商一致"
+                    rows="2"
+                    autosize
+                />
                 </van-cell-group>
              </div>
 
@@ -103,18 +86,15 @@
                     <van-cell is-link  @click="showPromotion" >
                         <template slot="title">
                             <span style="margin-right: 10px;">支付方式</span>
-                            <span class="wayText" style="float:right" ref="payWay">{{this.payWay}}</span>
+                            <span class="wayText" style="float:right" ref="payWay">{{this.payMode}}</span>
                         </template>
                     </van-cell>
                     <!-- 上拉菜单，选择支付方式 -->
                     <van-actionsheet v-model="show" title="支持以下支付方式" class="select-wrap">
-                        <van-radio-group v-model="payWay">
+                        <van-radio-group  v-model="payMode">
                             <van-cell-group>
-                                <van-cell title="在线支付" clickable  @click="selectWay" >
-                                    <van-radio name="在线支付"/>
-                                </van-cell>
-                                <van-cell title="货到付款" clickable  @click="selectWay" >
-                                    <van-radio name="货到付款"/>
+                                <van-cell v-for="item in pay_type" :key="item.pay_id" :title="item.pay_name" clickable  :data-pay="item.pay_id"  @click="pay(item,pay_type)" >
+                                    <van-radio :name="item.pay_name"/>
                                 </van-cell>
                             </van-cell-group>    
                         </van-radio-group>
@@ -132,6 +112,7 @@
                         </template>
                     </van-cell>
                     <!-- 上拉菜单，选择配送方式 -->
+                
                     <van-actionsheet v-model="show2" title="支持以下配送方式" class="select-wrap">
                         <van-radio-group v-model="delivery">
                             <van-cell-group>
@@ -147,54 +128,81 @@
                 </van-cell-group>
             </div>
 
-        </div>
+        </div>  
 
         <!-- 提交订单 -->
         <div class="order-bill">
             <div class="barText">
-                共<span class="red">{{totalCount}}</span>件,
-                总金额&nbsp;<span class="price red">{{ totalPrice | toFix | rmb}}</span>
+                共<span class="red">{{orderData.goods_num}}</span>件,
+                总金额&nbsp;<span class="price red">{{orderData.subtotal_price}}</span>
             </div>
-            <button class="barBtn">
+            <button class="barBtn" @click="open">
                 确认订单
             </button>
         </div>
-  
+        <!-- 地址选择 -->
+         <div class="site">
+                   <van-popup v-model="showSite" position="right" :overlay="false">
+                         <van-radio-group v-model="sitess" >
+                             <div class="site-box">
+                                  <div class="select-sist-title">
+                                  <p class="goback" @click="showSite=false">返回</p>
+                                  <p >选择地址</p>
+                                  </div>
+                                  <div class="site-list" v-for="item in site"  :key="item.id" @click="selectSite(item)">
+                                  
+                                        <div class="right">
+                                            <div class="nameInfo">
+                                                <span class="name">{{item.consignee}}</span>
+                                                <span class="phone">{{item.mobile}}</span>
+                                            </div>
+                                            <div class="addressText">
+                                                <p>{{item.address}}</p>
+                                            </div>
+                                        </div> 
+                                        <van-radio :name="item.address_id">
+                        </van-radio>
+                                  
+                                  </div>
+                         </div>
+                        
+                        </van-radio-group>
+                </van-popup>
+            </div>
     </div>
 </template>
 
 <script>
     import headerView from '../common/headerView'
+    /* 引入 mint-ui 弹窗组件 */
+import {Toast,Dialog} from "vant"
     export default {
         name:'comfirmOrder',
         data() {
             return {
-                
+                  //商品图片路径
+                baseUrl:'http://api.zfwl.c3w.cc/upload/images/',
+                home:this.$route.query.id,
                 // 商品信息
-                orderData:[
-                    {
-                        goodsId:1,
-                        img:"/static/img/cart/0003.jpg",
-                        imgUrl:"1",
-                        goodsName:"COMBACK 随身便携小挎包随身便携小挎包随身便携小挎包",
-                        goodsColor:"黑色",
-                        goddsSize:"L",
-                        price:79,
-                        salePrice:98,
-                        goodsNum:1
-                    },
-                    {
-                        goodsId:1,
-                        img:"/static/img/cart/0003.jpg",
-                        imgUrl:"1",
-                        goodsName:"COMBACK 随身便携小挎包随身便携小挎包随身便携小挎包",
-                        goodsColor:"黑色",
-                        goddsSize:"L",
-                        price:79,
-                        salePrice:98,
-                        goodsNum:2
-                    }
-                ],
+                orderData:[],
+                //商品支付
+                pay_type:[],
+                //支付显示
+                showWay: false,
+                //地址显示
+                showSite:false,
+                //地址
+                sitess:1,
+                //支付名称
+                payMode:'在线支付',
+                //支付方式
+                payId:'',
+                //备注
+                message:'',
+                //用户地址
+                site:[],
+                //默认显示地址
+                tacitlySite:[],
                 chosenCoupon: -1,
                 coupons: [
                     {
@@ -224,11 +232,46 @@
 
                 ],
                 showList:false,//优惠券
-                payWay: '在线支付',
                 delivery:"普通快递 : 免运费",
                 show:false,//是否显示支付方式上拉列表
                 show2:false,//是否显示配送方式上拉列表
             };
+        },
+        created(){
+            // console.log(this.home)
+                 //获取订单信息
+                    // 购物车提交订单	order/temporary
+                    // 参数：
+                    // token
+                    // cart_id
+                 
+                 var url = 'order/temporary';
+                 var params = new URLSearchParams();
+                 params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value    tokne
+                 params.append('cart_id', this.home);
+                 this.$axios({
+                            method:"post",
+                            url:url,
+                            data: params
+                        }).then((res)=>{
+                            if(res.data.status=== 1){
+                                  this.orderData = res.data.data.goods_res[0]  //商品信息
+                                  this.pay_type = res.data.data.pay_type            //支付方式
+                                  this.site = res.data.data.addr_res           //地址列表
+                                  for(var i in this.site){                  
+                                      if(this.site[i].is_default === 1 ){        //等于一就是显示默认地址
+                                              this.tacitlySite = this.site[i]
+                                      }
+                                  }
+                            }else{
+                                Dialog.alert({
+                                message:res.data.msg
+                                });
+                            }
+                            
+                        })       
+
+
         },
         computed:{
             // 总价
@@ -256,14 +299,6 @@
                 }
                 return total;
             },
-            // 总数
-			totalCount(){
-                let count = 0;	
-                for(var i = 0;i<this.orderData.length;i++){
-                   count += this.orderData[i].goodsNum;
-                }	
-				return count;
-			}
         },
 
         mounted(){
@@ -297,17 +332,11 @@
                 this.coupons.push(coupon);
             },
          
-            // 上拉列表:选择支付方式
-            showPromotion() {
-                this.show = true;
+            showPromotion(){
+                this.show=true;
             },
-            // 选择支付方式
-            selectWay(e){
-                this.payWay = e.target.innerText;
-                this.show = false;
-            
-            },
-
+      
+        
             // 上拉列表:选择配送方式
             showPromotion2() {
                 this.show2 = true;
@@ -327,8 +356,89 @@
             // 提示
             sorry() {
                 this.$toast('暂无后续逻辑~');   
+            },
+
+            //弹出支付方式
+            open(){
+                    // 提交订单	order/submitOrder
+                    // 参数：
+                    // token
+                    // cart_id		//购物车ID（多个逗号分开）
+                    // address_id	//收货ID
+                    // pay_type	//支付方式
+                    // user_note	//订单备注
+                    if(this.payId === ''){
+                                Dialog.alert({
+                                message:'请选择支付方式'
+                                });
+                                return
+                    }else{
+                                var params = new URLSearchParams();
+                                params.append('token', this.$store.getters.optuser.Authorization);           //token
+                                params.append('cart_id',this.home );                       //购物车ID（多个逗号分开）
+                                params.append('address_id', this.tacitlySite.address_id); //收货ID
+                                params.append('pay_type', this.payId);                   //支付方式
+                                params.append('user_note', this.message);               //订单备注
+                                var url = "	order/submitOrder"
+                                this.$axios({
+                                        method:"post",
+                                        url:url,
+                                        data: params
+                                    }).then((res)=>{
+                                        if(res.data.status=== 1){
+                                        // order_id  int
+                                        // pay_type string  (alipay
+                                        // 支付宝，weixin
+                                        // 微信，credit
+                                        // 余额，cash
+                                        // 货到付款)
+                                        var orderId = res.data.data
+                                        var urll = 'pay/payment'
+                                        var params = new URLSearchParams();
+                                        params.append('token', this.$store.getters.optuser.Authorization);                         //订单id
+                                        params.append('order_id', orderId);                                                       //订单id
+                                        params.append('pay_type',this.payId);                                                    //支付方式
+                                        this.$axios({
+                                            method:"post",
+                                            url:urll,
+                                            data: params
+                                        }).then((res)=>{
+                                            if(res.data.status ===1){
+                                                var ll = res.data.data
+                                             window.location.href = ll;
+                                            }else{
+                                            Dialog.alert({
+                                            message:res.data.msg
+                                            });
+                                            }
+                                        })
+                                        }else{
+                                            Dialog.alert({
+                                            message:res.data.msg
+                                            });
+                                        }
+                                        
+                                    }) 
+                    }
+                    
+
+            },
+            //支付中心
+            pay(i,pay_type){
+             this.show = false;
+             this.payMode = i.pay_name;
+             this.payId = i.pay_type //支付方式
+            },
+            //地址选择
+            openSite(){
+              this.showSite = true;
+            },
+            //地址列表选择
+            selectSite(item){
+               this.sitess = item.address_id
+               this.tacitlySite = item
+               this.showSite = false;
             }
-        
         },
 
         filters:{
@@ -365,6 +475,7 @@
             margin-bottom 20px
             background url(/static/img/bg-addr-box-line.png) #fff left bottom repeat-x; 
             background-size 70px
+            justify-content space-between
             .address-icon
                 width 42px
                 height 42px
@@ -462,7 +573,62 @@
             font-size 26px
             color #fff
 
+.select-wrap /deep/ .van-cell__value
+            flex none   
 
+.site .van-popup
+      min-height 100vh!important
+      width 100%
+
+.select-sist-title
+        display flex
+        position relative
+        justify-content center 
+        width 100%
+        height 88px
+        line-height 88px
+        text-align center 
+        font-size 16px
+        background-color #323232
+        color #fff
+
+.goback
+        position absolute
+        left  10px       
+.van-radio-group .site-list
+            display flex
+            height 170px
+            background-color #fff
+            align-items center
+            padding 30px 25px
+            box-sizing border-box
+            margin-bottom 20px
+            background url(/static/img/bg-addr-box-line.png) #fff left bottom repeat-x; 
+            background-size 70px   
+            padding-right 0
+            justify-content space-between
+
+.site-box .site-list .nameInfo
+            margin-bottom 10px
+.site-box .nameInfo .name
+    font-size: 0.4rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+
+.site-box .nameInfo .phone
+    color: #999;
+
+.site-box .site-list .addressText
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    font-size: 0.32rem;
+
+.site-box .site-list .van-radio
+    margin-right 10px
 </style>
 
 

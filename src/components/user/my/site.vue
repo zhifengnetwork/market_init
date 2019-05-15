@@ -55,11 +55,15 @@ import headerView from '../../common/headerView.vue'
 export default {
     data(){
         return{
-
+          site:this.$route.query.site, 
         }
     },components:{
         headerView
+    },
+    created(){
+        console.log(this.site)
     }
+    
 }
 </script>
 <style lang="stylus" scoped>

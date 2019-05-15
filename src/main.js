@@ -33,6 +33,10 @@ import {
   GoodsActionMiniBtn
 } from 'vant';
 
+//Popup 弹出层
+import { Popup } from 'vant';
+Vue.use(Popup);
+
 Vue
   .use(GoodsAction)
   .use(GoodsActionBigBtn)

@@ -10,7 +10,13 @@
         <div class="details-wrap">
             <!-- 订单状态 -->
             <div class="order-state">
-                 <p>订单状态：<span>已完成</span></p>   
+                 <p>订单状态：
+                     <span v-if="order.status==1">待付款</span>
+                     <span v-if="order.status==2">待发货</span>
+                     <span v-if="order.status==3">待收货</span>
+                     <span v-if="order.status==4">待评价</span>
+                     <span v-if="order.status==5">已取消</span>
+                     </p>   
                  <img src="/static/img/order/order-state1.png" alt="">
             </div>
 
@@ -21,31 +27,31 @@
                 </div>
                 <div class="right">
                     <div class="nameInfo">
-                        <span class="name">小辣鸡</span>
-                        <span class="phone">17875596666</span>
+                        <span class="name">{{order.consignee}}</span>
+                        <span class="phone">{{order.mobile}}</span>
                     </div>
                     <div class="addressText">
-                        <p>广东省 广州市 白云区 嘉禾街道嘉禾彭西仁和仁和仁和串钱的二巷69号</p>
+                        <p>{{order.address}}</p>
                     </div>
                 </div> 
             </div>
 
             <!-- 商品信息 -->
-            <div class="order-item">
+            <div class="order-item" v-for="items in order.goods_res" :key="items.id">
                 <div class="img-wrap">
-                    <img src="/static/img/cart/0003.jpg" />
+                    <img :src="baseUrl+items.img" />
                 </div>
                 <div class="text">
-                    <h3>COMBACK 随身便携小挎包随身便携小挎包随身便携小挎包</h3>
+                    <h3>{{items.goods_name}}</h3>
                     <p>
-                        <span class="color">颜色:黑色</span>
-                        <span class="size">尺码:L</span>
+                        <span class="color">{{items.spec_key_name}}</span>
+                        <!-- <span class="size">尺码:L</span> -->
                     </p>
                 </div>
                 <div class="price-wrap">
-                    <p class="price">¥79.00</p>
-                    <p class="sale-price">¥98.00</p>
-                    <p class="count">x1</p>
+                    <p class="price">¥{{items.goods_price}}</p>
+                    <p class="sale-price">¥{{items.original_price}}</p>
+                    <p class="count">x{{items.goods_num}}</p>
                 </div>
             </div>
             
@@ -71,7 +77,7 @@
                         优惠:
                     </div>
                     <div class="right red">
-                        ¥-0.00
+                        ¥-{{order.coupon_price}}
                     </div>
                 </div>
                 <div class="line">
@@ -79,7 +85,7 @@
                         订单总价:
                     </div>
                     <div class="right">
-                        ¥79.00
+                       ¥{{order.total_amount}}
                     </div>
                 </div>
                
@@ -91,7 +97,7 @@
                         订单编号:
                     </div>
                     <div class="right">
-                        294119778362083616
+                        {{order.order_sn}}
                     </div>
                 </div>
                 <div class="line">
@@ -99,7 +105,7 @@
                         下单时间:
                     </div>
                     <div class="right">
-                        2019-05-02 10:28:30
+                        {{order.add_time | formatDate}}
                     </div>
                 </div>
                 <div class="line">
@@ -115,7 +121,7 @@
                         支付方式:
                     </div>
                     <div class="right">
-                        在线支付
+                        {{order.pay_type.pay_name}}
                     </div>
                 </div>
                   <div class="line">
@@ -155,9 +161,58 @@
     import headerView from '../common/headerView'
     export default {
         name:'orderDetails',
+        data() {
+            return {
+                oride:this.$route.query.order_id,
+                order:[],
+                //商品图片路径
+                baseUrl:'http://api.zfwl.c3w.cc/upload/images/',
+            }
+        },
         components:{
             headerView
-        }
+        },
+        created(){
+            // 订单详情 	der/order_detail
+            // 参数：
+            // token
+            // order_id
+             var url =  'order/order_detail'
+             var params = new URLSearchParams();
+                 params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value    tokne
+                 params.append('order_id',this.oride);
+            this.$axios({
+                            method:"post",
+                            url:url,
+                            data: params
+            }).then((res)=>{
+        
+                if(res.data.status===1){
+                    this.order = res.data.data
+                }
+            })
+        },
+        methods: {
+        },
+        filters: {
+            formatDate: function (value) {
+                
+                let date = new Date(value);
+                console.log(value)
+                let y = date.getFullYear();
+                let MM = date.getMonth() + 1;
+                MM = MM < 10 ? ('0' + MM) : MM;
+                let d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+                let h = date.getHours();
+                h = h < 10 ? ('0' + h) : h;
+                let m = date.getMinutes();
+                m = m < 10 ? ('0' + m) : m;
+                let s = date.getSeconds();
+                s = s < 10 ? ('0' + s) : s;
+                return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s;
+            }
+            }
     }
 </script>
 

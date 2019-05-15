@@ -15,322 +15,182 @@
                         @click="handleClick(index)">
                         {{item.tabTitle}}
                     </li>
-                    <!-- <li class="active">全部订单</li>
-                    <li>待付款</li>
-                    <li>待发货</li>
-                    <li>已完成</li> -->
                 </ul>
             </div>
             <div class="tab-con">
                 <ul>
                     <li v-show="nowIndex===0">
-                        <div class="order-good">
+                        <div class="order-good" v-for="(item,index) in allOrders" :key="index">
                             <div class="line1">
-                                <span class="order-number">订单编号: 59077324629</span>
-                                <span class="order-state">已取消</span>
+                                <span class="order-number">订单编号: {{item.order_sn}}</span>
+                                <span class="order-state" v-if="item.order_status===1">待付款</span>
+                                <span class="order-state" v-if="item.order_status===2">待发货</span>
+                                <span class="order-state" v-if="item.order_status===3">待收货</span>
+                                <span class="order-state" v-if="item.order_status===4">待评价</span>
+                                <span class="order-state" v-if="item.order_status===5">已取消</span>
                             </div>
-                            <router-link to="/orderDetails">
+                            <router-link :to="'/orderDetails?order_id='+item.order_id">
                                 <div class="order-item">
                                     <div class="img-wrap">
-                                        <img src="/static/img/cart/0003.jpg" />
+                                        <img :src="baseUrl+item.img" />
                                     </div>
                                     <div class="text">
-                                        <h3>COMBACK 随身便携小挎包随身便携小挎包随身便携小挎包</h3>
+                                        <h3>{{item.goods_name}}</h3>
                                         <p>
-                                            <span class="color">颜色:黑色</span>
-                                            <span class="size">尺码:L</span>
+                                            <span class="color">{{item.spec_key_name}}</span>
                                         </p>
                                     </div>
                                     <div class="price-wrap">
-                                        <p class="price">¥79.00</p>
-                                        <p class="sale-price">¥98.00</p>
-                                        <p class="count">x1</p>
+                                        <p class="price">¥{{item.goods_price}}</p>
+                                        <p class="sale-price">¥{{item.original_price}}</p>
+                                        <p class="count">x{{item.goods_num}}</p>
                                     </div>
                                 </div>
                             </router-link>
-                            <div class="order-opt">
-                                <span class="btn">删除订单</span>
-                                <span class="btn">再次购买</span>
-                            </div>
-                        </div>
-                         <div class="order-good">
-                            <div class="line1">
-                                <span class="order-number">订单编号: 59077324629</span>
-                                <span class="order-state">待付款</span>
-                            </div>
-                            <router-link to="/orderDetails">
-                                <div class="order-item">
-                                    <div class="img-wrap">
-                                        <img src="/static/img/cart/0003.jpg" />
-                                    </div>
-                                    <div class="text">
-                                        <h3>COMBACK 随身便携小挎包随身便携小挎包随身便携小挎包</h3>
-                                        <p>
-                                            <span class="color">颜色:黑色</span>
-                                            <span class="size">尺码:L</span>
-                                        </p>
-                                    </div>
-                                    <div class="price-wrap">
-                                        <p class="price">¥79.00</p>
-                                        <p class="sale-price">¥98.00</p>
-                                        <p class="count">x1</p>
-                                    </div>
-                                </div>
-                            </router-link>
-                            <div class="order-opt">
-                                <span class="btn cancelBtn">取消订单</span>
+                            <div class="order-opt" v-if="item.order_status===1">
+                                <span class="btn cancelBtn" @click="cancellationquan(index,item.order_id,item.status)">取消订单</span>
                                 <span class="btn payBtn">立即付款</span>
                             </div>
-                        </div>
-                        
-                    </li>
-                    <li v-show="nowIndex===1">
-                        <div class="order-good">
-                            <div class="line1">
-                                <span class="order-number">订单编号: 59077324629</span>
-                                <span class="order-state">待付款</span>
-                            </div>
-                            <router-link to="/orderDetails">
-                                <div class="order-item">
-                                    <div class="img-wrap">
-                                        <img src="/static/img/cart/0003.jpg" />
-                                    </div>
-                                    <div class="text">
-                                        <h3>COMBACK 随身便携小挎包随身便携小挎包随身便携小挎包</h3>
-                                        <p>
-                                            <span class="color">颜色:黑色</span>
-                                            <span class="size">尺码:L</span>
-                                        </p>
-                                    </div>
-                                    <div class="price-wrap">
-                                        <p class="price">¥79.00</p>
-                                        <p class="sale-price">¥98.00</p>
-                                        <p class="count">x1</p>
-                                    </div>
-                                </div>
-                            </router-link>
-                            <div class="order-opt">
-                                <span class="btn cancelBtn">取消订单</span>
-                                <span class="btn payBtn">立即付款</span>
-                            </div>
-                        </div>
-
-                        <div class="order-good">
-                            <div class="line1">
-                                <span class="order-number">订单编号: 59077324629</span>
-                                <span class="order-state">待付款</span>
-                            </div>
-                            <router-link to="/orderDetails">
-                                <div class="order-item">
-                                    <div class="img-wrap">
-                                        <img src="/static/img/cart/0003.jpg" />
-                                    </div>
-                                    <div class="text">
-                                        <h3>COMBACK 随身便携小挎包随身便携小挎包随身便携小挎包</h3>
-                                        <p>
-                                            <span class="color">颜色:黑色</span>
-                                            <span class="size">尺码:L</span>
-                                        </p>
-                                    </div>
-                                    <div class="price-wrap">
-                                        <p class="price">¥79.00</p>
-                                        <p class="sale-price">¥98.00</p>
-                                        <p class="count">x1</p>
-                                    </div>
-                                </div>
-                            </router-link>
-                            <div class="order-opt">
-                                <span class="btn cancelBtn">取消订单</span>
-                                <span class="btn payBtn">立即付款</span>
-                            </div>
-                        </div>
-                    </li>
-                    <li v-show="nowIndex===2">
-                        <div class="order-good">
-                            <div class="line1">
-                                <span class="order-number">订单编号: 59077324629</span>
-                                <span class="order-state">待发货</span>
-                            </div>
-                            <router-link to="/orderDetails">
-                                <div class="order-item">
-                                    <div class="img-wrap">
-                                        <img src="/static/img/cart/0003.jpg" />
-                                    </div>
-                                    <div class="text">
-                                        <h3>COMBACK 随身便携小挎包随身便携小挎包随身便携小挎包</h3>
-                                        <p>
-                                            <span class="color">颜色:黑色</span>
-                                            <span class="size">尺码:L</span>
-                                        </p>
-                                    </div>
-                                    <div class="price-wrap">
-                                        <p class="price">¥79.00</p>
-                                        <p class="sale-price">¥98.00</p>
-                                        <p class="count">x1</p>
-                                    </div>
-                                </div>
-                            </router-link>
-                            <div class="order-opt">
+                            <div class="order-opt" v-if="item.order_status===2">
                                 <span class="btn cancelBtn">取消订单</span>
                                 <!-- <span class="btn">确认收货</span> -->
                             </div>
-                        </div>
-
-                        <div class="order-good">
-                            <div class="line1">
-                                <span class="order-number">订单编号: 59077324629</span>
-                                <span class="order-state">待发货</span>
+                            <div class="order-opt" v-if="item.order_status===3">
+                                <!-- <span class="btn cancelBtn">删除订单</span> -->
+                                 <span class="btn">确认收货</span>
                             </div>
-                            <router-link to="/orderDetails">
+                            <div class="order-opt" v-if="item.order_status===4">
+                                <span class="btn cancelBtn">删除订单</span>
+                                  <router-link to="/my/appraise">
+                                 <span class="btn">评价</span>
+                                 </router-link>
+                            </div>
+                            <!-- <div class="order-opt">
+                                <span class="btn">删除订单</span>
+                                <span class="btn">再次购买</span>
+                            </div> -->
+                        </div>
+                         
+                        
+                    </li>
+                    <li v-show="nowIndex===1">
+                        <div class="order-good" v-for="(item,index) in obligation" :key="index">
+                            <div class="line1">
+                                <span class="order-number">订单编号:{{item.order_sn}}</span>
+                                <span class="order-state">待付款</span>
+                            </div>
+                            <router-link :to="'/orderDetails?order_id='+item.order_id">
                                 <div class="order-item">
                                     <div class="img-wrap">
-                                        <img src="/static/img/cart/0003.jpg" />
+                                        <img :src="baseUrl+item.img" />
                                     </div>
                                     <div class="text">
-                                        <h3>COMBACK 随身便携小挎包随身便携小挎包随身便携小挎包</h3>
+                                        <h3>{{item.goods_name}}</h3>
                                         <p>
-                                            <span class="color">颜色:黑色</span>
-                                            <span class="size">尺码:L</span>
+                                            <span class="color">{{item.spec_key_name}}</span>
                                         </p>
                                     </div>
                                     <div class="price-wrap">
-                                        <p class="price">¥79.00</p>
-                                        <p class="sale-price">¥98.00</p>
-                                        <p class="count">x1</p>
+                                        <p class="price">¥{{item.goods_price}}</p>
+                                        <p class="sale-price">¥{{item.original_price}}</p>
+                                        <p class="count">x{{item.goods_num}}</p>
                                     </div>
                                 </div>
                             </router-link>
                             <div class="order-opt">
-                                <span class="btn cancelBtn">取消订单</span>
-                                <!-- <span class="btn">立即收货</span> -->
+                                <span class="btn cancelBtn" @click="cancellation(index,item.order_id,item.status)">取消订单</span>
+                                <span class="btn payBtn" @click="lipay()">立即付款</span>
+                            </div>
+                        </div>
+
+                    </li>
+                    <li v-show="nowIndex===2">
+                        <div class="order-good" v-for="item in shipments" :key="item.id">
+                            <div class="line1">
+                                <span class="order-number">订单编号:{{item.order_sn}}</span>
+                                <span class="order-state">待发货</span>
+                            </div>
+                            <router-link :to="'/orderDetails?order_id='+item.order_id">
+                                <div class="order-item">
+                                    <div class="img-wrap">
+                                        <img :src="baseUrl+item.img" />
+                                    </div>
+                                    <div class="text">
+                                        <h3>{{item.goods_name}}</h3>
+                                        <p>
+                                             <span class="color">{{item.spec_key_name}}</span>
+                                        </p>
+                                    </div>
+                                    <div class="price-wrap">
+                                        <p class="price">¥{{item.goods_price}}</p>
+                                        <p class="sale-price">¥{{item.original_price}}</p>
+                                        <p class="count">x{{item.goods_num}}</p>
+                                    </div>
+                                </div>
+                            </router-link>
+                            <div class="order-opt">
+                                <span class="btn cancelBtn">退款</span>
+                                <!-- <span class="btn">确认收货</span> -->
                             </div>
                         </div>
                     </li>
                      <li v-show="nowIndex===3">
-                        <div class="order-good">
+                        <div class="order-good" v-for="item in delivery" :key="item.id">
                             <div class="line1">
-                                <span class="order-number">订单编号: 59077324629</span>
-                                <span class="order-state">已发货</span>
+                                <span class="order-number">订单编号:{{item.order_sn}}</span>
+                                <span class="order-state">待收货</span>
                             </div>
-                            <router-link to="/orderDetails">
+                            <router-link :to="'/orderDetails?order_id='+item.order_id">
                                 <div class="order-item">
                                     <div class="img-wrap">
-                                        <img src="/static/img/cart/0003.jpg" />
+                                        <img :src="baseUrl+item.img" />
                                     </div>
                                     <div class="text">
-                                        <h3>COMBACK 随身便携小挎包随身便携小挎包随身便携小挎包</h3>
+                                         <h3>{{item.goods_name}}</h3>
                                         <p>
-                                            <span class="color">颜色:黑色</span>
-                                            <span class="size">尺码:L</span>
+                                             <span class="color">{{item.spec_key_name}}</span>
                                         </p>
                                     </div>
                                     <div class="price-wrap">
-                                        <p class="price">¥79.00</p>
-                                        <p class="sale-price">¥98.00</p>
-                                        <p class="count">x1</p>
+                                        <p class="price">¥{{item.goods_price}}</p>
+                                        <p class="sale-price">¥{{item.original_price}}</p>
+                                        <p class="count">x{{item.goods_num}}</p>
                                     </div>
                                 </div>
                             </router-link>
                             <div class="order-opt">
-                                <span class="btn cancelBtn">删除订单</span>
-                                <!-- <span class="btn">再次购买</span> -->
-                                 <span class="btn">确认收货</span>
-                            </div>
-                        </div>
-
-                        <div class="order-good">
-                            <div class="line1">
-                                <span class="order-number">订单编号: 59077324629</span>
-                                <span class="order-state">已发货</span>
-                            </div>
-                            <router-link to="/orderDetails">
-                                <div class="order-item">
-                                    <div class="img-wrap">
-                                        <img src="/static/img/cart/0003.jpg" />
-                                    </div>
-                                    <div class="text">
-                                        <h3>COMBACK 随身便携小挎包随身便携小挎包随身便携小挎包</h3>
-                                        <p>
-                                            <span class="color">颜色:黑色</span>
-                                            <span class="size">尺码:L</span>
-                                        </p>
-                                    </div>
-                                    <div class="price-wrap">
-                                        <p class="price">¥79.00</p>
-                                        <p class="sale-price">¥98.00</p>
-                                        <p class="count">x1</p>
-                                    </div>
-                                </div>
-                            </router-link>
-                            <div class="order-opt">
-                                <span class="btn cancelBtn">删除订单</span>
-                                <!-- <span class="btn">再次购买</span> -->
+                                <!-- <span class="btn cancelBtn">删除订单</span> -->
                                  <span class="btn">确认收货</span>
                             </div>
                         </div>
                     </li>
                      <li v-show="nowIndex===4">
-                        <div class="order-good">
+                        <div class="order-good" v-for="item in evaluate" :key="item.id">
                             <div class="line1">
-                                <span class="order-number">订单编号: 59077324629</span>
+                                <span class="order-number">订单编号:{{item.order_sn}}</span>
                                 <span class="order-state">已完成</span>
                             </div>
-                            <router-link to="/orderDetails">
+                           <router-link :to="'/orderDetails?order_id='+item.order_id">
                                 <div class="order-item">
                                     <div class="img-wrap">
-                                        <img src="/static/img/cart/0003.jpg" />
+                                        <img :src="baseUrl+item.img" />
                                     </div>
                                     <div class="text">
-                                        <h3>COMBACK 随身便携小挎包随身便携小挎包随身便携小挎包</h3>
+                                        <h3>{{item.goods_name}}</h3>
                                         <p>
-                                            <span class="color">颜色:黑色</span>
-                                            <span class="size">尺码:L</span>
+                                            <span class="color">{{item.spec_key_name}}</span>
                                         </p>
                                     </div>
                                     <div class="price-wrap">
-                                        <p class="price">¥79.00</p>
-                                        <p class="sale-price">¥98.00</p>
-                                        <p class="count">x1</p>
+                                        <p class="price">¥{{item.goods_price}}</p>
+                                        <p class="sale-price">¥{{item.original_price}}</p>
+                                        <p class="count">x{{item.goods_num}}</p>
                                     </div>
                                 </div>
                             </router-link>
                             <div class="order-opt">
                                 <span class="btn cancelBtn">删除订单</span>
-                                <!-- <span class="btn">再次购买</span> -->
                                   <router-link to="/my/appraise">
-                                 <span class="btn">评价</span>
-                                 </router-link>
-                            </div>
-                        </div>
-
-                        <div class="order-good">
-                            <div class="line1">
-                                <span class="order-number">订单编号: 59077324629</span>
-                                <span class="order-state">已完成</span>
-                            </div>
-                            <router-link to="/orderDetails">
-                                <div class="order-item">
-                                    <div class="img-wrap">
-                                        <img src="/static/img/cart/0003.jpg" />
-                                    </div>
-                                    <div class="text">
-                                        <h3>COMBACK 随身便携小挎包随身便携小挎包随身便携小挎包</h3>
-                                        <p>
-                                            <span class="color">颜色:黑色</span>
-                                            <span class="size">尺码:L</span>
-                                        </p>
-                                    </div>
-                                    <div class="price-wrap">
-                                        <p class="price">¥79.00</p>
-                                        <p class="sale-price">¥98.00</p>
-                                        <p class="count">x1</p>
-                                    </div>
-                                </div>
-                            </router-link>
-                            <div class="order-opt">
-                                <span class="btn cancelBtn">删除订单</span>
-                                <!-- <span class="btn">再次购买</span> -->
-                                <router-link to="/my/appraise">
                                  <span class="btn">评价</span>
                                  </router-link>
                             </div>
@@ -352,12 +212,26 @@
 
 <script>
     import headerView from '../common/headerView'
+    import { Dialog,Toast } from 'vant';
     export default {
         name:'order',
         data(){
             return{
+                //商品图片路径
+                baseUrl:'http://api.zfwl.c3w.cc/upload/images/',
+
                 nowIndex:0,
                 type:this.$route.query.type,
+                //全部订单
+                allOrders:[],
+                //代付款
+                obligation:[],
+                //待发货
+                shipments:[],
+                //待收货
+                delivery:[],
+                //待评价
+                evaluate:[],
                 tabList:[
 					{
 						tabTitle:"全部订单"
@@ -374,7 +248,8 @@
                     {
                         tabTitle:"待评价"
                     }
-                ]
+                ],
+                list:[]
             }
         },
         methods:{
@@ -382,14 +257,123 @@
                 this.nowIndex = index;
                 this.$router.go(0)
                 this.$router.push('/order?type='+index)
+            },
+            //取消订单
+            ajax(index,id,status,s,msgg){
+                   // 取消订单	order/edit_status
+                    // 参数：
+                    // token
+                    // order_id
+                    // status
+                    var url = "order/edit_status"
+                    var params = new URLSearchParams();
+                        params.append('token', this.$store.getters.optuser.Authorization);           //token
+                        params.append('order_id',id);   
+                        params.append('status',status);
+                    Dialog.confirm({
+                        message: msgg
+                    }).then(() => {
+                    this.$axios({
+                                method:"post",
+                                url:url,
+                                data: params
+                                }).then((res)=>{
+                        if(res.data.status === 1){
+                        s.splice(index,1)
+                        Toast(res.data.msg)
+                    }else{
+                        Toast(res.data.msg)
+                    }
+                    }) 
+                    })
+                    .catch(()=>{
+        
+                    })
+            },
+             //待付款取消订单
+            cancellation(index,id,status){
+                 var msgg = '您确定要取消订单吗？'
+                 this.ajax(index,id,status,this.obligation,msgg)               
+            },
+            //全部订单取消订单
+            cancellationquan(index,id,status){
+                 var msgg = '您确定要取消订单吗？'
+                 this.ajax(index,id,status,this.allOrders,msgg) 
             }
         },
         components:{
             headerView
         },
         created(){
-           this.nowIndex=parseInt(this.type)
-        }
+           // 订单列表	order/order_list
+            // 参数：
+            // token
+            // type		//全部订单 all，待付款 dfk，待发货 dfh，待收货 dsh，待评价 dpj，已取消 yqx
+            // 订单状态提示：
+            // order_status	//订单状态	已确认，2已收货，3已取消，4已完成
+            // pay_status	//支付状态	0未支付，1已支付，3，已退款
+            // shipping_status	//商品配送情况 0未发货，1已发货，3已收货，4退货
+           this.nowIndex=parseInt(this.type);
+           var type,siz
+           if(this.nowIndex === 0){
+               type='all'
+           }
+           if(this.nowIndex === 1){
+               type='dfk'
+           }
+           if(this.nowIndex === 2){
+               type='dfh'
+           }
+           if(this.nowIndex === 3){
+               type='dsh'  
+           }
+           if(this.nowIndex === 4){
+               type='dpj'
+           }
+                                var url = 'order/order_list'
+                                var params = new URLSearchParams();
+                                params.append('token', this.$store.getters.optuser.Authorization);           //token
+                                params.append('type',type );                       //购物车ID（多个逗号分开）
+                                this.$axios({
+                                        method:"post",
+                                        url:url,
+                                        data: params
+                                        }).then((res)=>{
+                                        if( res.data.status === 1){
+                                        
+                                            if(this.nowIndex === 0){
+
+                                                this.allOrders = res.data.data
+                                                
+                                            }
+                                            if(this.nowIndex === 1){
+
+                                                this.obligation = res.data.data
+                                                
+                                            }
+                                            if(this.nowIndex === 2){
+
+                                                this.shipments = res.data.data
+                                                
+                                            }
+                                            if(this.nowIndex === 3){
+
+                                                this.delivery = res.data.data
+                                                
+                                            }
+                                            if(this.nowIndex === 4){
+
+                                                this.evaluate = res.data.data
+                                        
+                                            }
+                                        }else{
+                                            Dialog.alert({
+                                            message:res.data.msg
+                                        });
+                        }
+            }) 
+            
+        },
         
     }
 </script>
