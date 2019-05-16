@@ -75,7 +75,7 @@ import '../static/css/font/iconfont.css'
 
 
 
-
+Vue.prototype.url = 'http://api.zhifengwangluo.c3w.cc/upload/images/'
 
 //全局获取倒计时
 Vue.prototype.timeCountdown = function (obj){

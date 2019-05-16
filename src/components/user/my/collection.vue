@@ -53,12 +53,12 @@
 
 <script>
 	import HeaderView from '../../common/headerView.vue'
-	import { Dialog } from 'vant'
+	import { Dialog,Toast } from 'vant'
 	export default {
 		data(){
 	        return{
 				//商品图片路径
-           		 baseUrl:'http://api.zfwl.c3w.cc/upload/images/',
+           		 baseUrl:'',
 				// 使用说明
 				arrows:false,
 				show: false,
@@ -112,6 +112,8 @@
             },
 		},
 		created(){
+			//图片路径
+           this.baseUrl=this.url
 			   //请求收藏列表
 			    // 收藏列表 Collection/collection_list
 				// 参数：

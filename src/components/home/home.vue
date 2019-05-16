@@ -148,6 +148,8 @@ export default {
   },
   data() {
     return {
+			//图片路径
+			baseUrl:'',
       /*页面渲染data 对象形式*/
       backData: {
         /*页面名字*/
@@ -166,6 +168,8 @@ export default {
   },
   /*组件实例创建完成，属性已绑定，但DOM还未生成*/
   created: function() {
+					//图片路径
+           this.baseUrl=this.url
 		let res=[];
     var that = this;
     /*axios=>请求-页面数据*/ 

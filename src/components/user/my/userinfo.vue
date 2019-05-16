@@ -107,8 +107,8 @@ export default {
               amend:true,
 
               //修改昵称
-              userName:''
-
+              userName:'',
+              baseUrl:''
         }
     },components:{
         headerView
@@ -130,6 +130,10 @@ export default {
           complete(){
 
           }
+    },
+    created() {
+        //图片路径
+           this.baseUrl=this.url
     },
 }
 </script>

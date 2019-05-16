@@ -166,13 +166,15 @@
                 oride:this.$route.query.order_id,
                 order:[],
                 //商品图片路径
-                baseUrl:'http://api.zfwl.c3w.cc/upload/images/',
+               baseUrl:'',
             }
         },
         components:{
             headerView
         },
         created(){
+            //图片路径
+           this.baseUrl=this.url
             // 订单详情 	der/order_detail
             // 参数：
             // token

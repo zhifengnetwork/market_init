@@ -76,8 +76,8 @@ input[type=button], input[type=submit], input[type=file], button {
 .right-arrow {
     border-bottom: 2px solid #cccccc;
     border-right: 2px solid #cccccc;
-    width: 8px;
-    height: 8px;
+    width: 15px;
+    height: 15px;
     -webkit-transform: rotate(-45deg);
     position: absolute;
     top: 0;

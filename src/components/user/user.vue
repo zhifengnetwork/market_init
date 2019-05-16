@@ -18,7 +18,7 @@
                </router-link>
                <ul class="order_icon clearfloat">
                    <li v-for="(item,index) in orderIcon" :key="index">
-                       <router-link :to="'/order?'+item.ar" class="icont-or">
+                       <router-link :to="item.ar" class="icont-or">
                            <img :src="item.imgUrl" alt="">
                            <p class="p-tit">{{item.name}}</p>
                         </router-link>
@@ -76,11 +76,11 @@ export default {
     data() {
         return {
              orderIcon:[
-                 {id:1,name:'待支付',imgUrl:'../../../static/img/user/yinghang.png',ar:'type=1'},
-                 {id:2,name:'待收货',imgUrl:'../../../static/img/user/liwu.png',ar:'type=3'},
-                 {id:3,name:'待发货',imgUrl:'../../../static/img/user/yunsu.png',ar:'type=2'},
-                 {id:4,name:'评价管理',imgUrl:'../../../static/img/user/pingjia.png',ar:'type=4'},
-                 {id:5,name:'退款/售后',imgUrl:'../../../static/img/user/shouhou.png',ar:''}
+                 {id:1,name:'待支付',imgUrl:'../../../static/img/user/yinghang.png',ar:'/order?type=1'},
+                 {id:2,name:'待收货',imgUrl:'../../../static/img/user/liwu.png',ar:'/order?type=3'},
+                 {id:3,name:'待发货',imgUrl:'../../../static/img/user/yunsu.png',ar:'/order?type=2'},
+                 {id:4,name:'评价管理',imgUrl:'../../../static/img/user/pingjia.png',ar:'/order?type=4'},
+                 {id:5,name:'退款/售后',imgUrl:'../../../static/img/user/shouhou.png',ar:'/order/afterSale'}
              ],
              btnBar:[
                  {id:1,name:'会员福利社',viceName:'签到送积分',imgUrl:'../../../static/img/user/Member@2x.png',aUrl:''},

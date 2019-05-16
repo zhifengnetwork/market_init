@@ -122,7 +122,7 @@
                                             <p class="intro">不含运费</p>
                                         </div>
 
-                                        <router-link :to="'/confirmOrder?id='+cheack">
+                                        <router-link to="">
                                             <div class="btn btn-red btn-balance" @click="closeOrder">结算</div>
                                         </router-link>
                                     </div>
@@ -214,7 +214,7 @@ export default {
     data() {
         return {
                 //商品图片路径
-              baseUrl:'http://api.zfwl.c3w.cc/upload/images/',
+              baseUrl:'',
               /* 编辑 */
               redactText:'编辑',
               /* 编辑状态 */
@@ -248,7 +248,8 @@ export default {
                        this.list = res.data.data
                  }
                })
-
+           //图片路径
+           this.baseUrl=this.url
     },
     methods: {
         // 删除商品
@@ -451,7 +452,7 @@ export default {
             var url = "order/temporary"
             for(var i = this.list.length-1; i>=0;i--){
                     var item = this.list[i];
-                    if(item.ischeack){
+                    if(this.cheack!=''){
                         var params = new URLSearchParams();
                         params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value    tokne
                         params.append('cart_id', item.id);                //你要传给后台的参数值 key/value             购物车id
@@ -461,7 +462,7 @@ export default {
                             data: params
                         }).then((res)=>{
                             if(res.data.status=== 1){
-                         
+                                 this.$router.push("/confirmOrder?id="+this.cheack);
                             }else{
                                 Dialog.alert({
                                 message:res.data.msg

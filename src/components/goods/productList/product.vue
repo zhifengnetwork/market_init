@@ -132,6 +132,8 @@ export default {
           //选中筛选
              screen:true,
           
+          REQUIRE: true,
+          
           //筛选左边
           classifyName:"性别",
 
@@ -141,11 +143,12 @@ export default {
 
           //分类id
         //   cat_id:12,
-          sort:'ASC',
-          page:2,
+          sort:'ASC', 
+          page:1,
+        
         //分类列表
-          proList:[],
-          baseUrl:'http://api.zfwl.c3w.cc/upload/images/',
+        proList:[],
+        baseUrl:'',
         
         //默认
         default:[],
@@ -248,7 +251,7 @@ export default {
                 // 取消上一次请求
                 this.cancelRequest();
             
-                var url="api/goods/category?goods_attr="+2+'&cat_id='+this.cat_id
+                var url="/goods/category?goods_attr="+2+'&cat_id='+this.cat_id
 
                 this.$axios.get(url).then((res)=>{
                         if(res.data.status==1){
@@ -277,7 +280,7 @@ export default {
                  // 取消上一次请求
                 this.cancelRequest();
             
-                var url="api/goods/category?goods_attr="+3+'&cat_id='+this.cat_id
+                var url="/goods/category?goods_attr="+3+'&cat_id='+this.cat_id
 
                 this.$axios.get(url).then((res)=>{
                         this.proList=res.data.data.goods_list;
@@ -367,7 +370,7 @@ export default {
        // 取消上一次请求
             this.cancelRequest();
 
-       var url="api/goods/category?sort="+param.sort+'&cat_id='+this.cat_id
+       var url="/goods/category?sort="+param.sort+'&cat_id='+this.cat_id
 
        this.$axios.get(url).then((res)=>{
             this.proList=res.data.data.goods_list;
@@ -381,7 +384,7 @@ export default {
                     var param = {
                             // 请求时传点击的价格区间数据给后台
                             sort:this.sort="DESC" // 点击的价格区间
-        }
+                    }
         if(this.descState==1){
 
             this.proList=this.descList
@@ -391,7 +394,7 @@ export default {
         // 取消上一次请求
             this.cancelRequest();
 
-        var url="api/goods/category?sort="+param.sort+'&cat_id='+this.cat_id
+        var url="/goods/category?sort="+param.sort+'&cat_id='+this.cat_id
         
         this.$axios.get(url).then((res)=>{
             this.proList=res.data.data.goods_list
@@ -407,16 +410,30 @@ export default {
             if(typeof this.source ==='function'){
                 this.source('终止请求')
             }
+        },
+        scrollBottom() {
+       console.log(window.screen.height + document.body.scrollTop,document.body.clientHeight)
+        if (((window.screen.height + document.body.scrollTop) > (document.body.clientHeight)) && this.REQUIRE) {
+          // 请求的数据未加载完成时，滚动到底部不再请求前一天的数据 this.REQUIRE = false;
+          
         }
+      },
+
     },
 
     mounted(){
-             var url = "api/goods/category?cat_id="+this.cat_id
+             var url = "/goods/category?cat_id="+this.cat_id
                 this.$axios.get(url).then((res)=>{
                     this.proList=res.data.data.goods_list;
                     this.default=res.data.data.goods_list;//保存默认
                 })
-    }
+        // 添加滚动事件，检测滚动到页面底部
+      window.addEventListener('scroll', this.scrollBottom)
+    },
+    created() {
+        //图片路径
+           this.baseUrl=this.url
+    },
 }
 </script>
 <style lang="stylus" scoped>

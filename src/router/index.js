@@ -59,8 +59,11 @@ import changePwd from '@/components/user/my/changePwd'
 //商品列表
 import productLsit from '@/components/goods/productList/product'
 
-//商品列表
-// import list from '@/components/goods/productList/list'
+//商品售后
+import afterSale from '@/components/order/afterSale'
+
+//商品售后详情
+import afterDetails from '@/components/order/afterDetails'
 
 
 
@@ -213,13 +216,20 @@ const router = new Router({
 			component:productLsit,
 			meta:{requireAuth:true}   //是否需要登录
 		},
-		// //商品列表
-		// {
-		// 	path:'/list',
-		// 	name: 'list',
-		// 	component:list,
-		// 	meta:{requireAuth:true}   //是否需要登录
-		// },
+		//  退款/售后
+		{
+			path:'/order/afterSale',
+			name: 'afterSale',
+			component:afterSale,
+			meta:{requireAuth:true}   //是否需要登录
+		},
+		//  售后详情
+		{
+			path:'/afterSale/afterDetails',
+			name: 'afterDetails',
+			component:afterDetails,
+			meta:{requireAuth:true}   //是否需要登录
+		},
 		
   	]
 })

@@ -90,7 +90,7 @@
 				resData:[],
 	 			listHeight:[],
 				scrollY:0,
-				baseUrl:'http://api.zfwl.c3w.cc/upload/images/'
+				baseUrl:''
 	 		}
 		},
 		 
@@ -151,6 +151,7 @@
 		 },
 		// dom节点渲染完成后请求接口数据 
 	 	mounted(){
+
 			// 调用loading 
 			this.$store.commit('showLoading')
 			
@@ -175,6 +176,10 @@
 				alert(error)
             })
 			 
+		 },
+		 created() {
+			 //图片路径
+           this.baseUrl=this.url
 		 },
 		// 注册组件 
 		components:{

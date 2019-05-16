@@ -147,6 +147,7 @@
                                 :info="optCartCount()"
                                 icon="cart-o"
                                 text="购物车"
+                                to="/cart"
                             />
                             <div data-v-3e366829="" class="van-goods-action-mini-btn van-hairline" :class="{active:goods.collection===1}" @click="onClickMinicollect">
                               <div data-v-3e366829="" class="van-icon  van-goods-action-mini-btn__icon iconfont">&#xe60c;</div>
@@ -185,7 +186,6 @@
                                                   <div class="block-list" v-for="(item,n) in good" :key="n">
                                                         <span class="name">{{item.spec_name}}</span>                                
                                                         <ul class="size-row clearfix">
-                                                           
                                                             <li class="block "  v-for="(oItem,index) in item.res" :key="index" :class="[oItem.isShow?'':'noneActive',oItem.isSelect?'chosed':'']" :data-id='oItem.attr_id'  @click="tabInfoChange(n,index,oItem.attr_id,$event)">{{oItem.attr_name}}</li>
                                                         </ul>
                                                     </div>
@@ -219,56 +219,17 @@
                       <div class="title" @touchmove.prevent>领取优惠券</div>
                         <div class="body">
                             <ul class="coupon-list">
-                                    <li class="coupon" data-coupon="450445">
+                                    <li class="coupon" :data-coupon="item.coupon_id" v-for="item in goods.coupon" :key="item.coupon_id">
                                         <div class="pull-right">
-                                            <button type="button" class="coupon-btn coupon-btn-valid">立刻领取</button>
+                                            <button type="button"  :class="['coupon-btn',{'coupon-btn-valid':item.is_lq===0}]" @click="getCouponBt(item)" >{{item.is_lq===0?'立即领取':'已领取'}}</button>
                                         </div>
                                         <div class="coupon-intro">
-                                            <div class="coupon-price">¥ 40</div>
-                                            <div class="coupon-desc">Dickies满459元减40元</div>
-                                            <div class="coupon-time">使用期限: 2019.04.22-2019.04.27</div>
+                                            <div class="coupon-price">¥ {{item.price}}</div>
+                                            <div class="coupon-desc">{{item.title}}</div>
+                                            <div class="coupon-time">使用期限: {{item.start_time | formatDate}}一{{item.end_time | formatDate}}</div>
                                         </div>
                                     </li>
-                                    <li class="coupon" data-coupon="449475">
-                                        <div class="pull-right">
-                                            <button type="button" class="coupon-btn coupon-btn-valid">立刻领取</button>
-                                        </div>
-                                        <div class="coupon-intro">
-                                            <div class="coupon-price">¥ 40</div>
-                                            <div class="coupon-desc">【周年庆】满399减40</div>
-                                            <div class="coupon-time">使用期限: 2019.04.23-2019.04.27</div>
-                                        </div>
-                                    </li>
-                                    <li class="coupon" data-coupon="452607">
-                                        <div class="pull-right">
-                                            <button type="button" class="coupon-btn coupon-btn-valid">立刻领取</button>
-                                        </div>
-                                        <div class="coupon-intro">
-                                            <div class="coupon-price">¥ 60</div>
-                                            <div class="coupon-desc">【428周年庆】Dickies满559元减60元</div>
-                                            <div class="coupon-time">使用期限: 2019.04.28-2019.05.05</div>
-                                        </div>
-                                    </li>
-                                    <li class="coupon" data-coupon="449477">
-                                        <div class="pull-right">
-                                            <button type="button" class="coupon-btn coupon-btn-valid">立刻领取</button>
-                                        </div>
-                                        <div class="coupon-intro">
-                                            <div class="coupon-price">¥ 80</div>
-                                            <div class="coupon-desc">【周年庆】满699减80</div>
-                                            <div class="coupon-time">使用期限: 2019.04.23-2019.04.27</div>
-                                        </div>
-                                    </li>
-                                    <li class="coupon" data-coupon="449479">
-                                        <div class="pull-right">
-                                            <button type="button" class="coupon-btn coupon-btn-valid">立刻领取</button>
-                                        </div>
-                                        <div class="coupon-intro">
-                                            <div class="coupon-price">¥ 110</div>
-                                            <div class="coupon-desc">【周年庆】满999减110</div>
-                                            <div class="coupon-time">使用期限: 2019.04.23-2019.04.27</div>
-                                        </div>
-                                    </li>
+                                   
                             </ul>
                         </div>
                      </div>
@@ -308,7 +269,7 @@ export default {
             goods_id:this.$route.query.goods_id,
             
             //商品图片路径
-            baseUrl:'http://api.zfwl.c3w.cc/upload/images/',
+            baseUrl:'',
              
              //头部显示导航
              isHide:true, 
@@ -318,6 +279,9 @@ export default {
 
              //显示领取优惠券
              getCoupon:false,
+
+             //优惠券
+             coupons:false,
 
              //显示不同规格图片
               getImg:'',
@@ -957,6 +921,30 @@ export default {
             }
               
         },
+        // 领取优惠卷
+        getCouponBt(id){
+            // 获取优惠券	coupon/get_coupon
+            // 参数：
+            // token
+            // coupon_id
+            var url = 'coupon/get_coupon'
+            var params = new URLSearchParams();
+                        params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value    tokne
+                        params.append('coupon_id',id.coupon_id);                //你要传给后台的参数值 key/value             购物车id
+                        this.$axios({
+                            method:"post",
+                            url:url,
+                            data: params
+                        }).then((res)=>{
+                            if(res.data.status=== 1){
+                               id.is_lq =1
+                               Toast(res.data.msg)
+                            }else{
+                               Toast(res.data.msg)
+                            }
+                            
+            })
+        },
         optCartCount(){
              return this.$store.getters.optCartCount;
         },
@@ -996,6 +984,8 @@ export default {
         },
         //获取商品规格
         created(){
+          //图片路径
+           this.baseUrl=this.url
           // this.userInfo = this.$store.getters.optuser
           // this.askToken();
           // 调用loading 
@@ -1012,6 +1002,7 @@ export default {
                 }).then((res)=>{
                   if(res.data.status === 1){
                     that.goods = res.data.data;
+                    console.log(that.goods)
                     that.good =  res.data.data.spec.spec_attr;
                     // 数据加载成功，关闭loading 
 					          this.$store.commit('hideLoading')
@@ -1048,6 +1039,18 @@ export default {
                 })
             
     },
+    filters: {
+            formatDate: function (value) {
+                let date = new Date(value*1000);
+                let y = date.getFullYear();
+                let MM = date.getMonth() + 1;
+                MM = MM < 10 ? ('0' + MM) : MM;
+                let d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+                
+                return y + '-' + MM + '-' + d 
+            }
+            }
 }
 </script>
 <style lang="stylus" scoped>

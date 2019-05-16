@@ -8,7 +8,7 @@
         <div class="coupon-box">
                 <div class="coupon-tabr">
                     <ul>
-                        <li class="item-tabr" v-for="(item,index) in tabr" @click="tabrs(index)" :class="{active:index==indexx}">{{item.name}} ({{item.num}})</li>
+                        <li class="item-tabr" v-for="(item,index) in tabr" @click="tabrs(index)" :class="{active:index==indexx}">{{item.name}}</li>
                         <!-- <li class="item-tabr">已使用 (5)</li>
                         <li class="item-tabr">已过期 (5)</li> -->
                     </ul>
@@ -17,22 +17,22 @@
 					<!-- 未使用 -->
                     <div class="coupon-list unused">
 						<!-- 未使用 -->
-                        <section class="coupon-section"  v-if="indexx==0">
+                        <section class="coupon-section"  v-if="indexx==0"  v-for="item in list" :key="item.id">
                             <div class="coupon">
                                 <div class="coupon-left coupon-left-activity">
-                                    <p class="value"><span>40</span></p>
+                                    <p class="value"><span>{{parseInt(item.price)}}</span></p>
                                 </div>
                                 <div class="coupon-right">
                                     <p class="title">
-                                        <span class="type-activity">[活动券]</span> 【周年庆】40元现金券</p>
-                                    <p class="time">2019.04.23-2019.04.27</p>
+                                        <span class="type-activity">[活动券]</span> 【周年庆】{{parseInt(item.price)}}元现金券</p>
+                                    <p class="time">{{item.start_time | formatDate}}一{{item.end_time | formatDate}}</p>
                                     <p class="use-intro" @click="frost">
                                         <span class="show-intro-btn">使用说明</span>
                                         <span class="iconfont" :class="arrows?'icon-up':'icon-down'"></span>
                                     </p>
                                     <span class="tip"></span>
                                 </div>
-                                    <a href="" class="use-now">立即使用</a>
+                                    <router-link :to="'/details?goods_id='+item.goods_id" href="" class="use-now">立即使用</router-link>
                             </div>
                             <ul class="coupon-intro" v-show="arrows">
                                 <li>特例商品不支持使用优惠券</li>
@@ -62,16 +62,16 @@
 							</ul>
 					    </section>
 						<!-- 已失效 -->
-						<section class="coupon-section"  v-if="indexx==2">
+						<section class="coupon-section"  v-if="indexx==2" v-for="item in list" :key="item.id">
 							<div class="coupon coupon-have">
 								<div class="coupon-left have">
-									<p class="value"><span>40</span></p>
-									<p class="threshold">满149元可用</p>
+									<p class="value"><span>{{parseInt(item.price)}}</span></p>
+									<!-- <p class="threshold">满149元可用</p> -->
 								</div>
 								<div class="coupon-right rightHave">
 									<p class="title">
-										<span class="type-activity">[活动券]</span> 【周年庆】40元现金券</p>
-									<p class="time">2019.04.23-2019.04.27</p>
+										<span class="type-activity">[活动券]</span> 【周年庆】{{parseInt(item.price)}}元现金券</p>
+									<p class="time">{{item.start_time | formatDate}}一{{item.end_time | formatDate}}</p>
 									<p class="use-intro"  @click="frost">
 										<span class="show-intro-btn">使用说明</span>
 										<span class="iconfont" :class="arrows?'icon-up':'icon-down'"></span>
@@ -93,7 +93,7 @@
 						<hr>
 					</div>
 					<!-- 暂无优惠卷 -->
-					<div class="no-conpon-now hide">
+					<div class="no-conpon-now " v-if="list.length===0">
 					  <div class="icon-not"></div>
 					   <p>暂无优惠券</p>
 					</div>
@@ -103,16 +103,20 @@
 </template>
 <script>
 import headerView from '../../common/headerView.vue'
+import { Dialog,Toast } from 'vant'
 export default {
     data(){
         return{
+            //图片路径
+           baseUrl:'',
 			// 使用说明
 			 arrows:false,
 			 tabr:[
 				 {name:'未使用',num:1},{name:'已使用',num:5},{name:'已过期',num:4}
 			 ],
 			 //默认为零 默认显示第一个未使用
-			 indexx:0
+             indexx:0,
+             list:[]
         }
     },components:{
         headerView
@@ -124,9 +128,69 @@ export default {
 			//tabr
 		tabrs(index){
 			this.indexx=index
-			this.arrows=false
+            this.arrows=false
+            var t = index+1;
+            var url = 'coupon/my_coupon'
+        // 我的优惠券	coupon/my_coupon
+        // 参数：
+        // token
+        // type	//1未使用，2已使用，3已过期
+        var params = new URLSearchParams();
+            params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value
+            params.append('type', t); //你要传给后台的参数值 key/value
+			    this.$axios({
+							method:"post",
+                            url:url,
+                            data: params
+				}).then((res)=>{
+					if(res.data.status===1){
+                      this.list = res.data.data
+					}else{
+					    Dialog.alert({
+						message:res.data.msg
+                        })	
+                        
+					}
+			})
 		}
-	},
+    },
+    created() {
+        //图片路径
+        this.baseUrl=this.url
+        var url = 'coupon/my_coupon'
+        // 我的优惠券	coupon/my_coupon
+        // 参数：
+        // token
+        // type	//1未使用，2已使用，3已过期
+        var params = new URLSearchParams();
+            params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value
+            params.append('type', '1'); //你要传给后台的参数值 key/value
+			    this.$axios({
+							method:"post",
+                            url:url,
+                            data: params
+				}).then((res)=>{
+					if(res.data.status===1){
+                      this.list = res.data.data
+					}else{
+					    Dialog.alert({
+						message:res.data.msg
+						})	
+					}
+			})
+    },
+    filters: {
+            formatDate: function (value) {
+                let date = new Date(value*1000);
+                 console.log(date)
+                let y = date.getFullYear();
+                let MM = date.getMonth() + 1;
+                MM = MM < 10 ? ('0' + MM) : MM;
+                let d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+                return y + '-' + MM + '-' + d 
+            }
+    }
 }
 </script>
 <style lang="stylus" scoped> 

@@ -27,22 +27,23 @@
             <!-- </router-link> -->
 
             <!-- 商品信息 -->
-            <router-link :to="'/details?goods_id='+orderData.goods_id">
-                <div class="order-item" v-for="(item,index) in orderData.spec" :key="index">
+            <router-link  v-for="(item,index) in orderData"  :key="index" :to="'/details?goods_id='+item.goods_id">
+                <div class="order-item" v-for="(items,index) in item.spec" :key="index">
                     <div class="img-wrap">
-                        <img :src="baseUrl+orderData.img" />    
+                        <img :src="baseUrl+item.img" />    
                     </div>
                     <div class="text">
-                        <h3>{{item.goods_name}}</h3>
+                        <h3>{{items.goods_name}}
+                        </h3>
                         <p>
-                            <span class="color">{{item.spec_key_name}}</span>
+                            <span class="color">{{items.spec_key_name}}</span>
                             <!-- <span class="size">尺码:{{item.goodsSize}}</span> -->
                         </p>
                     </div>
                     <div class="price-wrap">
-                        <p class="price">{{item.goods_price | toFix | rmb}}</p>
+                        <p class="price">{{items.goods_price | toFix | rmb}}</p>
                         <!-- <p class="sale-price">{{item.salePrice | toFix | rmb}}</p> -->
-                        <p class="count">x{{item.goods_num}}</p>
+                        <p class="count">x{{items.goods_num}}</p>
                     </div>
                 </div>
             </router-link>
@@ -62,22 +63,36 @@
 
             <div class="dispatch-row" >
                 <!-- 优惠券单元格 -->
-                <van-coupon-cell
-                :coupons="coupons"
-                :chosen-coupon="chosenCoupon"
-                @click="showList = true"
-                />
-
-                <!-- 优惠券列表 -->
-                <van-popup v-model="showList" position="bottom">
-                <van-coupon-list
-                    :coupons="coupons"
-                    :chosen-coupon="chosenCoupon"
-                    :disabled-coupons="disabledCoupons"
-                    @change="onChange"
-                    @exchange="onExchange"
-                />
-                </van-popup>
+                <van-cell-group class="goods-cell-group">
+                    <van-cell is-link  @click="getCoupon=true" >
+                        <template slot="title">
+                            <span style="margin-right: 10px;">优惠卷</span>
+                            <span class="wayText" style="float:right" ref="payWay">{{couponsPrice}}</span>
+                        </template>
+                    </van-cell>
+                   <!-- 优惠券列表 -->
+                    <div class="coupon-drawer" :class="{open:getCoupon}" >
+                    <div class="coupon-drawer-dialog">
+                      <div class="title" @touchmove.prevent>使用优惠券</div>
+                        <div class="body">
+                            <ul class="coupon-list">
+                                    <li class="coupon" :data-coupon="item.coupon_id" v-for="item in coupons" :key="item.coupon_id">
+                                        <div class="pull-right">
+                                            <button type="button" :class="['coupon-btn',item.select?'':'coupon-btn-valid']" @click="getCouponBt(item)" >{{item.select?'已使用':'立即使用'}}</button>
+                                        </div>
+                                        <div class="coupon-intro">
+                                            <div class="coupon-price">¥ {{item.price}}</div>
+                                            <div class="coupon-desc">{{item.title}}</div>
+                                            <div class="coupon-time">使用期限: {{item.start_time | formatDate}}一{{item.end_time | formatDate}}</div>
+                                        </div>
+                                    </li>
+                                   
+                            </ul>
+                        </div>
+                     </div>
+                     <div class="coupon-drawer-mask" @click="getCoupon=false" @touchmove.prevent></div>
+                 </div>
+                </van-cell-group>
             </div>
 
             <!-- 支付方式 -->
@@ -119,9 +134,9 @@
                                 <van-cell title="普通快递 : 免运费" clickable  @click="selectWay2" >
                                     <van-radio name="普通快递 : 免运费"/>
                                 </van-cell>
-                                <van-cell title="顺丰速运:运费¥15" clickable  @click="selectWay2" >
+                                <!-- <van-cell title="顺丰速运:运费¥15" clickable  @click="selectWay2" >
                                     <van-radio name="顺丰速运:运费¥15"/>
-                                </van-cell>
+                                </van-cell> -->
                             </van-cell-group>    
                         </van-radio-group>
                     </van-actionsheet>
@@ -134,7 +149,7 @@
         <div class="order-bill">
             <div class="barText">
                 共<span class="red">{{orderData.goods_num}}</span>件,
-                总金额&nbsp;<span class="price red">{{orderData.subtotal_price}}</span>
+                总金额&nbsp;<span class="price red">{{total}}</span>
             </div>
             <button class="barBtn" @click="open">
                 确认订单
@@ -160,7 +175,7 @@
                                                 <p>{{item.address}}</p>
                                             </div>
                                         </div> 
-                                        <van-radio :name="item.address_id">
+                                        <van-radio :name="item.address_id" @click="selectSite(item)">
                         </van-radio>
                                   
                                   </div>
@@ -180,8 +195,9 @@ import {Toast,Dialog} from "vant"
         name:'comfirmOrder',
         data() {
             return {
+                total:0,
                   //商品图片路径
-                baseUrl:'http://api.zfwl.c3w.cc/upload/images/',
+                baseUrl:'',
                 home:this.$route.query.id,
                 // 商品信息
                 orderData:[],
@@ -204,30 +220,13 @@ import {Toast,Dialog} from "vant"
                 //默认显示地址
                 tacitlySite:[],
                 chosenCoupon: -1,
-                coupons: [
-                    {
-                        available: 1,
-                        condition: '无使用门槛\n最多优惠12元',
-                        reason: '',
-                        value: 250,
-                        name: '优惠券名称',
-                        startAt: 1489104000,
-                        endAt: 1514592000,
-                        valueDesc: '2.5',
-                        unitDesc: '元'
-                    },
-                    {
-                        available: 1,
-                        condition: '无使用门槛\n最多优惠10元',
-                        reason: '',
-                        value: 350,
-                        name: '优惠券名称',
-                        startAt: 1489104000,
-                        endAt: 1514592000,
-                        valueDesc: '3.5',
-                        unitDesc: '元'
-                    }
-                ],
+                //优惠券列表
+                coupons: [],
+                //优惠券
+                couponss:0,
+                couponsPrice:'',
+                //显示领取优惠券
+                getCoupon:false, //优惠券
                 disabledCoupons: [
 
                 ],
@@ -238,7 +237,8 @@ import {Toast,Dialog} from "vant"
             };
         },
         created(){
-            // console.log(this.home)
+            //图片路径
+           this.baseUrl=this.url
                  //获取订单信息
                     // 购物车提交订单	order/temporary
                     // 参数：
@@ -255,14 +255,16 @@ import {Toast,Dialog} from "vant"
                             data: params
                         }).then((res)=>{
                             if(res.data.status=== 1){
-                                  this.orderData = res.data.data.goods_res[0]  //商品信息
-                                  this.pay_type = res.data.data.pay_type            //支付方式
+                                  this.orderData = res.data.data.goods_res  //商品信息
+                                  this.pay_type = res.data.data.pay_type       //支付方式
                                   this.site = res.data.data.addr_res           //地址列表
+                                  this.coupons = res.data.data.coupon           //优惠券
                                   for(var i in this.site){                  
                                       if(this.site[i].is_default === 1 ){        //等于一就是显示默认地址
                                               this.tacitlySite = this.site[i]
                                       }
                                   }
+                                  this.totalPrice()
                             }else{
                                 Dialog.alert({
                                 message:res.data.msg
@@ -273,33 +275,8 @@ import {Toast,Dialog} from "vant"
 
 
         },
-        computed:{
-            // 总价
-            totalPrice(index){
-                let total = 0;
-                for(var i = 0;i<this.orderData.length;i++){
-                   total += this.orderData[i].price * this.orderData[i].goodsNum;
-                }
-                //判断是否选择优惠券               
-                if(this.chosenCoupon == -1){ //不适用优惠券
-                    // 选择顺丰速运
-                    if(this.delivery == "顺丰速运:运费¥15"){
-                        total = total + 15 ;
-                    }
-                }else{// 使用优惠券
 
-                    // 使用优惠券优惠金额
-                    var value = this.coupons[this.chosenCoupon].value / 100 ;
-                    total -= value ;
 
-                    // 选择顺丰速运
-                    if(this.delivery == "顺丰速运:运费¥15"){
-                        total = total + 15 ;
-                    }    
-                }
-                return total;
-            },
-        },
 
         mounted(){
             // 处理留言框被键盘遮住
@@ -321,17 +298,15 @@ import {Toast,Dialog} from "vant"
         },
 
         methods:{
-            // 优惠券切换回调
-            onChange(index) {
-                var indexx 
-                this.showList = false;
-                this.chosenCoupon = index;
-            },
-            // 兑换优惠券回调
-            onExchange(code) {
-                this.coupons.push(coupon);
-            },
-         
+               // 总价
+            totalPrice(index){
+             
+                for(var i = 0;i<this.orderData.length;i++){
+                 this.total += parseFloat(this.orderData[i].subtotal_price)
+                }
+              
+            },  
+           
             showPromotion(){
                 this.show=true;
             },
@@ -352,11 +327,14 @@ import {Toast,Dialog} from "vant"
                     this.total -= 15;
                 }
             },
-
-            // 提示
-            sorry() {
-                this.$toast('暂无后续逻辑~');   
+            //使用优惠券
+            getCouponBt(id){
+                   id.select=true
+                   this.getCoupon=false
+                   this.couponsPrice = `-￥${id.price}`
+                   this.total = parseFloat(this.total-id.price)
             },
+
 
             //弹出支付方式
             open(){
@@ -448,9 +426,19 @@ import {Toast,Dialog} from "vant"
 			},
 			rmb(val){
 				return "￥" + val
-			}
-        },
-        
+            },
+            formatDate: function (value) {
+                
+                let date = new Date(value*1000);
+                let y = date.getFullYear();
+                let MM = date.getMonth() + 1;
+                MM = MM < 10 ? ('0' + MM) : MM;
+                let d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+              
+                return y + '-' + MM + '-' + d 
+            }
+            },
         components:{
 			headerView
         },
@@ -513,6 +501,7 @@ import {Toast,Dialog} from "vant"
                 margin-right 18px
                 img 
                     width 100%
+                    height 100%
             .text
                 flex 1
                 font-size 26px
@@ -629,6 +618,85 @@ import {Toast,Dialog} from "vant"
 
 .site-box .site-list .van-radio
     margin-right 10px
+
+//优惠券
+      .coupon-drawer-dialog 
+                background-color: #fff;
+                bottom: -100%;
+                left: 0;
+                position: fixed;
+                right: 0;
+                transition: all .6s;
+                z-index: 11;
+
+     .coupon-drawer.open .coupon-drawer-dialog 
+                bottom: 0;
+
+     .coupon-drawer-mask 
+                background-color: rgba(0,0,0,.6);
+                bottom: 0;
+                display: none;
+                left: 0;
+                position: fixed;
+                right: 0;
+                top: 0;
+                z-index: 10;
+
+      .coupon-drawer.open .coupon-drawer-mask 
+                display:block;
+
+     .coupon-drawer-dialog .title 
+                border-bottom: 1px solid #e0e0e0;
+                font-size: 30px
+                line-height: 89px
+                text-align: center;
+
+     .coupon-drawer-dialog .body 
+                border-bottom: .5rem solid #fff;
+                height: 540px
+                overflow: auto;
+    
+     .coupon 
+                border-bottom: 1px solid #e0e0e0;
+                margin-left: 30px
+                margin-right: 30px
+                min-height: 119px
+                padding-bottom: 15px
+                padding-top: 30px
+
+    .pull-right 
+                float: right;
+    
+     .coupon-btn 
+                background-color: #fff;
+                border: 2px solid #b0b0b0;
+                border-radius: .2rem;
+                color: #b0b0b0;
+                font-size: 25px
+                height: 53px
+                margin-top: 20px
+                min-width: 128px
+                padding: 0;
+
+     .coupon-btn-valid 
+                border-color: #d0021b;
+                color: #d0021b;
+    
+     .coupon-intro 
+                overflow: hidden;
+                padding-right: 15px
+    
+     .coupon-price 
+                color: #d0021b;
+                font-size: 40px
+                line-height: 1;
+
+     .coupon-desc 
+                color: #444;
+                font-size: 26px
+     .coupon-time 
+                color: #b0b0b0;
+                font-size: 25px
 </style>
 
 

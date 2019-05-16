@@ -2,7 +2,7 @@
     <div class="order">
         <!-- 头部组件 -->
         <headerView custom-title="我的订单" custom-fixed rightNone>
-            <div class="backBtn" slot="backBtn" @click="$router.go(-1)">
+            <div class="backBtn" slot="backBtn" @click="$router.push('/user')">
                 <img src="/static/img/public/backBtn.png" />
             </div>
         </headerView>
@@ -218,7 +218,7 @@
         data(){
             return{
                 //商品图片路径
-                baseUrl:'http://api.zfwl.c3w.cc/upload/images/',
+                baseUrl:'',
 
                 nowIndex:0,
                 type:this.$route.query.type,
@@ -305,6 +305,8 @@
             headerView
         },
         created(){
+            //图片路径
+           this.baseUrl=this.url
            // 订单列表	order/order_list
             // 参数：
             // token
@@ -423,6 +425,7 @@
                         margin-right 18px
                         img 
                             width 100%
+                            height 100%
                     .text
                         flex 1
                         font-size 26px
