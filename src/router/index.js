@@ -65,6 +65,12 @@ import afterSale from '@/components/order/afterSale'
 //商品售后详情
 import afterDetails from '@/components/order/afterDetails'
 
+// 支付成功
+import paySucceed from '@/components/pay/paySucceed'
+
+// 支付失败
+import payFail from '@/components/pay/payFail'
+
 
 
 
@@ -231,6 +237,20 @@ const router = new Router({
 			path:'/afterSale/afterDetails',
 			name: 'afterDetails',
 			component:afterDetails,
+			meta:{requireAuth:true}   //是否需要登录
+		},
+		// 支付成功
+		{
+			path:'/paySucceed',
+			name: 'paySucceed',
+			component:paySucceed,
+			meta:{requireAuth:true}   //是否需要登录
+		},
+		// 支付失败
+		{
+			path:'/payFail',
+			name: 'payFail',
+			component:payFail,
 			meta:{requireAuth:true}   //是否需要登录
 		},
 		
