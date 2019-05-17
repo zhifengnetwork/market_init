@@ -247,14 +247,11 @@ export default {
 							that.userToken = res.data.data.token;  //token
 							that.mobile = res.data.data.mobile                 //phone
 							that.uid = res.data.data.id
-							that.pageId =  res.data.data.page_id,
       						localStorage.removeItem('Authorization');
 							 // 将用户token保存到vuex中
 							that.changeLogin({ Authorization: that.userToken,
 							mobile:that.mobile,
 							uid:that.uid,
-							/**首页请求id */
-							pageId: that.pageId
 							});
 							 // 将用户手机号保存到vuex中
 							

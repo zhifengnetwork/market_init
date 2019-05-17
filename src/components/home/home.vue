@@ -170,12 +170,28 @@
 		created: function() {
 			//图片路径
 			/*this.baseUrl = this.url*/
+			/*swiper分页*/
 			let res = [];
 			var that = this;
-			console.log('当前页面id',that.$store.getters.optuser.pageId);
+			var page_id = null;
+			/*axios=>请求-页面数据的id*/
+			that.$axios.post("index/page", {
+				token: that.$store.getters.optuser.Authorization,
+				})
+				.then(function(response) {
+					console.log(response["data"]);
+					page_id = response["data"]["data"];
+					console.log('请求id',page_id);
+				})
+				.catch(function(error) {
+					alert(error);
+					console.log(error);
+				});
+				
+
 			/*axios=>请求-页面数据*/
 			that.$axios.post("/shop/getShopData", {
-					id: that.$store.getters.optuser.pageId,
+					id: page_id,
 				})
 				.then(function(response) {
 					console.log(response["data"]);
