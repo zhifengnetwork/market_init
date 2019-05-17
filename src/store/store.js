@@ -21,6 +21,7 @@ const store =  new Vuex.Store({
          Authorization: localStorage.getItem('Authorization') ? localStorage.getItem('Authorization') : '',
          phone:localStorage.getItem('phone') ? localStorage.getItem('phone') : '',
          uid:localStorage.getItem('uid') ? localStorage.getItem('uid') : '',
+         pageId:localStorage.getItem('pageId') ? localStorage.getItem('pageId') : '',
       }
     },
 
@@ -45,6 +46,7 @@ const store =  new Vuex.Store({
           localStorage.setItem('Authorization', user.Authorization);
           localStorage.setItem('phone', user.mobile);
           localStorage.setItem('uid', user.uid);
+          localStorage.setItem('pageId', user.pageId);
         },
         
         del_token(state) {        //删除token

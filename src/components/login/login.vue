@@ -44,7 +44,7 @@
 	</form>
 	      <div class="other-info clearfloat">
             <!-- <a href="/passport/login">账号密码登录</a> -->
-			<rout-link  id="getPswrdBtn" to="/forget">忘记密码?</rout-link>
+			<router-link  id="getPswrdBtn" to="/forget">忘记密码?</router-link>
         </div>
 	</div>
 </template>
@@ -242,16 +242,19 @@ export default {
 							data: params
 				}).then((res)=>{
 							if(res.data.status === 1){
-							
+							console.log(res.data.data)
 							Toast('登录成功~')
 							that.userToken = res.data.data.token;  //token
 							that.mobile = res.data.data.mobile                 //phone
 							that.uid = res.data.data.id
+							that.pageId =  res.data.data.page_id,
       						localStorage.removeItem('Authorization');
 							 // 将用户token保存到vuex中
 							that.changeLogin({ Authorization: that.userToken,
 							mobile:that.mobile,
-							uid:that.uid
+							uid:that.uid,
+							/**首页请求id */
+							pageId: that.pageId
 							});
 							 // 将用户手机号保存到vuex中
 							
