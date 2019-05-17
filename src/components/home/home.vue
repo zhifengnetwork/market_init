@@ -213,32 +213,30 @@
 			carousel(res) {
 				for(let l = 0; l < res.length; l++) {
 					console.log(res);
-					if(l == res[l].key-1) {
-						var swiper = new Swiper('.' + res[l].data.id + res[l].key, {
-							autoplay: { //自动播放
-								delay: 3000,
-								disableOnInteraction: false, //用户操作swiper之后，是否禁止autoplay。默认为true：停止。
-							},
-							loop: true, // 循环模式选项
-							pagination: {
-								el: '.swiper-pagination',
-								// 自定义分页器，必须的type类型
-								type: 'custom',
-								renderCustom: function(swiper, current, total) {
-									var paginationHtml = "";
-									for(var i = 0; i < total; i++) {
-										// 判断是不是激活焦点
-										if(i === (current - 1)) {
-											paginationHtml += '<span class="' + res[l].data.params.butStyle + '" style="background:' + res[l].data.params.clickColor + '"></span>';
-										} else {
-											paginationHtml += '<span class="' + res[l].data.params.butStyle + '" style="background:' + res[l].data.params.butColor + '"></span>';
-										}
+					var swiper = new Swiper('.' + res[l].data.id + res[l].key, {
+						autoplay: { //自动播放
+							delay: 3000,
+							disableOnInteraction: false, //用户操作swiper之后，是否禁止autoplay。默认为true：停止。
+						},
+						loop: true, // 循环模式选项
+						pagination: {
+							el: '.swiper-pagination',
+							// 自定义分页器，必须的type类型
+							type: 'custom',
+							renderCustom: function(swiper, current, total) {
+								var paginationHtml = "";
+								for(var i = 0; i < total; i++) {
+									// 判断是不是激活焦点
+									if(i === (current - 1)) {
+										paginationHtml += '<span class="' + res[l].data.params.butStyle + '" style="background:' + res[l].data.params.clickColor + '"></span>';
+									} else {
+										paginationHtml += '<span class="' + res[l].data.params.butStyle + '" style="background:' + res[l].data.params.butColor + '"></span>';
 									}
-									return paginationHtml;
 								}
+								return paginationHtml;
 							}
-						});
-					}
+						}
+					});
 				}
 			},
 		},
