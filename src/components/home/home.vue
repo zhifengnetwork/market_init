@@ -149,7 +149,7 @@
 		data() {
 			return {
 				//图片路径
-				baseUrl: '',
+				/*baseUrl: '',*/
 				/*页面渲染data 对象形式*/
 				backData: {
 					/*页面名字*/
@@ -169,7 +169,7 @@
 		/*组件实例创建完成，属性已绑定，但DOM还未生成*/
 		created: function() {
 			//图片路径
-			this.baseUrl = this.url
+			/*this.baseUrl = this.url*/
 			let res = [];
 			var that = this;
 			console.log('当前页面id',that.$store.getters.optuser.pageId);
