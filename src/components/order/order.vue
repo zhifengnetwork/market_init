@@ -61,8 +61,8 @@
                             </div>
                             <div class="order-opt" v-if="item.order_status===4">
                                 <span class="btn cancelBtn">删除订单</span>
-                                  <router-link to="/my/appraise">
-                                 <span class="btn">评价</span>
+                                  <router-link :to="'/my/appraise?order_id='+item.order_id">
+                                 <span class="btn" >评价</span>
                                  </router-link>
                             </div>
                             <!-- <div class="order-opt">
@@ -190,8 +190,8 @@
                             </router-link>
                             <div class="order-opt">
                                 <span class="btn cancelBtn">删除订单</span>
-                                  <router-link to="/my/appraise">
-                                 <span class="btn">评价</span>
+                                  <router-link :to="'/my/appraise?order_id='+item.order_id">
+                                 <span class="btn" >评价</span>
                                  </router-link>
                             </div>
                         </div>

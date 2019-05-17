@@ -43,8 +43,8 @@
 		  <button id="regBtn" class="login-btn" type="button" @click="login">登录</button>
 	</form>
 	      <div class="other-info clearfloat">
-            <a href="/passport/login">账号密码登录</a>
-            <a id="getPswrdBtn" href="javascript:void(0);">忘记密码?</a>
+            <!-- <a href="/passport/login">账号密码登录</a> -->
+			<rout-link  id="getPswrdBtn" to="/forget">忘记密码?</rout-link>
         </div>
 	</div>
 </template>
@@ -400,7 +400,7 @@ export default {
 .sms-login-new-page  .other-info a:first-child 
     text-align: left;
 
-.sms-login-new-page  .other-info a:last-child 
+.sms-login-new-page  .other-info #getPswrdBtn
     float: right;
     text-align: right;
 

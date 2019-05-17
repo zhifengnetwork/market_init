@@ -80,18 +80,21 @@ const router = new Router({
 		    redirect: '/login', /**重定向**/
 		    /*component: login*/
 				component: (resolve) => require(['@/components/login/login.vue'],resolve)
-	    },
+		},
+		//登录
 	    {
 	    	path: '/login', 
 				component: (resolve) => require(['@/components/login/login.vue'],resolve)
 	      
-	    },
+		},
+		//注册
 	    {
 	    	path: '/register',
 	    	name: 'register',
 				component: (resolve) => require(['@/components/login/register'],resolve)
 	    	
-	    },
+		},
+		//找回密码
 	    {
 	    	path: '/forget',
 	    	name: 'forget',

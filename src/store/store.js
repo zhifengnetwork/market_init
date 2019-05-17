@@ -10,7 +10,7 @@ const store =  new Vuex.Store({
     // 状态(一般保存数据)
     state:{
       loading:false,
-      cartCount: 0,  //购物车商品的数量
+      cartCount:0,  //购物车商品的数量
       //购物车列表
       goodsList:localStorage["goodsList"]?JSON.parse(localStorage["goodsList"]):[],
       // // 存储token
@@ -34,6 +34,9 @@ const store =  new Vuex.Store({
         },
         increment(state){state.cartCount++},//数量增加
         substract(state){state.cartCount--},//数量减少
+        cartNum(state,num){   //购物车总数
+          state.cartCount = num;
+        },
          // 修改token，并将token存入localStorage
         changeLogin (state, user) {
           state.userInfo.Authorization = user.Authorization;//TOKEN
