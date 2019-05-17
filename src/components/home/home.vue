@@ -211,8 +211,8 @@
 		methods: {
 			carousel(res) {
 				for(let l = 0; l < res.length; l++) {
-					console.log(res)
-					if(l == res[l].key) {
+					console.log(res);
+					if(l == res[l].key-1) {
 						var swiper = new Swiper('.' + res[l].data.id + res[l].key, {
 							autoplay: { //自动播放
 								delay: 3000,
@@ -232,7 +232,6 @@
 										} else {
 											paginationHtml += '<span class="' + res[l].data.params.butStyle + '" style="background:' + res[l].data.params.butColor + '"></span>';
 										}
-										console.log(66666);
 									}
 									return paginationHtml;
 								}
