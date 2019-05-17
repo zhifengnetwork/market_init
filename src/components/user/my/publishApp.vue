@@ -4,26 +4,33 @@
                     <div class="backBtn" slot="backBtn" @click="($router.go(-1))">
                         <img src="../../../../static/img/public/backBtn.png" />
                     </div>
-                    <span class="rightBtn" slot="rightBtn" >发布</span>
+                    <span class="rightBtn" slot="rightBtn"  @click="publish">发布</span>
         </headerView>
-         <div class="appraise-info">
+         <div class="appraise-info" v-for="(item,index) in orderList" :key="index">
               <div class="info-grade">
                    <div class="agree-with">
-                       <img src="../../../../static/img/user/appraise/goods.png" alt="" class="goods">
+                       <img :src="baseUrl+item.img" alt="" class="goods">
                        描述相符
                    </div>
                    <van-rate
-                    v-model="value"
+                    v-model="item.value"
                     :size="25"
                     color="#f44"
                     void-icon="star"
                     void-color="#eee"
-                    @change="goodsValue"
+                    @change="goodsValue(item.sku_id)"
                     />
-                    <div class="good">{{goods}}</div>
+                    <div class="good">{{item.values}}</div>
+              </div>
+              <div class="info-pro">
+                    <h3>{{item.goods_name}}</h3>
+                    <p>
+                        <span>{{item.spec_key_name}}</span>
+                        <span>x{{item.goods_num}}</span>
+                    </p>
               </div>
               <div class="info-input">
-                  <textarea name="" id="" cols="30" rows="5" placeholder="宝贝满足你的期待吗? 说说你的使用心得，分享给想买的他们吧" maxlength="250"></textarea>
+                  <textarea name="" id="" cols="30" rows="5" placeholder="宝贝满足你的期待吗? 说说你的使用心得，分享给想买的他们吧" maxlength="250" v-model="item.text"></textarea>
               </div>
               <!-- 上传图片 -->
               <div class="uploader">
@@ -33,7 +40,7 @@
       <img class="seledPic" ref="picture" :src="item?item:require('../../static/Images/imagebj.jpg')" name="avatar" @click="bigImg(index)">
       <img class="delect" src="../../static/Images/del.png" @click="delect(index)">
     </div>   -->
-                        <div class="closeIcon" v-if="imgUrls.length>0" v-for="(item,index) in imgUrls">
+                        <div class="closeIcon" v-if="imgUrls.length>0"  v-for="(item,index) in imgUrls" :key="index">
                             <img class="seledPic" :src="item?item:require('../../../../static/img/user/appraise/up.jpg')" name="avatar" @click="bigImg(index)">
                             <img src="../../../../static/img/user/appraise/close.png" alt="" class="close"  @click="closeImg(index)">
                         </div>
@@ -41,7 +48,7 @@
                         <div class="imgMask" v-if="showBigImg" @click.stop="showBigImg=!showBigImg">
                             <div class="showImg">
                                 <mt-swipe :auto="0" :show-indicators="false" @change="handleChange" :continuous="false" :defaultIndex="num">
-                                <mt-swipe-item v-for="(item,index) in imgUrls" :key="item.id">
+                                <mt-swipe-item v-for="(items,index) in imgUrls" :key="items.id">
                                     <div class="num"  >{{index+1+'/'+imgUrls.length}}</div>
                                     <img :src="imgUrls[index]" class="img"/>
                                 </mt-swipe-item>
@@ -51,7 +58,7 @@
                         <div class="selPic" v-if="imgUrls.length<6"> 
                             <img src="../../../../static/img/user/appraise/up.jpg" alt="" class="addI"  >
                                 <p class="add-img" >{{pictureNums}}</p>
-                            <input type="file" maxlength="" class="input-file" multiple="multiple" name="avatar" ref="avatarInput" @change="onRead($event)" accept="image/gif,image/jpeg,image/jpg,image/png">
+                            <input type="file" maxlength="" class="input-file" multiple="multiple" name="avatar" ref="avatarInput" @change="onRead($event)"  accept="image/gif,image/jpeg,image/jpg,image/png" >
                         </div>
                     </div>
 
@@ -75,14 +82,23 @@ import headerView from '../../common/headerView.vue'
 
 import {Swipe, SwipeItem} from 'mint-ui'
 import {MessageBox, Toast} from 'mint-ui'
+import { List } from 'vant';
 
 
 export default {
     data(){
         return{
+         //商品图片路径
+        baseUrl:'',
+        //订单id
+         id : this.$route.query.order_id,
+        //评分
          value: 3,
         
          goods:'一般',
+        
+        //订单列表
+         orderList:[],
 
          checkedT:{
              checked:true,
@@ -105,30 +121,70 @@ export default {
             avatar: '',
 
             file: '',
+        
         }
     },created () {
-    this.avatar = this.imgUrl
+           //图片路径
+            this.baseUrl=this.url
+            console.log(this.id)
+            // 获取订单商品评论列表 	order/order_comment_list
+            // 参数：
+            // token
+            // order_id
+            var url = 'order/order_comment_list';
+            var params = new URLSearchParams();
+            params.append('token',this.$store.getters.optuser.Authorization);
+            params.append('order_id',this.id);
+            this.$axios({
+                            method:"post",
+                            url:url,
+                            data: params
+            }).then((res)=>{
+
+                if(res.data.status===1){
+                    this.orderList = res.data.data
+                    for(var item in this.orderList){
+                       this.orderList[item].value = 5;
+                       this.$set(this.orderList[item],'values','非常好')
+                    }
+                }else{
+                    Toast(res.data.msg)
+                }
+            })
      }
     ,components:{
         headerView
     },
     methods: {
-         goodsValue(e){
-             if(this.value==1){
-                 this.goods="非常差"
-             }
-             if(this.value==2){
-                 this.goods="差"
-             }
-             if(this.value==3){
-                 this.goods="一般"
-             }
-             if(this.value==4){
-                 this.goods="好"
-             }
-             if(this.value==5){
-                 this.goods="非常好"
-             }
+         goodsValue(id){
+        
+             this.orderList.map((data) => { 
+                 if(id === data.sku_id){
+  
+                if(data.value==1){
+                   
+                    this.$set(data,'values','非常差')
+
+                }
+                if(data.value==2){
+  
+                     this.$set(data,'values','差')
+                }
+                if(data.value==3){
+       
+                     this.$set(data,'values','一般')
+                }
+                if(data.value==4){
+           
+                     this.$set(data,'values','好')
+                }
+                if(data.value==5){
+  
+                     this.$set(data,'values','非常好')
+                }
+                 }
+             })
+             
          },
          //上传图片
          onRead(e){
@@ -141,7 +197,6 @@ export default {
                     let that = this
                     reader.readAsDataURL(file)
                     reader.onload = function (e) {
-                        console.log(this.result)
                         that.imgUrls.push(this.result)
                     }
                     }
@@ -175,11 +230,47 @@ export default {
          handleChange (index) {
             this.num = index
             },
-            bigImg (index) {
+
+        bigImg (index) {
             this.showBigImg = true
             this.num = index
-            }
+        },
+        //发布评论
+    publish(){
+            // order/order_comment
+            //参数
+            // order_id
+            // goods_id
+            // sku_id
+            // content
+            // star_rating
+            // img
+            var order_list = [];
+            var list=['21321321321','23213213213','213123213213'];
+            var returnObj = new Object();//创建一个对象
+            var params = new URLSearchParams();
+            var url = 'order/order_comment'
+                returnObj.order_id = this.id;
+　　　　　　　　　returnObj.goods_id = 18;
+                returnObj.sku_id = 18;
+                returnObj.content = 'sadsadsadsadsadas';
+                returnObj.star_rating =1;
+                returnObj.img = list;
+                order_list.push(returnObj)
+            var s = JSON.stringify(order_list)
+                params.append('token',this.$store.getters.optuser.Authorization)
+                params.append('comments', s);
+                this.$axios({
+                            method:"post",
+                            url:url,
+                            data: params
+                }).then((res)=>{
+                    console.log(res)
+                })
+    }
+
     },
+
 }
 </script>
 <style lang="stylus" scoped>
@@ -219,9 +310,15 @@ export default {
        vertical-align: middle;
        margin-bottom  6px
 
-    .appraise-info .info-input 
+    .appraise-info .info-input,.info-pro
        padding 20px
-
+    .info-pro h3
+       font-size 30px
+    .info-pro span 
+       font-size 25px
+       color #666666
+    .info-pro span:last-child
+       float right
     .appraise-info .info-input      textarea
        width 100%
        border none

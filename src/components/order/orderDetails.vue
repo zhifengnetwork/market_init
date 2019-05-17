@@ -199,8 +199,7 @@
         filters: {
             formatDate: function (value) {
                 
-                let date = new Date(value);
-                console.log(value)
+                let date = new Date(value*1000);
                 let y = date.getFullYear();
                 let MM = date.getMonth() + 1;
                 MM = MM < 10 ? ('0' + MM) : MM;
@@ -276,6 +275,7 @@
             margin-right 18px
             img 
                 width 100%
+                height 100%
         .text
             flex 1
             font-size 26px

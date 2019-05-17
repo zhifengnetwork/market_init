@@ -706,9 +706,8 @@ export default {
                  } 
            
                    if( this.sku_num > 1){  //如果数量小于一
-
+                      // this.$store.commit("substract");
                       this.sku_num--;
-
                   }else{
 
                       Toast('您选中的数量不能为零噢~')
@@ -751,9 +750,9 @@ export default {
                     }
                  }
                   if( this.sku_num < 10){  //如果数量小于10
-
+            
+                      // this.$store.commit("increment");
                       this.sku_num++;
-
                   }else{
 
                       Toast('您选中的数量不能超过10噢~')
@@ -809,7 +808,9 @@ export default {
                     }).then((res)=>{
                       if(res.data.status === 1){
                         Toast('商品添加购物车成功~')
-                        this.$store.commit("increment") 
+                        // this.$store.commit("increment") 
+                        var num =this.$store.getters.optCartCount
+                        this.$store.commit("cartNum",num+this.selectArarr.goods_num);
                         // 数据加载成功，关闭loading 
                         this.$store.commit('hideLoading')
                       }else{
@@ -1039,7 +1040,7 @@ export default {
                     data:params
                 }).then((res)=>{
                   if(res.data.status===1){
-                    
+                    this.$store.commit("cartNum",res.data.data);
                   }
                 })
 
