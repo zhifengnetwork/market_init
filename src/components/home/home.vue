@@ -172,9 +172,10 @@
 			this.baseUrl = this.url
 			let res = [];
 			var that = this;
+			console.log('当前页面id',that.$store.getters.optuser.pageId);
 			/*axios=>请求-页面数据*/
-			that.$axios.post("http://zfwl.zhifengwangluo.c3w.cc/shop/getShopData", {
-					id: 41
+			that.$axios.post("/shop/getShopData", {
+					id: that.$store.getters.optuser.pageId,
 				})
 				.then(function(response) {
 					console.log(response["data"]);
