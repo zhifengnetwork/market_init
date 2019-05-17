@@ -148,7 +148,7 @@
         <!-- 提交订单 -->
         <div class="order-bill">
             <div class="barText">
-                共<span class="red">{{orderData.goods_num}}</span>件,
+                共<span class="red">{{totalNum}}</span>件,
                 总金额&nbsp;<span class="price red">{{total}}</span>
             </div>
             <button class="barBtn" @click="open">
@@ -195,7 +195,10 @@ import {Toast,Dialog} from "vant"
         name:'comfirmOrder',
         data() {
             return {
+                //总价格
                 total:0,
+                //总商品数量
+                totalNum:0,
                   //商品图片路径
                 baseUrl:'',
                 home:this.$route.query.id,
@@ -264,7 +267,8 @@ import {Toast,Dialog} from "vant"
                                               this.tacitlySite = this.site[i]
                                       }
                                   }
-                                  this.totalPrice()
+                                  this.totalPrice() //总金额
+                                  this.totalNumber() //商品总数量
                             }else{
                                 Dialog.alert({
                                 message:res.data.msg
@@ -300,12 +304,16 @@ import {Toast,Dialog} from "vant"
         methods:{
                // 总价
             totalPrice(index){
-             
                 for(var i = 0;i<this.orderData.length;i++){
                  this.total += parseFloat(this.orderData[i].subtotal_price)
                 }
-              
-            },  
+            },
+            //总件数
+            totalNumber(){
+                 for(var i = 0;i<this.orderData.length;i++){
+                 this.totalNum += parseFloat(this.orderData[i].goods_num)
+                 }
+            },
            
             showPromotion(){
                 this.show=true;
@@ -328,11 +336,35 @@ import {Toast,Dialog} from "vant"
                 }
             },
             //使用优惠券
-            getCouponBt(id){
-                   id.select=true
-                   this.getCoupon=false
-                   this.couponsPrice = `-￥${id.price}`
-                   this.total = parseFloat(this.total-id.price)
+            getCouponBt(item){
+                    this.coupons.map((data) => { 
+                    if (item.coupon_id === data.coupon_id) {
+                        if (item.select){
+                        this.$set(data, 'select',false);
+                        this.getCoupon=false
+                        this.couponsPrice = ``
+                        var tot = 0;
+                        for(var i = 0;i<this.orderData.length;i++){     //从新计算总价
+                        tot += parseFloat(this.orderData[i].subtotal_price)
+                        }
+                        this.total = tot
+                        } else {
+                            for(var i = 0;i<this.coupons.length;i++){
+                                this.$set( this.coupons[i], 'select',false);
+                            }
+                            this.$set(data,'select',true);
+                            this.couponsPrice = `-￥${item.price}`
+                            this.getCoupon=false
+                            var tot = 0;
+                            for(var i = 0;i<this.orderData.length;i++){   //从新计算总价
+                            tot += parseFloat(this.orderData[i].subtotal_price)
+                            }
+                            this.total = parseFloat((tot*100)-(item.price*100))/100  //总价减去优惠卷价格
+                        };
+                    }
+                    });
+
+
             },
 
 

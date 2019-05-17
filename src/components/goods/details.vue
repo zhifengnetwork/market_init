@@ -345,14 +345,14 @@ export default {
         sorry() {
              this.is_sku=true;                                  //改变规格弹窗状态为true
              this.byHide=false                                  //改变规格弹窗按钮
-            //  this.getImg=this.baseUrl+this.goods.img[0].picture //点击加入默认sku显示的图片为第一张
+             this.getImg=this.baseUrl+this.goods.img[0].picture //点击加入默认sku显示的图片为第一张
         },
 
         //点击立即购买
         buy(){
             this.is_sku=true;      //改变规格弹窗状态为true
             this.byHide=true       //改变规格弹窗按钮
-            // this.getImg=this.baseUrl+this.goods.img[0].picture //点击加入默认sku显示的图片为第一张
+            this.getImg=this.baseUrl+this.goods.img[0].picture //点击加入默认sku显示的图片为第一张
         },
 
         //点击关闭规格弹窗
@@ -521,7 +521,7 @@ export default {
           
       // }
       //选中自己，兄弟节点取消选中
-      if (orderInfoChild[index].isShow = true) {
+      if (orderInfoChild[index].isShow == true) {
         if (orderInfoChild[index].isSelect == true) {
             orderInfoChild[index].isSelect = false;
                 this.sku_num = 1,  //只要取消选中 商品选择数量自动默认为1
@@ -989,6 +989,7 @@ export default {
           // this.userInfo = this.$store.getters.optuser
           // this.askToken();
           // 调用loading 
+              //商品详情
             this.$store.commit('showLoading')
                   var params = new URLSearchParams();
                   params.append('goods_id', this.goods_id);       //你要传给后台的参数值 key/value
@@ -1026,7 +1027,22 @@ export default {
                     })
                    }
                   }
+               
+              //购物车总数
+              var nUrl = 'cart/cart_sum'
+              //参数 token
+              var params = new URLSearchParams();
+              params.append('token',this.$store.getters.optuser.Authorization);
+                that.$axios({
+                    method:"post",
+                    url:nUrl,
+                    data:params
+                }).then((res)=>{
+                  if(res.data.status===1){
                     
+                  }
+                })
+
              for (var i in that.goods.spec.goods_sku) {  
              that.shopItemInfo[that.goods.spec.goods_sku[i].sku_attr1] = that.goods.spec.goods_sku[i]; //修改数据结构格式，改成键值对的方式，以方便和选中之后的值进行匹配
               }
