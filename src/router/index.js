@@ -71,6 +71,9 @@ import paySucceed from '@/components/pay/paySucceed'
 // 支付失败
 import payFail from '@/components/pay/payFail'
 
+// 绑定用户信息
+import bindingMsg from '@/components/user/my/bindingMsg'
+
 
 
 
@@ -251,6 +254,13 @@ const router = new Router({
 			path:'/payFail',
 			name: 'payFail',
 			component:payFail,
+			meta:{requireAuth:true}   //是否需要登录
+		},
+		// 绑定用户信息
+		{
+			path:'/my/bindingMsg',
+			name: 'bindingMsg',
+			component:bindingMsg,
 			meta:{requireAuth:true}   //是否需要登录
 		},
 		
