@@ -173,6 +173,7 @@
 			/*swiper分页*/
 			let res = [];
 			var that = this;
+			/*页面请求id(防止后台启用另外一个页面，不能及时更新)*/
 			var page_id = null;
 			/*axios=>请求-页面数据的id*/
 			that.$axios.post("index/page", {
@@ -181,7 +182,41 @@
 				.then(function(response) {
 					console.log(response["data"]);
 					page_id = response["data"]["data"];
-					console.log('请求id',page_id);
+					/*axios=>请求-页面数据 -s*/
+					that.$axios.post("/shop/getShopData", {
+							id: page_id,
+						})
+						.then(function(response) {
+							console.log(response["data"]);
+							if(response["data"]["code"] == 1) {
+								/*alert(response['data']['msg']);*/
+								/*页面名字*/
+								that.backData["page_name"] = response["data"]["data"]["page_name"];
+								/*页面渲染数据*/
+								that.backData["data"] = response["data"]["data"]["data"];
+								/*获取轮播图数据*/
+								for(let i = 0; i < response.data.data.data.length; i++) {
+									if(response.data.data.data[i].id == "rotationId") {
+										/*轮播图设置*/
+										res.push({
+											'data': response.data.data.data[i],
+											'key': response.data.data.data[i].key_num
+										});
+										that.$nextTick(function() {
+											that.carousel(res);
+										});
+									}
+								}
+							} else {
+								/*保存失败*/
+								alert(response["data"]["msg"]);
+							}
+						})
+						.catch(function(error) {
+							alert(error);
+							console.log(error);
+						});
+					/*axios=>请求-页面数据 -e*/
 				})
 				.catch(function(error) {
 					alert(error);
@@ -189,40 +224,7 @@
 				});
 				
 
-			/*axios=>请求-页面数据*/
-			that.$axios.post("/shop/getShopData", {
-					id: page_id,
-				})
-				.then(function(response) {
-					console.log(response["data"]);
-					if(response["data"]["code"] == 1) {
-						/*alert(response['data']['msg']);*/
-						/*页面名字*/
-						that.backData["page_name"] = response["data"]["data"]["page_name"];
-						/*页面渲染数据*/
-						that.backData["data"] = response["data"]["data"]["data"];
-						/*获取轮播图数据*/
-						for(let i = 0; i < response.data.data.data.length; i++) {
-							if(response.data.data.data[i].id == "rotationId") {
-								/*轮播图设置*/
-								res.push({
-									'data': response.data.data.data[i],
-									'key': response.data.data.data[i].key_num
-								});
-								that.$nextTick(function() {
-									that.carousel(res);
-								});
-							}
-						}
-					} else {
-						/*保存失败*/
-						alert(response["data"]["msg"]);
-					}
-				})
-				.catch(function(error) {
-					alert(error);
-					console.log(error);
-				});
+			
 
 		},
 		methods: {
