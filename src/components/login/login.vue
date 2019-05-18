@@ -242,7 +242,7 @@ export default {
 							data: params
 				}).then((res)=>{
 							if(res.data.status === 1){
-							
+							console.log(res.data.data)
 							Toast('登录成功~')
 							that.userToken = res.data.data.token;  //token
 							that.mobile = res.data.data.mobile                 //phone
@@ -251,7 +251,7 @@ export default {
 							 // 将用户token保存到vuex中
 							that.changeLogin({ Authorization: that.userToken,
 							mobile:that.mobile,
-							uid:that.uid
+							uid:that.uid,
 							});
 							 // 将用户手机号保存到vuex中
 							
