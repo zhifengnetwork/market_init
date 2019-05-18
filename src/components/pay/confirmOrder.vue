@@ -265,6 +265,8 @@ import {Toast,Dialog} from "vant"
                                   for(var i in this.site){                  
                                       if(this.site[i].is_default === 1 ){        //等于一就是显示默认地址
                                               this.tacitlySite = this.site[i]
+                                      }else{
+                                              this.tacitlySite = this.site[i]
                                       }
                                   }
                                   this.totalPrice() //总金额

@@ -73,44 +73,43 @@
                 </div>
                 <!-- 商品评价 -->
                 <div class="mod_detail_info_header evaluate">
-                        <router-link class="J_to_evaluate" :to="'details/evaluate?product_Id='+goods.id">
+                        <router-link class="J_to_evaluate" :to="'details/evaluate?product_Id='+goods.goods_id">
                             <div class="detail_info_line clearfloat">
                                 <h3>商品评价</h3>
                                 <i class="midea-icon right-arrow"></i>
                             </div>
                         </router-link>
                         <div class="detail_switch">
-                                                    <div class="evaluate_tag_box evaluate_tag_box_line">
+                                                    <!-- <div class="evaluate_tag_box evaluate_tag_box_line">
                                     <div class="evaluate_tag_box_inner">
                                                                             <span class="tags_span">满意(245)</span>
-                                                                            <!-- <span class="tags_span"></span>
-                                                                            <span class="tags_span"></span> -->
+                                                                         
                                                                             <span class="tags_span">很好看，潮的(52)</span>
-                                                                            <!-- <span class="tags_span"></span> -->
+                                                                            
                                                                     </div>
-                                </div>
+                                                   </div> -->
                                                                         <div class="evaluate_list_box">
                                     <div class="evaluate_box">
                                         <div class="rate_avator_time clearfloat">
                                             <div class="avator_wrap">
                                                 <img src="//filecmms.midea.com/ccrm-prod/userHeadImg/defaultHeadImg.png" class="avator_pic" alt="用户头像">
-                                                <span class="avator_name" title="0***7">0***7</span>
+                                                <span class="avator_name" title="0***7">{{elevping[0].mobile}}</span>
                                             </div>
                                             <div class="quality_time">
-                                                                                        <span class="comment_time">2019-04-26</span>
+                                                                                        <span class="comment_time">{{elevping[0].add_time | formatDate}}</span>
                                             </div>
                                         </div>
                                         <p class="evaluate_comment">
-                                           很好看，潮的**。
+                                          {{elevping[0].content}}
                                     </p>
                                     </div>
                                 </div>
-                                <router-link class="all_evaluate_btn J_to_evaluate" mtag="30008.8.1" :to="'details/evaluate?product_Id='+goods.id">
-                                    <span class="evaluate_text">查看全部149条评价</span>
+                                <router-link class="all_evaluate_btn J_to_evaluate" mtag="30008.8.1" :to="'details/evaluate?product_Id='+goods.goods_id">
+                                    <span class="evaluate_text">查看全部{{elevping.length}}条评价</span>
                                     <i class="midea-icon right-arrow evaluate_icon"></i>
 
                                 </router-link>
-                                            </div>
+                    </div>
                     </div>
                 <!-- 商品详情 -->
                 <div class="mod_detail_info_header evaluate">
@@ -285,6 +284,9 @@ export default {
 
              //显示不同规格图片
               getImg:'',
+
+            //商品评论
+            elevping:[],
 
 
              //显示加入购物车还是立即购买//规格弹窗的按钮text
@@ -1054,6 +1056,25 @@ export default {
             this.$store.commit('hideLoading')
             alert(error)
                 })
+
+            //评论总数量
+             var urll = "goods/comment_list"
+            //  获取评论列表 	goods/comment_list
+            // 参数：
+            // token
+            // goods_id
+            var params = new URLSearchParams();
+                params.append('token',this.$store.getters.optuser.Authorization);
+                params.append('goods_id',this.goods_id);
+                that.$axios({
+                    method:"post",
+                    url:urll,
+                    data:params
+                }).then((res)=>{
+                  if(res.data.status===1){
+                      this.elevping = res.data.data
+                  }
+            })
             
     },
     filters: {
@@ -1064,7 +1085,6 @@ export default {
                 MM = MM < 10 ? ('0' + MM) : MM;
                 let d = date.getDate();
                 d = d < 10 ? ('0' + d) : d;
-                
                 return y + '-' + MM + '-' + d 
             }
             }
@@ -1335,7 +1355,7 @@ export default {
     .evaluate .evaluate_icon
                 display: inline-block;
                 position: relative;
-                top: -5px;
+                top: -2px;
                 left: 2px;
                 font-size: 13px;
                 font-weight: normal;

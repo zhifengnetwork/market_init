@@ -282,7 +282,7 @@
     border: none;
     box-shadow: none;
     width: 400px;
-    font-size 25px
+    font-size 30px
 
 .warpperP .sms-login-form>.form-group>input.verify-input
     width: 260px
@@ -295,7 +295,7 @@
     border-radius: .625rem;
     color: #fff;
     float: right;
-    font-size: 20px
+    font-size: 30px
     height: 50px
     line-height: 50px
     margin-top: -8px
@@ -325,4 +325,7 @@
     height: 50px
 .warpperP .active 
     background-color: #444!important;
+
+.iconfont
+    font-size 30px
 </style>

@@ -354,7 +354,7 @@ export default {
     border: none;
     box-shadow: none;
     width: 400px;
-    font-size 25px
+    font-size 30px
 
   .reg-new-page .reg-form>.form-group>input.verify-input
     width: 260px
@@ -364,7 +364,7 @@ export default {
     border-radius: .625rem;
     color: #fff;
     float: right;
-    font-size: 20px
+    font-size: 30px
     height: 50px
     line-height: 50px
     margin-top: -8px
@@ -387,7 +387,7 @@ export default {
    .reg-new-page .reg-form>.form-group>.label
     font-size 30px
     color #000000
-    margin-right 36px
+    margin-right 30px
 
    .reg-new-page .reg-form>.form-group.password>.eye 
     float: right;

@@ -233,21 +233,6 @@ export default {
             // console.log(index)
      
             },
-            getImg(images,index){
-                ImagePreview({
-                    images:images,
-                    showIndex:true,
-                    loop:false,
-                    startPosition:index,
-                     onClose:function (url) {  //回调参数,官方文档解释的不是很清楚。。。
-                        //回调参数类型 url:{ index:Number(当前图片的索引值), url:当前图片的URL }
-                        var num = url.index, url_link = url.url;
-                        console.log(url);
-                    }
-
-                })
-        },
-
          //删除照片
          closeImg(index,item){
                 item.imgUrls.splice(index, 1)
@@ -283,8 +268,7 @@ export default {
             for(var i=0;i<this.orderList.length;i++){
                 var item = this.orderList[i];
                 returnObj.order_id = this.id;
-                
-　　　　　　　　 returnObj.goods_id = item.goods_id;
+　　　　　　　　  returnObj.goods_id = item.goods_id;
                 returnObj.sku_id = item.sku_id;
                 returnObj.content = item.textmsg;
                 returnObj.star_rating =item.value;

@@ -142,9 +142,7 @@ export default {
 							this.timeCountdown(this.phone);  //参数为最终对象
 						}else{
 							
-								Dialog.alert({
-								message:res.data.msg
-								})
+								Toast(res.data.msg)
 							
 						}
 				})
@@ -174,14 +172,12 @@ export default {
 				 var that = this
 				 		 //用户手机号
                  if(that.logOnMessage.mobile==""){
-						 Dialog.alert({
-						 message: '手机号不能为空噢~!'
-						 })
+						
+						 Toast('手机号不能为空噢~!')
 						 return
 				  }else if(!that.regular.mobile.test(that.logOnMessage.mobile)){
-                        Dialog.alert({
-						message: '手机号码输入不规范,请输入正确的手机格式!'
-						})
+                       
+						Toast('手机号码输入不规范,请输入正确的手机格式!')
 						return
 				  }
 
@@ -193,36 +189,32 @@ export default {
 				// 								return
 				//    }else{
 					   if(that.logOnMessage.verifyCode==""){
-												Dialog.alert({
-												message: '验证码不能为空，请获取验证码!'
-											})
+						               Toast('验证码不能为空，请获取验证码!')
+											
 												return
 				   }
 				//    }
 
 				  //用户密码
 				  if(that.logOnMessage.password==""){
-						 Dialog.alert({
-						 message: '密码不能为空噢~!'
-						 })
+					  Toast('密码不能为空噢~!')
+						
 						 return
 				  }else if(!that.regular.password.test(that.logOnMessage.password)){
-                        Dialog.alert({
-						message: '密码长度要在6~18位之间,且必须以字母开头!'
-						})
+					  Toast('密码长度要在6~18位之间,且必须以字母开头!')
+                        
 						return
 				  }
 
 				 // 验证码
 				if(that.logOnMessage.thisCode== ''){
-					Dialog.alert({
-						message: '验证码不能为空！!'
-						})
+					 Toast('验证码不能为空！')
+					
 					return 
 				}else if(that.logOnMessage.thisCode.toLowerCase() != that.numberCode.toLowerCase()){
-					Dialog.alert({
-						message: '验证码不正确！!'
-					})
+					Toast('验证码不正确！')
+					
+					
 					/*调用组件的函数=> 更新-验证码*/
 					that.$refs.mychildFun.setCode();
 					/*清掉当前input，验证码*/
@@ -245,14 +237,15 @@ export default {
 							console.log(res.data.data)
 							Toast('登录成功~')
 							that.userToken = res.data.data.token;  //token
-							that.mobile = res.data.data.mobile                 //phone
-							that.uid = res.data.data.id
+							// that.mobile = res.data.data.mobile                 //phone
+							// that.uid = res.data.data.id
       						localStorage.removeItem('Authorization');
 							 // 将用户token保存到vuex中
-							that.changeLogin({ Authorization: that.userToken,
-							mobile:that.mobile,
-							uid:that.uid,
-							});
+							// that.changeLogin({ Authorization: that.userToken,
+							// mobile:that.mobile,
+							// uid:that.uid,
+							// });
+							that.changeLogin({ Authorization: that.userToken});
 							 // 将用户手机号保存到vuex中
 							
 					
@@ -343,7 +336,7 @@ export default {
     border: none;
     box-shadow: none;
     width: 400px;
-    font-size 25px
+    font-size 30px
 
 .sms-login-new-page .sms-login-form>.form-group>input.verify-input
     width: 260px
@@ -356,7 +349,7 @@ export default {
     border-radius: .625rem;
     color: #fff;
     float: right;
-    font-size: 20px
+    font-size: 30px
     height: 50px
     line-height: 50px
     margin-top: -8px
@@ -407,4 +400,6 @@ export default {
 .sms-login-new-page .active 
     background-color: #444!important;
 
+.iconfont
+    font-size 30px
 </style>

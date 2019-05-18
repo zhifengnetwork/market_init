@@ -101,7 +101,7 @@
                               <!--  total box -->   
                               <div class="total box" v-if="list.length>0">
                                     <div class="price-compute">
-                                        <p>总计¥{{getSubTotal}}.00=商品金额¥{{getSubTotal}}.00</p>
+                                        <p>总计¥{{getSubTotal}}=商品金额¥{{getSubTotal}}</p>
                                     </div>
                                 </div>
                              
@@ -118,7 +118,7 @@
                                     </div>
                                     <div class="opts bill ">
                                         <div class="total">
-                                            <p class="price">总计:¥{{getSubTotal}}.00&nbsp;&nbsp;({{getnum}}件)</p>
+                                            <p class="price">总计:¥{{getSubTotal}}&nbsp;&nbsp;({{getnum}}件)</p>
                                             <p class="intro">不含运费</p>
                                         </div>
 
@@ -485,7 +485,8 @@ export default {
       for (var i = 0; i < this.list.length; i++) {
         var item = this.list[i];
         if(item.ischeack){
-          sum += item.goods_price * item.goods_num;
+          sum +=  parseFloat(item.goods_price) * parseInt(item.goods_num);
+         
         }else{
           sum += 0;
         }

@@ -19,9 +19,11 @@ const store =  new Vuex.Store({
       userInfo:{
           // 存储token
          Authorization: localStorage.getItem('Authorization') ? localStorage.getItem('Authorization') : '',
-         phone:localStorage.getItem('phone') ? localStorage.getItem('phone') : '',
-         uid:localStorage.getItem('uid') ? localStorage.getItem('uid') : '',
-      }
+        //  phone:localStorage.getItem('phone') ? localStorage.getItem('phone') : '',
+        //  uid:localStorage.getItem('uid') ? localStorage.getItem('uid') : '',
+         usin:localStorage.getItem('usin') ? localStorage.getItem('usin') : '',
+      },
+    
     },
 
     // mutations 类似事件
@@ -40,20 +42,26 @@ const store =  new Vuex.Store({
          // 修改token，并将token存入localStorage
         changeLogin (state, user) {
           state.userInfo.Authorization = user.Authorization;//TOKEN
-          state.userInfo.phone = user.mobile;
-          state.userInfo.uid = user.uid;
+          // state.userInfo.phone = user.mobile;
+          // state.userInfo.uid = user.uid;
           localStorage.setItem('Authorization', user.Authorization);
-          localStorage.setItem('phone', user.mobile);
-          localStorage.setItem('uid', user.uid);
+          // localStorage.setItem('phone', user.mobile);
+          // localStorage.setItem('uid', user.uid);
+        },
+        userInfo(state, user){
+          state.userInfo.usin = JSON.stringify(user);
+          localStorage.setItem('usin', JSON.stringify(user));
         },
         
         del_token(state) {        //删除token
           state.userInfo.Authorization = '';//TOKEN
-          state.userInfo.phone = '';
-          state.userInfo.uid = '';
+          // state.userInfo.phone = '';
+          // state.userInfo.uid = '';
+          state.userInfo.usin = '';//用户信息
           localStorage.removeItem('Authorization');
-          localStorage.removeItem('phone');
-          localStorage.removeItem('uid');
+          localStorage.removeItem('usin');
+          // localStorage.removeItem('phone');
+          // localStorage.removeItem('uid');
         },
       
   

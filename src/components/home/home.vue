@@ -176,15 +176,17 @@
 			/*页面请求id(防止后台启用另外一个页面，不能及时更新)*/
 			var page_id = null;
 			/*axios=>请求-页面数据的id*/
-			that.$axios.post("index/page", {
-				token: that.$store.getters.optuser.Authorization,
-				})
+	    
+			        var params = new URLSearchParams();
+						
+			that.$axios.post("index/page")
 				.then(function(response) {
 					console.log(response["data"]);
-					page_id = response["data"]["data"];
+					// page_id = response["data"]["data"];
+						params.append('id', response["data"]["data"]);
 					/*axios=>请求-页面数据 -s*/
 					that.$axios.post("/shop/getShopData", {
-							id: page_id,
+							data: params,
 						})
 						.then(function(response) {
 							console.log(response["data"]);

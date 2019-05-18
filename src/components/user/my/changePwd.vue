@@ -25,7 +25,7 @@
                                 <div class="list_item_cnt">
                                     手机
                                 </div>
-                                <div class="list_item_extra js_mainTel" id="mainTel">{{getpwd.phonee}}<i class="right-arrow"></i></div>
+                                <div class="list_item_extra js_mainTel" id="mainTel">{{userList.mobile}}<i class="right-arrow"></i></div>
                             </div>
                         </div>
                         <div class="mod_list_item js_wxapp_hide" @click="alter=3">
@@ -34,7 +34,9 @@
                                 <div class="list_item_cnt">
                                     邮箱
                                 </div>
-                                <div class="list_item_extra" id="mainEmail">未设置<i class="right-arrow"></i></div>
+                                <div class="list_item_extra" id="mainEmail">
+                                {{userList.mailbox!=''?userList.mailbox:'未设置'}}
+                                    <i class="right-arrow"></i></div>
                             </div>
                         </div>
                         <div class="mod_list_item js_wxapp_hide" @click="alter=4">
@@ -56,13 +58,15 @@
                                 <img src="../../../../static/img/public/backBtn.png" />
                         </div>
                    </headerView>
+                   
                    <div class="main_wrap_inner" >
+                       <form action="">
                         <div class="mod_list">
                                 <div class="mod_list_item" id="modifyPswDiv" style="display: none">
                                     <div class="list_item_bd">
                                         <div class="list_item_label"></div>
                                         <div class="list_item_cnt ">
-                                            <input id="pwdOld" class="list_item_input" type="password" placeholder="输入旧密码">
+                                            <input id="pwdOld" class="list_item_input" name='pwd0' type="password" placeholder="输入旧密码 " autocomplete="off">
                                         </div>
                                     </div>
                                 </div>
@@ -70,7 +74,7 @@
                                     <div class="list_item_bd">
                                         
                                         <div class="list_item_cnt">
-                                            <input style="background-color: #fff; color:#999" disabled="" id="bind_mobile" class="list_item_input js_bind_mobile" type="text" v-model="getpwd.phonee">
+                                            <input style="background-color: #fff; color:#999" disabled="" id="bind_mobile" class="list_item_input js_bind_mobile" type="text" v-model="userList.mobile">
                                         </div>
                                         <div class="list_item_extra"></div>
                                     </div>
@@ -82,8 +86,8 @@
                                             <input id="pay_code" class="list_item_input js_verifyCode" type="text" placeholder="验证码"  v-model="getpwd.newCode">
                                         </div>
                                         <div class="list_item_extra" @click="getCode()">
-                                             <a id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="!pwd.canGet" disabled="disabled">{{pwd.waitTime+"s后重新获取"}}</a>
-                                             <a id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="pwd.canGet" @click="getCode">获取手机验证码</a>
+                                             <button id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="!pwd.canGet" disabled="disabled">{{pwd.waitTime+"s后重新获取"}}</button>
+                                             <button id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="pwd.canGet" @click="getCode">获取手机验证码</button>
                                             </div>
                                     </div>
                                 </div>
@@ -91,7 +95,7 @@
                                     <div class="list_item_bd">
                                         
                                         <div class="list_item_cnt ">
-                                            <input id="pwdInput" class="list_item_input" type="password" placeholder="输入新密码" v-model="getpwd.pwd">
+                                            <input id="pwdInput" class="list_item_input" name='pwd' type="password" placeholder="输入新密码" autocomplete="off" v-model="getpwd.pwd">
                                         </div>
                                     </div>
                                 </div>
@@ -99,16 +103,19 @@
                                     <div class="list_item_bd">
                                         
                                         <div class="list_item_cnt ">
-                                            <input id="pwdConfirm" class="list_item_input" type="password" placeholder="确认新密码" v-model="getpwd.pwd1">
+                                            <input id="pwdConfirm" class="list_item_input" name='pwd1' type="password" placeholder="确认新密码" autocomplete="off" v-model="getpwd.pwd1">
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            </form>
                             <div class="comment">密码由6-20位英文字母、数字或符号组成</div>
                             <div class="mod_btn_group mod_btn_group_block" @click="setNewPwd(getpwd.newCode)">
                                 <a id="btnOperatePwd" class="mod_btn mod_btn_block mod_btn_primary" href="javascript:void(0)">确定</a>
                             </div>
+                            
                      </div>
+                    
                    </div>
                 <!-- 手机 -->
                 <div class="phone" v-if="alter==2">
@@ -126,7 +133,7 @@
                                     <div class="list_item_label"></div>
                                     <div class="list_item_cnt">已绑定手机
                                     </div>
-                                    <div class="list_item_extra js_mainTel">{{getpwd.phonee}}</div>
+                                    <div class="list_item_extra js_mainTel">{{userList.mobile}}</div>
                                 </div>
                             </div>
 
@@ -134,7 +141,7 @@
                                 <div class="list_item_bd">
                                     <div class="list_item_label"></div>
                                     <div class="list_item_cnt">
-                                        <input id="telephone" class="list_item_input" type="text" placeholder="更换绑定手机">
+                                        <input id="telephone" class="list_item_input" type="text" placeholder="更换绑定手机"  v-model="newPhone">
                                     </div>
                                     <div class="list_item_extra">
                                         <!-- <i class="right-arrow"></i> -->
@@ -147,16 +154,16 @@
                                     <div class="list_item_cnt item_cnt">
                                         <input id="code" class="list_item_input" type="text" placeholder="验证码">
                                     </div>
-                                    <div class="list_item_extra" @click="getPhoneCode()">
-                                        <a id="getcode" class="list_item_extra_btn" href="javascript:void(0)" v-show="!phone.canGet" disabled="disabled">{{phone.waitTime+"s后重新获取"}}</a>
-                                         <a id="getcode" class="list_item_extra_btn" href="javascript:void(0)" v-show="phone.canGet">获取手机验证码</a>
+                                    <div class="list_item_extra" @click="getPhoneCode(newPhone)">
+                                        <button id="getcode" class="list_item_extra_btn" href="javascript:void(0)" v-show="!phone.canGet" disabled="disabled">{{phone.waitTime+"s后重新获取"}}</button>
+                                         <button id="getcode" class="list_item_extra_btn" href="javascript:void(0)" v-show="phone.canGet" >获取手机验证码</button>
                                         </div>
                                 </div>
                             </div>
 
                         </div>
                         <div class="mod_btn_group mod_btn_group_block">
-                            <a id="btnOperateTel" class="mod_btn mod_btn_block mod_btn_primary" href="javascript:void(0)">完成</a>
+                            <a id="btnOperateTel" class="mod_btn mod_btn_block mod_btn_primary" href="javascript:void(0)" @click="changePhone(newPhone)">完成</a>
                         </div>
                     </div>
                  </div>
@@ -197,7 +204,7 @@
                                     <div class="list_item_bd">
                                         <div class="list_item_label"></div>
                                         <div class="list_item_cnt">
-                                            <input style="background-color: #fff; color:#999" disabled="" id="bind_mobile" class="list_item_input js_bind_mobile" type="text" v-model="getpwd.phonee">
+                                            <input style="background-color: #fff; color:#999" disabled="" id="bind_mobile" class="list_item_input js_bind_mobile" type="text" v-model="userList.mobile">
                                         </div>
                                         <div class="list_item_extra"></div>
                                     </div>
@@ -209,8 +216,8 @@
                                             <input id="pay_code" class="list_item_input js_verifyCode" type="text" placeholder="验证码" v-model="getpayment.newCode">
                                         </div>
                                         <div class="list_item_extra" @click="getCode()">
-                                             <a id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="!pwd.canGet" disabled="disabled">{{pwd.waitTime+"s后重新获取"}}</a>
-                                             <a id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="pwd.canGet" @click="getCode">获取手机验证码</a>
+                                             <button id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="!pwd.canGet" :disabled="disabled">{{pwd.waitTime+"s后重新获取"}}</button>
+                                             <button id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="pwd.canGet" @click="getCode">获取手机验证码</button>
                                             </div>
                                     </div>
                                 </div>
@@ -218,12 +225,13 @@
                             </div>
 
                             <!--更新密码-->
+                            <form action="">
                             <div class="mod_list">
                                 <div class="mod_list_item">
                                     <div class="list_item_bd">
                                         <div class="list_item_label"></div>
                                         <div class="list_item_cnt ">
-                                            <input class="list_item_input js_payPswInput" type="password" placeholder="输入新密码" maxlength="6" v-model="getpayment.pwd">
+                                            <input class="list_item_input js_payPswInput" type="password" placeholder="输入新密码" autocomplete="off" maxlength="6" v-model="getpayment.pwd">
                                         </div>
                                         <div class="list_item_extra"></div>
                                     </div>
@@ -232,16 +240,18 @@
                                     <div class="list_item_bd">
                                         <div class="list_item_label"></div>
                                         <div class="list_item_cnt ">
-                                            <input class="list_item_input js_payPswConfirm" type="password" placeholder="确认新密码" maxlength="6"  v-model="getpayment.pwd1">
+                                            <input class="list_item_input js_payPswConfirm" type="password" placeholder="确认新密码" autocomplete="off" maxlength="6"  v-model="getpayment.pwd1">
                                         </div>
                                         <div class="list_item_extra"></div>
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="comment">密码由6位英文字母数字组成</div>
                             <div class="mod_btn_group mod_btn_group_block" @click="paymentCode(getpayment.newCode)" >
                                 <a class="mod_btn mod_btn_block mod_btn_primary js_operPayPsw" href="javascript:void(0)">确定</a>
                             </div>
+                            </form >
                         </div>
                  
                  </div>
@@ -259,9 +269,12 @@ import headerView from '../../common/headerView.vue'
 export default {
     data(){
         return{
+            userList:'',
+            
+            //用户新手机号
+            newPhone:'',
             //用户修改密码
             getpwd:{
-                 phonee:'',
                  pwd:'',
                  pwd1:'',
                  newCode:'',
@@ -269,6 +282,7 @@ export default {
             password:/^[a-zA-Z]\w{5,17}$/,             //用户密码正则
             pwdd:/^[a-zA-Z0-9]{6}$/,                   //支付密码
             email:/^[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/,               //用户邮箱正则
+            mobile:/^[1]([3-9])[0-9]{9}$/,              //用户手机号正则
             alter:0,
             //用户修改支付密码
             getpayment:{
@@ -279,7 +293,7 @@ export default {
             //邮箱
             emile:'',
            //商城支付
-           tempPwd:{ //定义一个临时对象
+            tempPwd:{ //定义一个临时对象
             canGet: true,
             timer: null,
             waitTime: 60
@@ -301,10 +315,10 @@ export default {
                     //倒计时开始
                      var that = this
                      var temp='sms_forget';
-						var auth = md5( this.getpwd.phonee + md5(temp+'android+app') );
+						var auth = md5( this.userList.mobile + md5(temp+'android+app') );
 						var url = "/Phone_auth/verifycode"
 						var params = new URLSearchParams();
-						params.append('mobile', this.getpwd.phonee);       //你要传给后台的参数值 key/value
+						params.append('mobile', this.userList.mobile);       //你要传给后台的参数值 key/value
 						params.append('temp', temp);
 						params.append('auth', auth);
 						that.$axios({
@@ -428,7 +442,15 @@ export default {
 						}
 				})
          },
+         //邮箱
          setEmile(code){
+             if(code===''){
+                 Toast('邮箱不能为空')
+                 return
+             }else if(!this.email.test(code)){
+                 Toast('邮箱格式错误！')
+                 return
+             }else{
                  var url = 'user/reset_mailbox '
                  var params = new URLSearchParams();
 						params.append('mailbox', code);       //你要传给后台的参数值 key/value
@@ -440,20 +462,97 @@ export default {
 						}).then((res)=>{
 							if(res.data.status === 1){
                                 Toast(res.data.msg)
+                                this.userList.mailbox = code
                                 this.alter=0;
 						}else{
 								Dialog.alert({
 								message:res.data.msg
 								})
-							
                 }  
-                })     
+                })   
+             }
+                   
+         },
+         //更换手机
+         changePhone(phone){
+                 if(phone === ''){
+                            Toast('手机号不能为空!')
+                            return
+                     }
+                     //用户手机
+				
+				  else if(!this.mobile.test(phone)){
+                        Dialog.alert({
+						message: '手机号格式错误!!'
+						})
+						return
+                  }else{
+                        var that = this
+						var url = "/user/reset_pwd"
+						var params = new URLSearchParams();
+						params.append('mobile', phone);       //你要传给后台的参数值 key/value
+                        params.append('token', this.$store.getters.optuser.Authorization);
+						that.$axios({
+							method: 'post',
+							url:url,
+							data: params
+						}).then((res)=>{
+							if(res.data.status === 1){
+                                Toast(res.data.msg)
+                                this.alter=0;
+                                this.userList.mobile = phone
+						}else{
+								Dialog.alert({
+								message:res.data.msg
+								})
+							
+						}
+				})
+                  }
+                   
          },
 
          //获取验证码  手机
-         getPhoneCode(){
-                  //倒计时开始
-                this.timeCountdown(this.phone);  //参数为最终对象
+         getPhoneCode(code){
+                      //倒计时开始
+                      if(code === ''){
+                            Toast('手机号不能为空!')
+                            return
+                     }
+                     //用户手机
+				
+				  else if(!this.mobile.test(code)){
+                        Dialog.alert({
+						message: '手机号格式错误!!'
+						})
+						return
+                  }else{
+                        var that = this
+                        var temp='sms_forget';
+						var auth = md5( code + md5(temp+'android+app') );
+						var url = "/Phone_auth/verifycode"
+						var params = new URLSearchParams();
+						params.append('mobile', code);       //你要传给后台的参数值 key/value
+						params.append('temp', temp);
+						params.append('auth', auth);
+						that.$axios({
+							method: 'post',
+							url:url,
+							data: params
+						}).then((res)=>{
+							if(res.data.status === 1){
+							Toast(res.data.msg)
+							//倒计时开始
+					        this.timeCountdown(this.phone);  //参数为最终对象
+						}else{
+							
+								Dialog.alert({
+								message:res.data.msg
+								})
+							
+						}
+                })
+                  }
          },
         
     },computed:{
@@ -475,7 +574,8 @@ export default {
 
     },
     created() {
-         this.getpwd.phonee = this.$store.getters.optuser.phone
+        this.userList = JSON.parse(this.$store.getters.optuser.usin)
+        this.emile  = this.$store.getters.optuser.usin.mailbox
     },
 }
 </script>
@@ -581,6 +681,7 @@ export default {
         min-width: 100px;
         padding-left: 35px;
         text-align: center;
+        color #000;
 .mod_list_item .list_item_bd>.list_item_cnt.item_cnt
      width 50%
 

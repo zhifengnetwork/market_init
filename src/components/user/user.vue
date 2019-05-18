@@ -96,8 +96,8 @@ export default {
                  {id:6,name:'帮助中心',imgUrl:'../../../static/img/user/Help@2x.png',aUrl:''},
                  {id:7,name:'设置',viceName:'用户设置•地址',imgUrl:'../../../static/img/user/Set_up@2x.png',aUrl:'/my/userinfo'}
              ],
-             user:{ id:1,userName:'马冬梅',vipRank:'白金会员'}
-                
+             user:{ id:1,userName:'马冬梅',vipRank:'白金会员'},
+             userItem:[]   
              
         }
     },
@@ -120,6 +120,22 @@ export default {
             // on cancel
             });
         }
+    },
+    created() {
+         var url = "user/userinfo"
+           var params = new URLSearchParams();
+            params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value
+            this.$axios({
+                    method:"post",
+                    url:url,
+                    data:params
+                }).then((res)=>{
+                   
+                  if(res.data.status===1){
+                     this.userItem = res.data.data
+                     this.$store.commit("userInfo",res.data.data);
+                  }
+                })
     },
 }
 </script>

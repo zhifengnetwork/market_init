@@ -150,26 +150,11 @@ export default {
         proList:[],
         baseUrl:'',
         
-        //默认
-        default:[],
-        defaultId:1,
-
-        // ASC
-        ascList:[],
-        ascState:0,
-
-        //desc
-        descList:[],
-        descState:0,
-
-        //人气
-        popularity:[],
-        popularityState:0,
 
         //新品
         newProduct:[],
         newState:false, //新品状态
-        newStatee:0,
+        // newStatee:0,
         
 
 
@@ -219,7 +204,7 @@ export default {
 
                 // 
                 if(this.indexx==1){ //选中的下标为一
-                     this.proList=this.default
+                     this.ajax()
                 }
                 if(this.indexx==2){ //选中的下标为二
                      
@@ -241,13 +226,7 @@ export default {
 
             if(this.list[1].data==ip){//新品
             
-              if(this.newStatee==1){
-
-                       this.proList =  this.newProduct
-
-                       this.newState=true;
-
-              }else{
+              
                 // 取消上一次请求
                 this.cancelRequest();
             
@@ -256,12 +235,11 @@ export default {
                 this.$axios.get(url).then((res)=>{
                         if(res.data.status==1){
                              this.proList=res.data.data.goods_list;
-                             this.newProduct=res.data.data.goods_list;//保存人气商品列表
+                           
                              this.newState=true;
                         }
                 })
-                this.newStatee=1
-              }
+               
 
               
             }else{
@@ -272,11 +250,7 @@ export default {
 
             if(this.list[2].data==ip){//人气
                
-               if(this.popularityState==1){
-
-                   this.proList=this.popularity
-
-               }else{
+               
                  // 取消上一次请求
                 this.cancelRequest();
             
@@ -284,12 +258,10 @@ export default {
 
                 this.$axios.get(url).then((res)=>{
                         this.proList=res.data.data.goods_list;
-                        this.popularity=res.data.data.goods_list;//保存商品列表
+                       
 
                 })
-                this.popularityState=1
-
-               }
+              
 
             }
             
@@ -337,7 +309,7 @@ export default {
                 this.getGoodsListPirce()//发送请求
 
             }else{
-                this.proList=this.default
+                this.ajax()
             }
             
         },
@@ -361,11 +333,7 @@ export default {
                             // 请求时传点击的价格区间数据给后台
                             sort:this.sort="ASC" // 点击的价格区间
         }
-         if(this.ascState==1){
-            
-            this.proList=this.ascList
-            
-        }else{
+        
        
        // 取消上一次请求
             this.cancelRequest();
@@ -374,22 +342,18 @@ export default {
 
        this.$axios.get(url).then((res)=>{
             this.proList=res.data.data.goods_list;
-            this.ascList=res.data.data.goods_list;//保存商品列表
+            // this.ascList=res.data.data.goods_list;//保存商品列表
        })
 
          this.ascState=1;
-        }
+        
         }else if(!this.isCur){
 
                     var param = {
                             // 请求时传点击的价格区间数据给后台
                             sort:this.sort="DESC" // 点击的价格区间
                     }
-        if(this.descState==1){
-
-            this.proList=this.descList
-
-        }else{
+        
         
         // 取消上一次请求
             this.cancelRequest();
@@ -398,12 +362,10 @@ export default {
         
         this.$axios.get(url).then((res)=>{
             this.proList=res.data.data.goods_list
-            this.descList=res.data.data.goods_list;//保存商品列表
+          
         })
 
-         this.descState=1;
-
-        }
+        
         }
     },
      cancelRequest(){
@@ -418,21 +380,26 @@ export default {
           
         }
       },
+      //页面默认
+      ajax(){
+             var url = "/goods/category?cat_id="+this.cat_id
+                this.$axios.get(url).then((res)=>{
+                    this.proList=res.data.data.goods_list;
+                    
+                })
+      }
 
     },
 
     mounted(){
-             var url = "/goods/category?cat_id="+this.cat_id
-                this.$axios.get(url).then((res)=>{
-                    this.proList=res.data.data.goods_list;
-                    this.default=res.data.data.goods_list;//保存默认
-                })
+             
         // 添加滚动事件，检测滚动到页面底部
       window.addEventListener('scroll', this.scrollBottom)
     },
     created() {
         //图片路径
            this.baseUrl=this.url
+           this.ajax()
     },
 }
 </script>
