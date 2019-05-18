@@ -157,7 +157,7 @@
         </div>
         <!-- 地址选择 -->
          <div class="site">
-                   <van-popup v-model="showSite" position="right" :overlay="false">
+                   <van-popup v-model="showSite" position="right" :overlay="false" >
                          <van-radio-group v-model="sitess" >
                              <div class="site-box">
                                   <div class="select-sist-title">
@@ -184,6 +184,25 @@
                         </van-radio-group>
                 </van-popup>
             </div>
+            <!-- 密码输入框 -->
+            <van-popup v-model="showPwd" class="popup" @click-overlay="close()">
+
+                  <van-password-input
+                    :value="value"
+                    info="密码为 6 位数字"
+                    @focus="showKeyboard = true"
+                    />
+            </van-popup>
+             <!-- 数字键盘 -->
+                    <van-number-keyboard
+                    :show="showKeyboard"
+                    @input="onInput"
+                    @delete="onDelete"
+                    @blur="showKeyboard = false"
+            />
+            <!-- 加载 -->
+                 
+                <van-loading color="#000000" v-show="lodiong" />
     </div>
 </template>
 
@@ -195,6 +214,12 @@ import {Toast,Dialog} from "vant"
         name:'comfirmOrder',
         data() {
             return {
+                //支付密码
+                value: '',
+                showPwd:false,
+                showKeyboard:false,
+                //加载
+                lodiong:false,
                 //总价格
                 total:0,
                 //总商品数量
@@ -379,12 +404,16 @@ import {Toast,Dialog} from "vant"
                     // address_id	//收货ID
                     // pay_type	//支付方式
                     // user_note	//订单备注
+                    if(this.payId === 1){  //余额支付
+                         this.showPwd=true;
+                    }
                     if(this.payId === ''){
                                 Dialog.alert({
                                 message:'请选择支付方式'
                                 });
                                 return
-                    }else{
+                    }
+                    else{
                                 var params = new URLSearchParams();
                                 params.append('token', this.$store.getters.optuser.Authorization);           //token
                                 params.append('cart_id',this.home );                       //购物车ID（多个逗号分开）
@@ -409,15 +438,22 @@ import {Toast,Dialog} from "vant"
                                         var params = new URLSearchParams();
                                         params.append('token', this.$store.getters.optuser.Authorization);                         //订单id
                                         params.append('order_id', orderId);                                                       //订单id
-                                        params.append('pay_type',this.payId);                                                    //支付方式
+                                        params.append('pay_type',this.payId);    
+                                        return                                                //支付方式
+                                        console.log(1)
                                         this.$axios({
                                             method:"post",
                                             url:urll,
                                             data: params
                                         }).then((res)=>{
                                             if(res.data.status ===1){
-                                                var ll = res.data.data
-                                             window.location.href = ll;
+                                                if(this.payId === 1){
+                                                   
+                                                }else{
+                                                     var ll = res.data.data
+                                                window.location.href = ll;
+                                                }
+                                                
                                             }else{
                                             Dialog.alert({
                                             message:res.data.msg
@@ -450,6 +486,78 @@ import {Toast,Dialog} from "vant"
                this.sitess = item.address_id
                this.tacitlySite = item
                this.showSite = false;
+            },
+            //输入密码
+            onInput(key) {
+               this.value = (this.value + key).slice(0, 6);
+            //    console.log(value)
+               if(this.value.length === 6){
+                                        var url = 'user/check_pwd'
+                                        var params = new URLSearchParams();
+                                        params.append('token', this.$store.getters.optuser.Authorization);                         //token
+                                        params.append('pwd', this.value);                                                         //密码
+                                        this.$axios({
+                                            method:"post",
+                                            url:url,
+                                            data: params
+                                        }).then((res)=>{
+                                      if(res.data.status ===1){
+
+                                        var orderId = this.home
+                                        var urll = 'pay/payment'
+                                        var params = new URLSearchParams();
+                                        params.append('token', this.$store.getters.optuser.Authorization);                         //订单id
+                                        params.append('order_id', orderId);                                                       //订单id
+                                        params.append('pay_type',this.payId);                                                    //支付方式
+                                        this.$axios({
+                                            method:"post",
+                                            url:urll,
+                                            data: params
+                                        }).then((res)=>{
+                                            if(res.data.status ===1){
+                                                if(this.payId === 1){
+                                                    alert("1111")
+                                                }else{
+                                                     var ll = res.data.data
+                                                window.location.href = ll;
+                                                }
+                                                
+                                            }else{
+                                            Dialog.alert({
+                                            message:res.data.msg
+                                            });
+                                            }
+                                        })
+                                        
+                                                this.lodiong=true;
+                                            setTimeout(()=>{
+                                                this.lodiong=false;
+                                                this.value = '';
+                                                 //请求支付接口  
+                                                 
+                                            },2000)
+                                            }else{
+                                            Dialog.alert({
+                                            message:res.data.msg
+                                            }).then(() => {
+                                                this.lodiong=true;
+                                            setTimeout(()=>{
+                                                this.close();
+                                                this.lodiong=false;
+                                            },1000)
+                                            });
+                                            }
+                                        })
+               }
+            },
+            //删除密码
+            onDelete() {
+            this.value = this.value.slice(0, this.value.length - 1);
+            },
+            //关闭蒙城 清空密码
+            close(){
+                this.showPwd=false
+                this.value = ''
             }
         },
 
@@ -731,6 +839,21 @@ import {Toast,Dialog} from "vant"
      .coupon-time 
                 color: #b0b0b0;
                 font-size: 25px
+   .popup
+        width 100%
+   .van-number-keyboard
+        z-index 3000!important
+    .van-password-input__security li
+        border 1px solid #000
+   .van-password-input
+        padding-top 30px
+   .van-loading
+        position fixed
+        top 45%
+        left 45%
+        width 100px
+        height 100px
+        z-index 3100!important
 </style>
 
 

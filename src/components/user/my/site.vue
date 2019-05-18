@@ -57,7 +57,7 @@
 import headerView from '../../common/headerView.vue'
 import { MessageBox } from 'mint-ui';
 /* 引入 mint-ui 弹窗组件 */
-import {Toast,Dialog} from "mint-ui"
+	import {Toast} from "vant"
 export default {
     data(){
         return{
@@ -162,34 +162,7 @@ export default {
                     this.addressInfo = addressInfo;
     },
     onSave(content) {
-                //     var url = "user/add_address";
-                //     var s;
-                //     if(content.isDefault){
-                //         s = 1
-                //     }else{
-                //         s = 0
-                //     }
-                //     var params = new URLSearchParams();
-                //                 params.append('address_id', this.addressInfo.id);       //你要传给后台的参数值 key/value         //收货id
-                //                 params.append('consignee', content.name);       //你要传给后台的参数值 key/value         //收货人
-                //                 params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value   //token
-                //                 params.append('province',content.province);       //你要传给后台的参数值 key/value              //省
-                //                 params.append('city', content.city);       //你要传给后台的参数值 key/value                     //市
-                //                 params.append('district', content.county);       //你要传给后台的参数值 key/value               //区
-                //                 params.append('mobile', content.tel);       //你要传给后台的参数值 key/value                            //手机
-                //                 params.append('is_default', s);       //你要传给后台的参数值 key/value                          //是否默认
-                //         this.$axios({
-                //                 method:"post",
-                //                 url:url,
-                //                 data:params
-                //             }).then((res)=>{
-                //             if(res.data.status===1){
-                //                 Toast(res.data.msg)
-                //             }else{
-                //                 Toast(res.data.msg)
-                //             }
-                //   })
-                        var url = "user/add_address";
+                        var url = "user/edit_address";
                         var s;
                         if(content.isDefault){
                             s = 1
@@ -211,9 +184,13 @@ export default {
                                     url:url,
                                     data:params
                                 }).then((res)=>{
+                                   
                                 if(res.data.status===1){
-                                    Toast(res.data.msg)
                                     
+                                    Toast(res.data.msg)
+                                    setTimeout(() => {
+                                           this.$router.go(0)
+                                    }, 1000);
                                 }else{
                                     Toast(res.data.msg)
                                 }

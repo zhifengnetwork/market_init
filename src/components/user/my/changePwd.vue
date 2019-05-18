@@ -152,7 +152,7 @@
                                 <div class="list_item_bd">
                                     <div class="list_item_label"></div>
                                     <div class="list_item_cnt item_cnt">
-                                        <input id="code" class="list_item_input" type="text" placeholder="验证码">
+                                        <input id="code" class="list_item_input" type="text" placeholder="验证码" v-model="newCode">
                                     </div>
                                     <div class="list_item_extra" @click="getPhoneCode(newPhone)">
                                         <button id="getcode" class="list_item_extra_btn" href="javascript:void(0)" v-show="!phone.canGet" disabled="disabled">{{phone.waitTime+"s后重新获取"}}</button>
@@ -163,7 +163,7 @@
 
                         </div>
                         <div class="mod_btn_group mod_btn_group_block">
-                            <a id="btnOperateTel" class="mod_btn mod_btn_block mod_btn_primary" href="javascript:void(0)" @click="changePhone(newPhone)">完成</a>
+                            <a id="btnOperateTel" class="mod_btn mod_btn_block mod_btn_primary" href="javascript:void(0)" @click="changePhone(newPhone,newCode)">完成</a>
                         </div>
                     </div>
                  </div>
@@ -273,6 +273,8 @@ export default {
             
             //用户新手机号
             newPhone:'',
+            //用户名手机code
+            newCode:'',
             //用户修改密码
             getpwd:{
                  pwd:'',
@@ -474,7 +476,7 @@ export default {
                    
          },
          //更换手机
-         changePhone(phone){
+         changePhone(phone,newCode){
                  if(phone === ''){
                             Toast('手机号不能为空!')
                             return
@@ -492,6 +494,7 @@ export default {
 						var params = new URLSearchParams();
 						params.append('mobile', phone);       //你要传给后台的参数值 key/value
                         params.append('token', this.$store.getters.optuser.Authorization);
+                        params.append('code', newCode);
 						that.$axios({
 							method: 'post',
 							url:url,
@@ -548,7 +551,7 @@ export default {
 							
 								Dialog.alert({
 								message:res.data.msg
-								})
+						})
 							
 						}
                 })

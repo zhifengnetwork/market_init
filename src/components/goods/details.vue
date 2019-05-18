@@ -93,19 +93,19 @@
                                         <div class="rate_avator_time clearfloat">
                                             <div class="avator_wrap">
                                                 <img src="//filecmms.midea.com/ccrm-prod/userHeadImg/defaultHeadImg.png" class="avator_pic" alt="用户头像">
-                                                <span class="avator_name" title="0***7">{{elevping[0].mobile}}</span>
+                                                <!-- <span class="avator_name" title="0***7">{{elevping[0].mobile}}</span> -->
                                             </div>
                                             <div class="quality_time">
-                                                                                        <span class="comment_time">{{elevping[0].add_time | formatDate}}</span>
+                                                                                        <!-- <span class="comment_time">{{elevping[0].add_time | formatDate}}</span> -->
                                             </div>
                                         </div>
-                                        <p class="evaluate_comment">
+                                        <!-- <p class="evaluate_comment">
                                           {{elevping[0].content}}
-                                    </p>
+                                    </p> -->
                                     </div>
                                 </div>
                                 <router-link class="all_evaluate_btn J_to_evaluate" mtag="30008.8.1" :to="'details/evaluate?product_Id='+goods.goods_id">
-                                    <span class="evaluate_text">查看全部{{elevping.length}}条评价</span>
+                                    <!-- <span class="evaluate_text">查看全部{{elevping.length}}条评价</span> -->
                                     <i class="midea-icon right-arrow evaluate_icon"></i>
 
                                 </router-link>

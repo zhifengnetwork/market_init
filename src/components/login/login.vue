@@ -110,7 +110,7 @@ export default {
         ...mapMutations(['changeLogin',]),
 		//获取验证码
 		getCode(code){
-			
+			     alert(1)
 				 var that = this
 				 		 //用户手机号
                  if(that.logOnMessage.mobile==""){
@@ -124,6 +124,7 @@ export default {
 						})
 						return
 				  }else{
+					    
                         var temp='sms_forget';
 						var auth = md5( code + md5(temp+'android+app') );
 						var url = "/Phone_auth/verifycode"
@@ -131,7 +132,7 @@ export default {
 						params.append('mobile', code);       //你要传给后台的参数值 key/value
 						params.append('temp', temp);
 						params.append('auth', auth);
-						that.$axios({
+						this.$axios({
 							method: 'post',
 							url:url,
 							data: params
@@ -234,7 +235,6 @@ export default {
 							data: params
 				}).then((res)=>{
 							if(res.data.status === 1){
-							console.log(res.data.data)
 							Toast('登录成功~')
 							that.userToken = res.data.data.token;  //token
 							// that.mobile = res.data.data.mobile                 //phone

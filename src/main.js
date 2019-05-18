@@ -40,6 +40,11 @@ Vue.use(ImagePreview);
 import { Popup } from 'vant';
 Vue.use(Popup);
 
+//余额支付
+import { PasswordInput, NumberKeyboard } from 'vant';
+
+Vue.use(PasswordInput).use(NumberKeyboard);
+
 Vue
   .use(GoodsAction)
   .use(GoodsActionBigBtn)
