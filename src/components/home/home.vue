@@ -174,20 +174,16 @@
 			let res = [];
 			var that = this;
 			/*页面请求id(防止后台启用另外一个页面，不能及时更新)*/
-			var page_id = null;
+//			var page_id = null;
 			/*axios=>请求-页面数据的id*/
-	    
-			        var params = new URLSearchParams();
-						
+			var params = new URLSearchParams();
 			that.$axios.post("index/page")
 				.then(function(response) {
 					console.log(response["data"]);
 					// page_id = response["data"]["data"];
-						params.append('id', response["data"]["data"]);
+					params.append('id', response["data"]["data"]);
 					/*axios=>请求-页面数据 -s*/
-					that.$axios.post("/shop/getShopData", {
-							data: params,
-						})
+					that.$axios.post("/shop/getShopData", params)
 						.then(function(response) {
 							console.log(response["data"]);
 							if(response["data"]["code"] == 1) {
