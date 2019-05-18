@@ -33,6 +33,9 @@ import {
   GoodsActionMiniBtn
 } from 'vant';
 
+import { ImagePreview } from 'vant';
+
+Vue.use(ImagePreview);
 //Popup 弹出层
 import { Popup } from 'vant';
 Vue.use(Popup);

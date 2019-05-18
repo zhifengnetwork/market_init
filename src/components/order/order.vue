@@ -61,8 +61,8 @@
                             </div>
                             <div class="order-opt" v-if="item.order_status===4">
                                 <span class="btn cancelBtn">删除订单</span>
-                                  <router-link :to="'/my/appraise?order_id='+item.order_id">
-                                 <span class="btn" >评价</span>
+                                  <router-link to="" >
+                                 <span class="btn" @click="evaluateet(item)">评价</span>
                                  </router-link>
                             </div>
                             <!-- <div class="order-opt">
@@ -190,8 +190,8 @@
                             </router-link>
                             <div class="order-opt">
                                 <span class="btn cancelBtn">删除订单</span>
-                                  <router-link :to="'/my/appraise?order_id='+item.order_id">
-                                 <span class="btn" >评价</span>
+                                  <router-link to="">
+                                 <span class="btn" @click='evaluateet(item)'>评价</span>
                                  </router-link>
                             </div>
                         </div>
@@ -299,6 +299,13 @@
             cancellationquan(index,id,status){
                  var msgg = '您确定要取消订单吗？'
                  this.ajax(index,id,status,this.allOrders,msgg) 
+            },
+            evaluateet(item){
+                if(item.comment === 1){
+                    Toast('你已评价过此商品')
+                }else{
+                    that.$router.push('/my/appraise?order_id='+item.order_id);
+                }
             }
         },
         components:{

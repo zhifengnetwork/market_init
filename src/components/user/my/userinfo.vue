@@ -108,7 +108,8 @@ export default {
 
               //修改昵称
               userName:'',
-              baseUrl:''
+              baseUrl:'',
+              userItem:'',
         }
     },components:{
         headerView
@@ -134,6 +135,19 @@ export default {
     created() {
         //图片路径
            this.baseUrl=this.url
+           var url = "user/userinfo"
+           var params = new URLSearchParams();
+            params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value
+            this.$axios({
+                    method:"post",
+                    url:url,
+                    data:params
+                }).then((res)=>{
+                   
+                  if(res.data.status===1){
+                     this.userItem = res.data.data
+                  }
+                })
     },
 }
 </script>

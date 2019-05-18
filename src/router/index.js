@@ -133,7 +133,7 @@ const router = new Router({
 			path:'/user',
 			name: 'user',
 			component:user,
-			// meta:{requireAuth:true}   //是否需要登录
+			 meta:{requireAuth:true}   //是否需要登录
 		},
 		// 订单
 		{
@@ -244,13 +244,12 @@ router.beforeEach((to, from, next) => {
 
 	if (to.matched.some(r => r.meta.requireAuth)) { 
 
-	// if (to.path === '/login' || to.path === '/register') {
+	if (to.path === '/login' || to.path === '/register') {
+    
+	  next();
 
-	//   next();
-
-	// } else {
-
-	  let token = localStorage.getItem('Authorization');
+	} else {
+		let token = localStorage.getItem('Authorization');
 	  if (token === null || token === '') {
 		
 		Dialog.alert({
@@ -264,7 +263,7 @@ router.beforeEach((to, from, next) => {
 		next();
 
 	  }
-	// }
+	}
 }else{
 		next();
 }

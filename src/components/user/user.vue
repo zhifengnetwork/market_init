@@ -67,11 +67,16 @@
                       </router-link>
             </div>
         </div>
+         <div class="quitOut-box" @click="quitOut">
+             <button class="quitOut">退出登录</button>
+         </div>
         <menuBar></menuBar>
     </div>
 </template>
 <script>
 import menuBar from '../common/menuBar.vue'
+import store from '../../store/store'
+import { Toast,Dialog} from 'vant';
 export default {
     data() {
         return {
@@ -98,10 +103,37 @@ export default {
     },
     components:{
         menuBar
-    }
+    },
+    methods: {
+        quitOut(){
+           store.commit('del_token'); //token，清除它;
+            Dialog.confirm({
+            title: '提示',
+            message: '你确定要退出登录吗?'
+            }).then(() => {
+               Toast('退出成功')
+               
+               setTimeout(() => {
+								this.$router.push("/login");
+			   }, 1000);
+            }).catch(() => {
+            // on cancel
+            });
+        }
+    },
 }
 </script>
-<style>
+<style lang="stylus" scoped>
     /*用户中心样式*/
     @import "../../../static/css/user/user.css";
+   .quitOut-box
+      background  #323232;
+      height 80px;
+      width 500px;
+      border-radius 10px
+      margin 0 auto 
+      line-height 80px
+      text-align center
+    .quitOut
+      color #ffffff
 </style>

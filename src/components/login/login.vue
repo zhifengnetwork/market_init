@@ -44,7 +44,7 @@
 	</form>
 	      <div class="other-info clearfloat">
             <!-- <a href="/passport/login">账号密码登录</a> -->
-			<rout-link  id="getPswrdBtn" to="/forget">忘记密码?</rout-link>
+			<router-link  id="getPswrdBtn" to="/forget">忘记密码?</router-link>
         </div>
 	</div>
 </template>
