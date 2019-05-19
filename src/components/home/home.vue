@@ -173,53 +173,42 @@
 			/*swiper分页*/
 			let res = [];
 			var that = this;
-			/*页面请求id(防止后台启用另外一个页面，不能及时更新)*/
-//			var page_id = null;
-			/*axios=>请求-页面数据的id*/
-			var params = new URLSearchParams();
-			that.$axios.post("index/page")
+			console.log('token: '+localStorage.getItem('Authorization'));
+			/*axios=>请求-页面数据 -s*/
+			that.$axios.post("/shop/getShopData")
 				.then(function(response) {
-					console.log(response["data"]);
-					// page_id = response["data"]["data"];
-					params.append('id', response["data"]["data"]);
-					/*axios=>请求-页面数据 -s*/
-					that.$axios.post("/shop/getShopData", params)
-						.then(function(response) {
-							console.log(response["data"]);
-							if(response["data"]["code"] == 1) {
-								/*alert(response['data']['msg']);*/
-								/*页面名字*/
-								that.backData["page_name"] = response["data"]["data"]["page_name"];
-								/*页面渲染数据*/
-								that.backData["data"] = response["data"]["data"]["data"];
-								/*获取轮播图数据*/
-								for(let i = 0; i < response.data.data.data.length; i++) {
-									if(response.data.data.data[i].id == "rotationId") {
-										/*轮播图设置*/
-										res.push({
-											'data': response.data.data.data[i],
-											'key': response.data.data.data[i].key_num
-										});
-										that.$nextTick(function() {
-											that.carousel(res);
-										});
-									}
-								}
-							} else {
-								/*保存失败*/
-								alert(response["data"]["msg"]);
+					
+					if(response["data"]["code"] == 1) {
+						/*alert(response['data']['msg']);*/
+						/*页面名字*/
+						that.backData["page_name"] = response["data"]["data"]["page_name"];
+						/*页面渲染数据*/
+						that.backData["data"] = response["data"]["data"]["data"];
+						/*获取轮播图数据*/
+						for(let i = 0; i < response.data.data.data.length; i++) {
+							if(response.data.data.data[i].id == "rotationId") {
+								/*轮播图设置*/
+								res.push({
+									'data': response.data.data.data[i],
+									'key': response.data.data.data[i].key_num
+								});
+								that.$nextTick(function() {
+									that.carousel(res);
+								});
 							}
-						})
-						.catch(function(error) {
-							alert(error);
-							console.log(error);
-						});
-					/*axios=>请求-页面数据 -e*/
+						}
+					} else {
+						/*保存失败*/
+						alert(response["data"]["msg"]);
+					}
 				})
 				.catch(function(error) {
 					alert(error);
 					console.log(error);
 				});
+			/*axios=>请求-页面数据 -e*/
+
+			
 				
 
 			

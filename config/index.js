@@ -10,26 +10,19 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    // proxyTable: {},
     proxyTable: {
 		  "/api": {
         target: "http://api.zhifengwangluo.c3w.cc",//接口的域名
-        // target: "http://api.zfwl.c3w.cc",//接口的域名
-		    // target: "http://localhost:8888",//接口的域名
 		    //secure: false,  //如果是https接口，需要配置这个参数
 		    changeOrigin: true, //如果接口跨域，需要进行这个参数配置
 		    pathRewrite: {
-		    	// "^/api" : "/static/mock"}
-		    	"^/api" : "/"}
+		    	"^/api" : ""
+		    	}
 		  }
 		},
 
     // Various Dev Server settings
-<<<<<<< HEAD
-    host: '192.168.1.41', // can be overwritten by process.env.HOST
-=======
     host: '192.168.1.10', // can be overwritten by process.env.HOST
->>>>>>> 1da66d66e3576d2f81e096e6e06099b1e4afe99c
     port: 8888, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,

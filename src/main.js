@@ -7,7 +7,6 @@ import 'mint-ui/lib/style.css'
 
 import 'lib-flexible/flexible.js' 
 
-
 // 引入全部组件
 import Mint from 'mint-ui';
 Vue.use(Mint);
@@ -108,11 +107,15 @@ Vue.prototype.timeCountdown = function (obj){
       waitTime: obj.waitTime
   }
 }
-
+/*数据序列化*/
+import qs from 'qs'
+Vue.prototype.$qs = qs;
 //引入axios库
 import axios from "./axios/request";
 // //注册组件
 Vue.prototype.$axios = axios;
+
+
 
 
 /* 设置为 false 以阻止 vue 在启动时生成生产提示。 */
