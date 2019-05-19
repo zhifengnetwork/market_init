@@ -3,7 +3,7 @@
         <div class="basic" v-show="amend">
            <headerView custom-title="基本资料">
                     <div class="backBtn" slot="backBtn" @click="($router.go(-1))">
-                        <img src="../../../../static/img/public/backBtn.png" />
+                        <img src="/static/img/public/backBtn.png" />
                       </div>
         </headerView>
           <div class="user-page">
@@ -100,7 +100,7 @@
 </template>
 <script>
 // 公共头部
-import headerView from '../../common/headerView.vue'
+import headerView from '@/components/common/headerView.vue'
 import { MessageBox } from 'mint-ui';
 /* 引入 mint-ui 弹窗组件 */
 import {Toast} from "mint-ui"
