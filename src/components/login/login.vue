@@ -110,7 +110,6 @@ export default {
         ...mapMutations(['changeLogin',]),
 		//获取验证码
 		getCode(code){
-			     alert(1)
 				 var that = this
 				 		 //用户手机号
                  if(that.logOnMessage.mobile==""){

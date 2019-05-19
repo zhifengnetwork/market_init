@@ -10,20 +10,23 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
+    // proxyTable: {},
     proxyTable: {
 		  "/api": {
         target: "http://api.zhifengwangluo.c3w.cc",//接口的域名
+        // target: "http://api.zfwl.c3w.cc",//接口的域名
+		    // target: "http://localhost:8888",//接口的域名
 		    //secure: false,  //如果是https接口，需要配置这个参数
 		    changeOrigin: true, //如果接口跨域，需要进行这个参数配置
 		    pathRewrite: {
-		    	"^/api" : ""
-		    	}
+		    	// "^/api" : "/static/mock"}
+		    	"^/api" : "/"}
 		  }
 		},
 
     // Various Dev Server settings
-    host: 'zf_shop.zhifengwangluo.com', // can be overwritten by process.env.HOST
-    port: 80, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    host: '192.168.1.10', // can be overwritten by process.env.HOST
+    port: 8888, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
