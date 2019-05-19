@@ -1,7 +1,7 @@
 <template>
     <div class="paySucceed">
         <headerView custom-title="购买成功" custom-fixed rightNone>
-            <div class="backBtn" slot="backBtn" @click="$router.go(-1)">
+            <div class="backBtn" slot="backBtn" @click="$router.push('/user')">
                 <img src="static/img/public/backBtn.png" />
             </div>
         </headerView>
@@ -11,10 +11,24 @@
                 <i class="iconfont icon-zhifuchenggong"></i>
                 <span>订单支付成功</span>
             </div>
-
-            <h3>商品信息</h3>
+           <div >
+      
             <!-- 商品信息 -->
-            <router-link to="/details">
+            <h3>
+                <span>订单编号:</span>
+                
+                <span class="publicEllipsis">{{orderData.order_sn}}</span>
+            </h3>
+            <h3>
+                <span>支付金额:</span>
+                <span style="color:red"  class="publicEllipsis">￥{{orderData.order_amount}}</span>
+            </h3>
+            <h3>
+                <span>商品名称:</span>
+                <span  class="publicEllipsis">{{orderData.goods_name}}</span>
+            </h3>
+            </div>
+            <!-- <router-link to="/details">
                 <div class="order-item" v-for="(item,index) in orderData" :key="index">
                     <div class="img-wrap">
                         <img :src="item.img" />
@@ -32,7 +46,8 @@
                         <p class="count">x{{item.goodsNum}}</p>
                     </div>
                 </div>
-            </router-link>
+            </router-link> -->
+            <p class="chakan" @click="$router.push('orderDetails?order_id='+orderData.order_id)">查看订单详情>></p>
         </div>
 
     </div>
@@ -45,35 +60,21 @@
         data(){
             return {
                 // 商品信息
-                orderData:[
-                    {
-                        goodsId:1,
-                        img:"/static/img/cart/0003.jpg",
-                        imgUrl:"1",
-                        goodsName:"COMBACK 随身便携小挎包随身便携小挎包随身便携小挎包",
-                        goodsColor:"黑色",
-                        goddsSize:"L",
-                        price:79,
-                        salePrice:98,
-                        goodsNum:1
-                    },
-                    {
-                        goodsId:1,
-                        img:"/static/img/cart/0003.jpg",
-                        imgUrl:"1",
-                        goodsName:"COMBACK 随身便携小挎包随身便携小挎包随身便携小挎包",
-                        goodsColor:"黑色",
-                        goddsSize:"L",
-                        price:79,
-                        salePrice:98,
-                        goodsNum:2
-                    }
-                ],
+                orderData:'',
+                    
+                // //商品订单id
+                // home:this.$route.query.id,
+                // //列表
+                // orderData:'',
             }
         },
         components:{
 			headerView
-        }
+        },
+        created() {
+                this.orderData = JSON.parse(this.$route.params.list)
+                console.log(this.orderData)
+        },
         
     }
 </script>
@@ -83,6 +84,8 @@
 .content
     padding-top 88px
     box-sizing border-box
+    height 100vh
+    background #ffffff
     .pay-tips
         display flex
         justify-content center
@@ -98,7 +101,8 @@
         font-size 30px
         color #444444
         font-weight normal
-        margin-left 40px
+        margin-left 15%
+        display: flex
     .order-item
         display flex
         padding 20px 30px
@@ -141,6 +145,14 @@
                 color #ee1827
             .sale-price
                 text-decoration line-through
+    .chakan
+       margin-left 15%
+       color red
+       margin-top 20px
+       font-size 30px
+.content h3 .publicEllipsis
+        max-width 60%
+        padding-left 20px
 </style>
 
 

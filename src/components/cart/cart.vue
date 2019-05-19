@@ -130,7 +130,7 @@
                               <!-- 选择 -->
                      </div>
                               <!-- 为你优选 -->
-                              <div class="recommend-for-you box hide" style="display: block;">    
+                              <div class="recommend-for-you box hide" style="display: none;">    
                                 <div id="goods-container" class="goods-container">
                                     <p class="title">
                                         <span>为你优选新品</span>

@@ -1009,7 +1009,7 @@ export default {
                 }).then((res)=>{
                   if(res.data.status === 1){
                     that.goods = res.data.data;
-                    console.log(that.goods)
+                    // console.log(that.goods)
                     that.good =  res.data.data.spec.spec_attr;
                     // 数据加载成功，关闭loading 
 					          this.$store.commit('hideLoading')

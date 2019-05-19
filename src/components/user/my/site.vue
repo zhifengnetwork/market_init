@@ -138,8 +138,8 @@ export default {
             let addressInfo = new Object;
             // this.areaList = areaList;
       // Toast('编辑收货地址:' + index);
-      console.log('编辑收货地址:' + index);
-       console.log(item);
+    //   console.log('编辑收货地址:' + index);
+    //    console.log(item);
       // 进入编辑模式
       if(item.is_default===1){
           item.is_default=true

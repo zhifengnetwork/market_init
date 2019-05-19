@@ -2,7 +2,7 @@
     <div class="user_box">
         <header class="elementary-bar">
             <a href="javascript:;" class="head-bar">
-                <img src="../../../static/img/user/defaultHeadImg.png" alt="" class="head-img">
+                <img :src="userItem.avatar" alt="" class="head-img">
             </a>
             <a href="javascript:;" class="head-name">{{user.userName}}</a>
             <a href="javascript:;" class="member" style="background-color: rgb(0, 126, 186); ">
@@ -130,7 +130,7 @@ export default {
                     url:url,
                     data:params
                 }).then((res)=>{
-                   
+                    
                   if(res.data.status===1){
                      this.userItem = res.data.data
                      this.$store.commit("userInfo",res.data.data);

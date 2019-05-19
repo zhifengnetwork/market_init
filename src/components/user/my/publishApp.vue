@@ -432,7 +432,7 @@ export default {
     .selPic
         position relative
         height 100%
-        z-index 100
+        z-index 10
         width 30%
         height 200px
         margin-left 15px

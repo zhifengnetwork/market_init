@@ -14,7 +14,7 @@
 				</div>
 				<div class="form-group verifyCode">
 					<i class="iconfont label">&#xe645;</i>
-					<input type="text" name="verifyCode" placeholder="请输入验证码" class="verify-input" autocomplete="off" v-model="logOnMessage.verifyCode" >
+					<input type="number" name="verifyCode" placeholder="请输入验证码" class="verify-input" autocomplete="off" v-model="logOnMessage.verifyCode" >
 					<div @click="getCode(logOnMessage.mobile)" class="btns clearfloat">
 					<button id="getVerifyCodeBtn" class="get-verify-code" type="button"  :disabled="!phone.canGet"  v-if="!phone.canGet">{{phone.waitTime+"s后重新获取"}}</button>
 					<button id="getVerifyCodeBtn" class="get-verify-code active" type="button"    v-if="phone.canGet">获取手机验证码</button>
@@ -147,12 +147,16 @@
 						Toast('输入的密码不一致噢~!')
 						return
 				  }
-
+                        // mobile
+						// password1
+						// password2
+						// code
 					var params = new URLSearchParams();
 						params.append('mobile', this.logOnMessage.mobile);       //你要传给后台的参数值 key/value
-						params.append('password', this.logOnMessage.password);
+						params.append('password1', this.logOnMessage.password);
+						params.append('password2', this.logOnMessage.passwordTwo);
 						params.append('code', this.logOnMessage.verifyCode);
-					var url =  "/User/login"
+					var url =  "/user/zhaohuipwd"
 
 				 this.$axios({
 					        method: 'post',
@@ -162,8 +166,6 @@
 							if(res.data.status === 1){
 							
 							Toast('修改成功~')
-							 // 将用户手机号保存到vuex中
-							
 					
 							setTimeout(() => {
 								that.$router.push("/login");

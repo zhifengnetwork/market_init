@@ -17,7 +17,7 @@
 		  </div>
 		  <div class="form-group verifyCode">
 			   <i class="iconfont label">&#xe645;</i>
-			   <input type="text" name="verifyCode" placeholder="请输入验证码" class="verify-input" autocomplete="off" v-model="logOnMessage.verifyCode" >
+			   <input type="number" name="verifyCode" placeholder="请输入验证码" class="verify-input" autocomplete="off" v-model="logOnMessage.verifyCode" >
 			   <button id="getVerifyCodeBtn" class="get-verify-code" type="button" @click="getCode(logOnMessage.mobile)" :disabled="!clickState"  :class="{active:clickState}">{{codeText}}</button>
 		  </div>
 		  <div class="form-group password">

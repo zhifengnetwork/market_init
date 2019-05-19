@@ -333,11 +333,9 @@ export default {
 							//倒计时开始
 							 this.timeCountdown(this.pwd);  //参数为最终对象
 						}else{
-							
 								Dialog.alert({
 								message:res.data.msg
 								})
-							
 						}
 				})
 
@@ -390,7 +388,6 @@ export default {
 								Dialog.alert({
 								message:res.data.msg
 								})
-							
 						}
 				})
 

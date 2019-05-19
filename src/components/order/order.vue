@@ -190,9 +190,9 @@
                             </router-link>
                             <div class="order-opt">
                                 <span class="btn cancelBtn">删除订单</span>
-                                  <router-link to="">
+                                  <a href="javascript:;">
                                  <span class="btn" @click='evaluateet(item)'>评价</span>
-                                 </router-link>
+                                 </a>
                             </div>
                         </div>
                     </li>
@@ -304,7 +304,7 @@
                 if(item.comment === 1){
                     Toast('你已评价过此商品')
                 }else{
-                    that.$router.push('/my/appraise?order_id='+item.order_id);
+                    this.$router.push('/my/appraise?order_id='+item.order_id);
                 }
             }
         },
@@ -312,9 +312,11 @@
             headerView
         },
         created(){
+            // 调用loading 
+			                    this.$store.commit('showLoading')
             //图片路径
            this.baseUrl=this.url
-           // 订单列表	order/order_list
+            // 订单列表	order/order_list
             // 参数：
             // token
             // type		//全部订单 all，待付款 dfk，待发货 dfh，待收货 dsh，待评价 dpj，已取消 yqx
@@ -342,14 +344,15 @@
                                 var url = 'order/order_list'
                                 var params = new URLSearchParams();
                                 params.append('token', this.$store.getters.optuser.Authorization);           //token
-                                params.append('type',type );                       //购物车ID（多个逗号分开）
+                                params.append('type',type );                      
                                 this.$axios({
                                         method:"post",
                                         url:url,
                                         data: params
                                         }).then((res)=>{
                                         if( res.data.status === 1){
-                                        
+                                            // 数据加载成功，关闭loading 
+					                        this.$store.commit('hideLoading')
                                             if(this.nowIndex === 0){
 
                                                 this.allOrders = res.data.data
@@ -378,6 +381,8 @@
                                         }else{
                                             Dialog.alert({
                                             message:res.data.msg
+                                        }).then(() => {
+                                            this.$router.push('/login');
                                         });
                         }
             }) 

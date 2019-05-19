@@ -2,7 +2,7 @@
     <div class="order-details">
           <!-- 头部组件 -->
         <headerView custom-title="订单详情" custom-fixed rightNone>
-            <div class="backBtn" slot="backBtn" @click="$router.go(-1)">
+            <div class="backBtn" slot="backBtn" @click="$router.push('user')">
                 <img src="/static/img/public/backBtn.png" />
             </div>
         </headerView>
@@ -121,7 +121,7 @@
                         支付方式:
                     </div>
                     <div class="right">
-                        {{order.pay_type.pay_name}}
+                        {{pay_name}}
                     </div>
                 </div>
                   <div class="line">
@@ -165,6 +165,7 @@
             return {
                 oride:this.$route.query.order_id,
                 order:[],
+                pay_name:'',
                 //商品图片路径
                baseUrl:'',
             }
@@ -191,6 +192,7 @@
         
                 if(res.data.status===1){
                     this.order = res.data.data
+                    this.pay_name = res.data.data.pay_type.pay_name
                 }
             })
         },

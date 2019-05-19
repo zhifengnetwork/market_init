@@ -18,14 +18,14 @@
 			   <i class="iconfont label">&#xe62c;</i>
 			   <input type="tel" name="mobile" placeholder="请输入手机号" class="mobile-input" autocomplete="off" v-model="logOnMessage.mobile" :disabled="!phone.canGet">
 		  </div>
-		  <div class="form-group verifyCode">
+		  <!-- <div class="form-group verifyCode">
 			   <i class="iconfont label">&#xe645;</i>
 			   <input type="text" name="verifyCode" placeholder="请输入验证码" class="verify-input" autocomplete="off" v-model="logOnMessage.verifyCode" >
 			   <div @click="getCode(logOnMessage.mobile)" class="btns clearfloat">
 			   <button id="getVerifyCodeBtn" class="get-verify-code" type="button"  :disabled="!phone.canGet"  v-if="!phone.canGet">{{phone.waitTime+"s后重新获取"}}</button>
                <button id="getVerifyCodeBtn" class="get-verify-code active" type="button"    v-if="phone.canGet">获取手机验证码</button>
 			   </div>
-		  </div>
+		  </div> -->
 		  <div class="form-group password">
 			   <i class="iconfont label">&#xe60e;</i>
 			   <input :type="isHide?'password':'text' " name="pwd" placeholder="请输入密码" class="password-input" autocomplete="off" v-model="logOnMessage.password">
@@ -109,42 +109,42 @@ export default {
 	methods: {
         ...mapMutations(['changeLogin',]),
 		//获取验证码
-		getCode(code){
-				 var that = this
-				 		 //用户手机号
-                 if(that.logOnMessage.mobile==""){
-						 Toast('手机号不能为空噢~!')
-						 return
-				  }else if(!that.regular.mobile.test(that.logOnMessage.mobile)){
-                        Toast('手机号码输入不规范,请输入正确的手机格式!')
-						return
-				  }else{
+		// getCode(code){
+		// 		 var that = this
+		// 		 		 //用户手机号
+        //          if(that.logOnMessage.mobile==""){
+		// 				 Toast('手机号不能为空噢~!')
+		// 				 return
+		// 		  }else if(!that.regular.mobile.test(that.logOnMessage.mobile)){
+        //                 Toast('手机号码输入不规范,请输入正确的手机格式!')
+		// 				return
+		// 		  }else{
 					    
-                        var temp='sms_forget';
-						var auth = md5( code + md5(temp+'android+app') );
-						var url = "/Phone_auth/verifycode"
-						var params = new URLSearchParams();
-						params.append('mobile', code);       //你要传给后台的参数值 key/value
-						params.append('temp', temp);
-						params.append('auth', auth);
-						this.$axios({
-							method: 'post',
-							url:url,
-							data: params
-						}).then((res)=>{
-							if(res.data.status === 1){
-							Toast(res.data.msg)
-							//倒计时开始
-							this.timeCountdown(this.phone);  //参数为最终对象
-						}else{
+        //                 var temp='sms_forget';
+		// 				var auth = md5( code + md5(temp+'android+app') );
+		// 				var url = "/Phone_auth/verifycode"
+		// 				var params = new URLSearchParams();
+		// 				params.append('mobile', code);       //你要传给后台的参数值 key/value
+		// 				params.append('temp', temp);
+		// 				params.append('auth', auth);
+		// 				this.$axios({
+		// 					method: 'post',
+		// 					url:url,
+		// 					data: params
+		// 				}).then((res)=>{
+		// 					if(res.data.status === 1){
+		// 					Toast(res.data.msg)
+		// 					//倒计时开始
+		// 					this.timeCountdown(this.phone);  //参数为最终对象
+		// 				}else{
 							
-								Toast(res.data.msg)
+		// 						Toast(res.data.msg)
 							
-						}
-				})
-				}
+		// 				}
+		// 		})
+		// 		}
 						
-		},
+		// },
 
 	
 
@@ -184,11 +184,11 @@ export default {
 				// 							})
 				// 								return
 				//    }else{
-					   if(that.logOnMessage.verifyCode==""){
-						               Toast('验证码不能为空，请获取验证码!')
+				// 	   if(that.logOnMessage.verifyCode==""){
+				// 		               Toast('验证码不能为空，请获取验证码!')
 											
-												return
-				   }
+				// 								return
+				//    }
 				//    }
 
 				  //用户密码
@@ -395,6 +395,7 @@ export default {
 .sms-login-new-page  .other-info #getPswrdBtn
     float: right;
     text-align: right;
+    color #1363ca
 
 .sms-login-new-page .active 
     background-color: #444!important;
