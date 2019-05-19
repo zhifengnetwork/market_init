@@ -23,36 +23,6 @@ axios.interceptors.request.use(
 		return Promise.reject(error)
 	})
 
-/*设置不对 -s*/
-//// axios默认配置
-//axios.defaults.timeout = 10000;   // 超时时间
-//axios.defaults.baseURL = apiURL;  // 默认地址
-//// post请求头
-//axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
-//
-//
-//// http://api.zfwl.c3w.cc/api/goods/goodsDetail
-//// http://192.168.3.71:8888/api/goods/goodsDetail
-//// 添加请求拦截器，在请求头中加token
-//axios.interceptors.request.use(
-//config => {
-//
-//  if (localStorage.getItem('Authorization')) {  //如果存在token
-//
-//    //每个请求头加上token
-//    config.headers.Authorization = localStorage.getItem('Authorization');
-//
-//  }
-// 
-//  return config;
-//},
-//
-//error => {
-//  
-//  return Promise.reject(error);
-//});  
-/*设置不对  -e*/
-
 // http response 拦截器
 axios.interceptors.response.use(
 	response => {
