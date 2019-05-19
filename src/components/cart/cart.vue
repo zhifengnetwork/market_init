@@ -471,9 +471,7 @@ export default {
                             
                         })
                     }else{
-                                // Dialog.alert({
-                                // message:'请先勾选商品'
-                                // });
+                                
                                 Toast('请先勾选商品')
                     }
                 }
