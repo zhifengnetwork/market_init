@@ -1,9 +1,9 @@
 <template>
 	<div class="sms-login-new-page">
 		<headerView custom-title="登录"  >
-				<div class="backBtn" slot="backBtn" @click="$router.go(-1)">
+				<!-- <div class="backBtn" slot="backBtn" @click="$router.go(-1)">
 					<img src="../../../static/img/public/backBtn.png" />
-				</div>
+				</div> -->
 				<span class="rightBtn" slot="rightBtn" @click="$router.push('/register')">注册</span>
 			</headerView> 
 		 <div class="headPortraitWrap">
@@ -113,14 +113,10 @@ export default {
 				 var that = this
 				 		 //用户手机号
                  if(that.logOnMessage.mobile==""){
-						 Dialog.alert({
-						 message: '手机号不能为空噢~!'
-						 })
+						 Toast('手机号不能为空噢~!')
 						 return
 				  }else if(!that.regular.mobile.test(that.logOnMessage.mobile)){
-                        Dialog.alert({
-						message: '手机号码输入不规范,请输入正确的手机格式!'
-						})
+                        Toast('手机号码输入不规范,请输入正确的手机格式!')
 						return
 				  }else{
 					    
@@ -276,7 +272,11 @@ export default {
             }
         }
 
-    }
+    },created() {
+		   if(this.$store.getters.optuser.Authorization){   //返回登录页 如果有token 就返回首页
+			    this.$router.push("/home");
+		   }
+	},
 }
 </script>
 <style lang="stylus" scoped>

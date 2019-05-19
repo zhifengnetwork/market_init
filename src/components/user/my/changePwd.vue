@@ -60,7 +60,7 @@
                    </headerView>
                    
                    <div class="main_wrap_inner" >
-                       <form action="">
+                       
                         <div class="mod_list">
                                 <div class="mod_list_item" id="modifyPswDiv" style="display: none">
                                     <div class="list_item_bd">
@@ -86,8 +86,8 @@
                                             <input id="pay_code" class="list_item_input js_verifyCode" type="text" placeholder="验证码"  v-model="getpwd.newCode">
                                         </div>
                                         <div class="list_item_extra" @click="getCode()">
-                                             <button id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="!pwd.canGet" disabled="disabled">{{pwd.waitTime+"s后重新获取"}}</button>
-                                             <button id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="pwd.canGet" @click="getCode">获取手机验证码</button>
+                                             <button type="submit" id="pay_getcode1" class="list_item_extra_btn js_getcode" v-show="!pwd.canGet" disabled="disabled">{{pwd.waitTime+"s后重新获取"}}</button>
+                                             <button type="submit" id="pay_getcode" class="list_item_extra_btn js_getcode"  v-show="pwd.canGet" @click="getCode">获取手机验证码</button>
                                             </div>
                                     </div>
                                 </div>
@@ -108,7 +108,7 @@
                                     </div>
                                 </div>
                             </div>
-                            </form>
+                           
                             <div class="comment">密码由6-20位英文字母、数字或符号组成</div>
                             <div class="mod_btn_group mod_btn_group_block" @click="setNewPwd(getpwd.newCode)">
                                 <a id="btnOperatePwd" class="mod_btn mod_btn_block mod_btn_primary" href="javascript:void(0)">确定</a>
@@ -155,8 +155,8 @@
                                         <input id="code" class="list_item_input" type="text" placeholder="验证码" v-model="newCode">
                                     </div>
                                     <div class="list_item_extra" @click="getPhoneCode(newPhone)">
-                                        <button id="getcode" class="list_item_extra_btn" href="javascript:void(0)" v-show="!phone.canGet" disabled="disabled">{{phone.waitTime+"s后重新获取"}}</button>
-                                         <button id="getcode" class="list_item_extra_btn" href="javascript:void(0)" v-show="phone.canGet" >获取手机验证码</button>
+                                        <button id="getcode" class="list_item_extra_btn" v-show="!phone.canGet" disabled="disabled">{{phone.waitTime+"s后重新获取"}}</button>
+                                         <button id="getcode" class="list_item_extra_btn"  v-show="phone.canGet" >获取手机验证码</button>
                                         </div>
                                 </div>
                             </div>
@@ -225,7 +225,7 @@
                             </div>
 
                             <!--更新密码-->
-                            <form action="">
+                            <form action="" >
                             <div class="mod_list">
                                 <div class="mod_list_item">
                                     <div class="list_item_bd">
@@ -418,9 +418,8 @@ export default {
 						message: '密码不一致!'
 						})
 						return
-                  }
-                     var that = this
-                     
+                  }else{
+                          var that = this
 						var url = "/user/reset_pwd"
 						var params = new URLSearchParams();
 						params.append('password1', this.getpayment.pwd);       //你要传给后台的参数值 key/value
@@ -443,6 +442,8 @@ export default {
 							
 						}
 				})
+                  }
+                        
          },
          //邮箱
          setEmile(code){

@@ -107,9 +107,6 @@ Vue.prototype.timeCountdown = function (obj){
       waitTime: obj.waitTime
   }
 }
-/*数据序列化*/
-import qs from 'qs'
-Vue.prototype.$qs = qs;
 //引入axios库
 import axios from "./axios/request";
 // //注册组件

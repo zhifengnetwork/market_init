@@ -100,60 +100,51 @@
 				 var that = this
 				 		 //用户手机号
                  if(that.logOnMessage.mobile==""){
-						 Dialog.alert({
-						 message: '手机号不能为空噢~!'
-						 })
+						 
+						 Toast('手机号不能为空噢~!')
 						 return
 				  }else if(!that.regular.mobile.test(that.logOnMessage.mobile)){
-                        Dialog.alert({
-						message: '手机号码输入不规范,请输入正确的手机格式!'
-						})
+                        
+						Toast('手机号码输入不规范,请输入正确的手机格式!')
 						return
 				  }
 			
 					   if(that.logOnMessage.verifyCode==""){
-												Dialog.alert({
-												message: '验证码不能为空，请获取验证码!'
-											})
+												
+											Toast('验证码不能为空，请获取验证码!')
 												return
 				   }
 
 				  //用户密码
 				  if(that.logOnMessage.password==""){
-						 Dialog.alert({
-						 message: '密码不能为空噢~!'
-						 })
+						 
+						 Toast('密码不能为空噢~!')
 						 return
 				  }else if(!that.regular.password.test(that.logOnMessage.password)){
-                        Dialog.alert({
-						message: '密码长度要在6~18位之间,且必须以字母开头!'
-						})
+                        
+						Toast('密码长度要在6~18位之间,且必须以字母开头!')
 						return
 				  }
 
 				  //用户密码
 				  if(that.logOnMessage.password==""){
-						 Dialog.alert({
-						 message: '密码不能为空噢~!'
-						 })
+						 
+						 Toast('密码不能为空噢~!')
 						 return
 				  }else if(!that.regular.password.test(that.logOnMessage.password)){
-                        Dialog.alert({
-						message: '密码长度要在6~18位之间,且必须以字母开头!'
-						})
+                        
+						Toast('密码长度要在6~18位之间,且必须以字母开头!')
 						return
 				  }
 
 				  //二次输入密码
 				  if(that.logOnMessage.passwordTwo==""){
-						 Dialog.alert({
-						 message: '确认密码不能为空噢~!'
-						 })
+						 
+						 Toast('确认密码不能为空噢~!')
 						 return
 				  }else if(that.logOnMessage.passwordTwo != that.logOnMessage.password){
-                        Dialog.alert({
-						message: '输入的密码不一致噢~!'
-						})
+                        
+						Toast('输入的密码不一致噢~!')
 						return
 				  }
 
@@ -191,14 +182,12 @@
 				 var that = this
 				 		 //用户手机号
                  if(that.logOnMessage.mobile==""){
-						 Dialog.alert({
-						 message: '手机号不能为空噢~!'
-						 })
+						
+						 Toast('手机号不能为空噢!')
 						 return
 				  }else if(!that.regular.mobile.test(that.logOnMessage.mobile)){
-                        Dialog.alert({
-						message: '手机号码输入不规范,请输入正确的手机格式!'
-						})
+                        
+						Toast('手机号码输入不规范,请输入正确的手机格式!')
 						return
 				  }else{
                         var temp='sms_forget';
