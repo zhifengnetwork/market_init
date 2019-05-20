@@ -18,9 +18,10 @@ module.exports = {
   output: {
     path: config.build.assetsRoot,
     filename: '[name].js',
+    /*增加 './'=>webpack-打包*/
     publicPath: process.env.NODE_ENV === 'production'
-      ? config.build.assetsPublicPath
-      : config.dev.assetsPublicPath
+      ? './' +config.build.assetsPublicPath
+      : './' +config.dev.assetsPublicPath
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],
