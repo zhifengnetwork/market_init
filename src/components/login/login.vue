@@ -221,7 +221,6 @@ export default {
 					var params = new URLSearchParams();
 						params.append('mobile', this.logOnMessage.mobile);       //你要传给后台的参数值 key/value
 						params.append('password', this.logOnMessage.password);
-						params.append('code', this.logOnMessage.verifyCode);
 					var url =  "/User/login"
 
 				 this.$axios({

@@ -1,13 +1,16 @@
-import axios from 'axios'
-//import apiURL from '@/axios/api.js'
+import Axios from 'axios'
 import router from '@/router'
 import store from '@/store/store'
 
+var root = process.env.API_ROOT;
+const axios = Axios.create();
 import { Dialog } from 'vant';
 /*设置 axios拦截器=>是否登录*/
 axios.interceptors.request.use(
 	config => {
-		config.baseURL = '/api' // 在config文件夹-index.js设置请求的域名
+		//请求之前重新拼装url
+		config.url = root + config.url;
+//		config.baseURL = '/api' // 在config文件夹-index.js设置请求的域名
 		config.withCredentials = true // 允许携带token ,这个是解决跨域产生的相关问题
 		config.timeout = 1000 // 超时时间
 		let token = localStorage.getItem('Authorization');
