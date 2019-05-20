@@ -163,7 +163,6 @@
 
 					let resData = res.data.data
 					this.resData = resData
-					console.log(this.resData)
 					this.$nextTick(()=>{
 						this.initScroll()
 						this.getHeight()
