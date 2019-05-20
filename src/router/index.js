@@ -271,7 +271,9 @@ const router = new Router({
 // 导航守卫
 // 使用 router.beforeEach 注册一个全局前置守卫，判断用户是否登陆
 router.beforeEach((to, from, next) => {
-
+	        
+						// window.scrollTo(0, 0)
+						// next()
 	if (to.matched.some(r => r.meta.requireAuth)) { 
 
 	if (to.path === '/login' || to.path === '/register') {

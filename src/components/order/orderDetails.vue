@@ -56,14 +56,14 @@
             </div>
             
             <div class="order-row">
-                <div class="line">
+                <!-- <div class="line">
                     <div class="left">
                         订单优惠:
                     </div>
                     <div class="right">
                         订单满68元包邮
                     </div>
-                </div>
+                </div> -->
                 <div class="line">
                     <div class="left">
                         运费:
@@ -129,7 +129,7 @@
                         订单备注:
                     </div>
                     <div class="right">
-                        尽快发货！
+                        {{order.user_note}}
                     </div>
                 </div>                
                  <div class="line">
@@ -191,16 +191,11 @@
             }).then((res)=>{
         
                 if(res.data.status===1){
+                    console.log(res.data.data)
                     this.order = res.data.data
                     this.pay_name = res.data.data.pay_type.pay_name
                 }
             })
-        },
-        methods: {
-            //将监听操作写在methods里面，removeEventListener取消监听内容必须跟开启监听保持一致，
-             fun(){
-                     this.$router.push('/user')
-             }
         },
         filters: {
             formatDate: function (value) {
@@ -229,6 +224,12 @@
         //页面销毁时，取消监听。否则其他vue路由页面也会被监听
             destroyed(){
         window.removeEventListener('popstate', this.fun, false);//false阻止默认事件
+        },
+        methods: {
+            //将监听操作写在methods里面，removeEventListener取消监听内容必须跟开启监听保持一致，
+             fun(){
+                     this.$router.push('/user')
+             }
         },
 
     }
