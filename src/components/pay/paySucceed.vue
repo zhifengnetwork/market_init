@@ -73,7 +73,7 @@
         },
         created() {
                 this.orderData = JSON.parse(this.$route.params.list)
-                console.log(this.orderData)
+                // console.log(this.$route.query.list)
         },
         
     }

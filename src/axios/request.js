@@ -85,6 +85,11 @@ axios.interceptors.response.use(
 					break;
 				case 500:
 					error.message = '服务端出错'
+					// Dialog.alert({
+					// 	message: '服务端出错'
+					// }).then(() => {
+					// 	$router.go(-1)
+					// })
 					break;
 				case 501:
 					error.message = '网络未实现'

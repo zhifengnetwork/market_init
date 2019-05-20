@@ -123,13 +123,14 @@
                                 <!-- <i class="midea-icon right-arrow"></i> -->
                             </div>
                         </a>
-                        <div class="detail_wrap">
+                        <div class="detail_wrap" v-html='goods.content'>
                             <p class="p-info">
                               Dickies从1922年诞生之日起就旨在出品品质的工装制服，深谙美国服装文化的精髓。越来越多的冲浪和明星、各大音乐人、社会名流及新生代时尚偶像们开始拥戴Dickies品牌。Dickies以它的耐穿、舒适和标志性外观成为一个生活方式品牌，得到一代又一代年轻人的喜爱和拥蹙。Dickies，从不刻意追逐时尚的这份低调反而得到无数时尚人士的认同，朴实、简单、款式经典的工装风格本身就是一种时尚！ 
                             </p>
-                            <p v-for="thumb in goods.thumb" :key="thumb" class="p-info">
+                            <!-- <p v-for="thumb in goods.thumb" :key="thumb" class="p-info">
                                 <img  :src="thumb" v-lazy="thumb">
-                            </p>
+                            </p> -->
+                            
                         </div>
                         <div class="marking_price_wrap">
                             <p class="marking_price__title">划线价格：</p>
@@ -153,7 +154,7 @@
                             />
                             <div data-v-3e366829="" class="van-goods-action-mini-btn van-hairline" :class="{active:goods.collection===1}" @click="onClickMinicollect">
                               <div data-v-3e366829="" class="van-icon  van-goods-action-mini-btn__icon iconfont">&#xe60c;</div>
-                              {{goods.collection===1?'以收藏':'收藏'}}</div>
+                              {{goods.collection===1?'已收藏':'收藏'}}</div>
                             <!-- <van-goods-action-mini-btn  
                                 icon="like-o"
                                 text="收藏"
@@ -898,12 +899,7 @@ export default {
               }).then((res)=>{
                 if(res.data.status === 1){
                   this.goods.collection=1
-                  Toast.success({
-                  message:res.data.msg,
-                  mask:true,
-                  loadingType:'spinner',
-                  forbidClick:true
-                  });
+                  Toast.success(res.data.msg);
                   }
               })
             }else{
@@ -918,12 +914,7 @@ export default {
               }).then((res)=>{
                 if(res.data.status === 1){
                   this.goods.collection=0
-                  Toast.success({
-                  message:res.data.msg,
-                  mask:true,
-                  loadingType:'spinner',
-                  forbidClick:true
-                  });
+                  Toast.success(res.data.msg);
                   }
               })
             }
@@ -1147,7 +1138,7 @@ export default {
                     overflow: hidden;
                     padding-left:40px
                     width: 100%;
-        ul   li>span
+         ul>li span
                             border-bottom: 1px solid #444;
                             color: #fff;
                             display: block;
@@ -1371,7 +1362,7 @@ export default {
                 display: block;
                 width:100%;
 
-    .detail_wrap    .p-info
+    .detail_wrap
                 padding: 17px 25px 20px 25px;
                 font-size: 25px
                 background-color: #fff;

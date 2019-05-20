@@ -159,7 +159,7 @@
 		width: 49.9%;
 		text-align: center;
 		line-height: 65px;
-		font-size: 12px;
+		font-size: 25px;
 	}
 	.active {
 		color: #444;

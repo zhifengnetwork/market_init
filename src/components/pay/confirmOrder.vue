@@ -149,7 +149,7 @@
         <div class="order-bill">
             <div class="barText">
                 共<span class="red">{{totalNum}}</span>件,
-                总金额&nbsp;<span class="price red">{{total}}</span>
+                总金额&nbsp;<span class="price red">￥{{total.toFixed(2)}}</span>
             </div>
             <button class="barBtn" @click="open">
                 确认订单
@@ -507,6 +507,7 @@ import {Toast,Dialog} from "vant"
                                                 mask: true,
                                                 message: '支付中...'
                                                 });
+                                                this.showKeyboard=false;
                                                 this.value = '';
                                                  //请求支付接口  
                                            
@@ -584,10 +585,11 @@ import {Toast,Dialog} from "vant"
                                                 mask: true,
                                                 message: '支付中...'
                                             });
+                                            this.showKeyboard=false;
                                             setTimeout(()=>{
+                                                this.showKeyboard=true;
                                                 Toast.fail(res.data.msg);
-                                                // this.close();
-                                                // this.showKeyboard = false
+                                                this.value = '';
                                             },2000)
                                             }
                                         })
@@ -762,13 +764,14 @@ import {Toast,Dialog} from "vant"
         height 88px
         line-height 88px
         text-align center 
-        font-size 16px
         background-color #323232
         color #fff
-
+        font-size 35px
+        
 .goback
         position absolute
-        left  10px       
+        left  10px 
+        font-size 30px      
 .van-radio-group .site-list
             display flex
             height 170px
@@ -886,8 +889,12 @@ import {Toast,Dialog} from "vant"
         width 100%
    .van-number-keyboard
         z-index 3000!important
+    .van-password-input__security li:first-child
+        border-left 0.5px solid #000
+
     .van-password-input__security li
-        border 1px solid #000
+        border 0.5px solid #000
+        border-left 0
    .van-password-input
         padding-top 30px
    .van-loading

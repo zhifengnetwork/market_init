@@ -58,7 +58,7 @@ i, em {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    max-width: 2rem;
+    max-width: 4rem;
 }
 
 .elementary-bar .member {

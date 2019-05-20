@@ -31,7 +31,7 @@
                     <van-popup v-model="show1" position="" :overlay="false" style="height:100%;width:100%">
                   
                    <headerView custom-title="修改地址">
-                    <div class="backBtn" slot="backBtn" @click="show1=false">
+                      <div class="backBtn" slot="backBtn" @click="show1=false">
                         <img src="../../../../static/img/public/backBtn.png" />
                       </div>
                     </headerView>
@@ -141,7 +141,7 @@ export default {
     //   console.log('编辑收货地址:' + index);
     //    console.log(item);
       // 进入编辑模式
-      if(item.is_default===1){
+      if( item.is_default){
           item.is_default=true
       }else{
           item.is_default=false
