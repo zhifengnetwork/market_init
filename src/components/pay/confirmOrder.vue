@@ -492,7 +492,6 @@ import {Toast,Dialog} from "vant"
             //输入密码
             onInput(key) {
                this.value = (this.value + key).slice(0, 6);
-            //    console.log(value)
                       if(this.value.length === 6){
                                         var url = 'user/check_pwd'
                                         var params = new URLSearchParams();
@@ -504,12 +503,12 @@ import {Toast,Dialog} from "vant"
                                             data: params
                                         }).then((res)=>{
                                       if(res.data.status ===1){  //提交成功
-                                           this.lodiong=true;
+                                            this.lodiong=true;
                                             setTimeout(()=>{
                                                 this.lodiong=false;
                                                 this.value = '';
                                                  //请求支付接口  
-                                                 },2000)
+                                     },2000)
 
                                 var params = new URLSearchParams();
                                 params.append('token', this.$store.getters.optuser.Authorization);           //token
@@ -583,16 +582,17 @@ import {Toast,Dialog} from "vant"
                                         
                                          })  
 
-                                            }else{    //请求失败
+                                       }else{    //请求失败
+                                            this.lodiong=true;
+                                            setTimeout(()=>{
+                                            this.lodiong=false;  //关闭加载
                                             Dialog.alert({
                                             message:res.data.msg
                                             }).then(() => {
-                                                this.lodiong=true;
-                                            setTimeout(()=>{
-                                                this.close();
-                                                this.lodiong=false;
-                                            },1000)
+                                                this.close();   //关闭输入密码框
                                             });
+                                            },1000)
+                                            
                                             }
                                         })
                }

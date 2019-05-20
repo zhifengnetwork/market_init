@@ -226,7 +226,9 @@
                                             <button type="button"  :class="['coupon-btn',{'coupon-btn-valid':item.is_lq===0}]" @click="getCouponBt(item)" >{{item.is_lq===0?'立即领取':'已领取'}}</button>
                                         </div>
                                         <div class="coupon-intro">
-                                            <div class="coupon-price">¥ {{item.price}}</div>
+                                            <div class="coupon-price">¥ {{item.price}}
+                                              <span style="font-size:12px">{{parseInt(item.threshold)!=0?'无门槛':"满"+item.threshold+'可使用'}}</span>
+                                            </div>
                                             <div class="coupon-desc">{{item.title}}</div>
                                             <div class="coupon-time">使用期限: {{item.start_time | formatDate}}一{{item.end_time | formatDate}}</div>
                                         </div>
@@ -1145,7 +1147,7 @@ export default {
                     overflow: hidden;
                     padding-left:40px
                     width: 100%;
-        ul   li   span
+        ul   li>span
                             border-bottom: 1px solid #444;
                             color: #fff;
                             display: block;
