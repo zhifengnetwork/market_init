@@ -23,11 +23,11 @@
                         <div class="order-good" v-for="(item,index) in allOrders" :key="index">
                             <div class="line1">
                                 <span class="order-number">订单编号: {{item.order_sn}}</span>
-                                <span class="order-state" v-if="item.order_status===1">待付款</span>
-                                <span class="order-state" v-if="item.order_status===2">待发货</span>
-                                <span class="order-state" v-if="item.order_status===3">待收货</span>
-                                <span class="order-state" v-if="item.order_status===4">待评价</span>
-                                <span class="order-state" v-if="item.order_status===5">已取消</span>
+                                <span class="order-state" v-if="item.status===1">待付款</span>
+                                <span class="order-state" v-if="item.status===2">待发货</span>
+                                <span class="order-state" v-if="item.status===3">待收货</span>
+                                <span class="order-state" v-if="item.status===4">待评价</span>
+                                <span class="order-state" v-if="item.status===5">已取消</span>
                             </div>
                             <router-link :to="'/orderDetails?order_id='+item.order_id">
                                 <div class="order-item">
@@ -47,19 +47,21 @@
                                     </div>
                                 </div>
                             </router-link>
-                            <div class="order-opt" v-if="item.order_status===1">
+                            <div class="order-opt" v-if="item.status===1">
                                 <span class="btn cancelBtn" @click="cancellationquan(index,item.order_id,item.status)">取消订单</span>
                                 <span class="btn payBtn">立即付款</span>
                             </div>
-                            <div class="order-opt" v-if="item.order_status===2">
-                                <span class="btn cancelBtn">取消订单</span>
+                            <div class="order-opt" v-if="item.status===2">
+                                <router-link :to="'/order/afterSale?order_id='+item.order_id">
+                                <span class="btn cancelBtn">退款</span>
+                                </router-link>
                                 <!-- <span class="btn">确认收货</span> -->
                             </div>
-                            <div class="order-opt" v-if="item.order_status===3">
+                            <div class="order-opt" v-if="item.status===3">
                                 <!-- <span class="btn cancelBtn">删除订单</span> -->
                                  <span class="btn">确认收货</span>
                             </div>
-                            <div class="order-opt" v-if="item.order_status===4">
+                            <div class="order-opt" v-if="item.status===4">
                                 <span class="btn cancelBtn">删除订单</span>
                                   <router-link to="" >
                                  <span class="btn" @click="evaluateet(item)">评价</span>

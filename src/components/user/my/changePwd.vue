@@ -431,7 +431,9 @@ export default {
 						}).then((res)=>{
 							if(res.data.status === 1){
                                 Toast(res.data.msg)
-                                this.$router.psuh('/my/changePwd')
+                                setTimeout(()=>{
+                                 that.$router.go(0)
+                                },1000)
 						}else{
 								Dialog.alert({
 								message:res.data.msg

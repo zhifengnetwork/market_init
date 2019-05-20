@@ -227,7 +227,7 @@
                                         </div>
                                         <div class="coupon-intro">
                                             <div class="coupon-price">¥ {{item.price}}
-                                              <span style="font-size:12px">{{parseInt(item.threshold)!=0?'无门槛':"满"+item.threshold+'可使用'}}</span>
+                                              <span style="font-size:12px">{{parseInt(item.threshold)===0?'无门槛':"满"+item.threshold+'可使用'}}</span>
                                             </div>
                                             <div class="coupon-desc">{{item.title}}</div>
                                             <div class="coupon-time">使用期限: {{item.start_time | formatDate}}一{{item.end_time | formatDate}}</div>
@@ -815,7 +815,7 @@ export default {
                     }).then((res)=>{
                       if(res.data.status === 1){
                         Toast('商品添加购物车成功~')
-                        // this.$store.commit("increment") 
+                        this.is_sku=false;
                         var num =this.$store.getters.optCartCount
                         this.$store.commit("cartNum",num+this.selectArarr.goods_num);
                         // 数据加载成功，关闭loading 

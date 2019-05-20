@@ -53,7 +53,7 @@ module.exports = {
     // 静态资源输出到二级目录下
     assetsSubDirectory: 'static',
     // 静态资源cdn地址
-    assetsPublicPath: './',
+    assetsPublicPath: '/',
 
     /**
      * Source Maps
