@@ -50,9 +50,7 @@
 								<ul class="singleList">
 									<router-link 
 										tag="li"
-										:to="'/details?goods_id='+item.goods_id"
-										
-									>
+										:to="'/details?goods_id='+item.goods_id">
 										<div class="img-wrap">
 											<img :src="baseUrl + item.img">
 										</div>
