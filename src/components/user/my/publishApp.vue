@@ -115,7 +115,6 @@ export default {
     },created () {
            //图片路径
             this.baseUrl=this.url
-            console.log(this.id)
             // 获取订单商品评论列表 	order/order_comment_list
             // 参数：
             // token

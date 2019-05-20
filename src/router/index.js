@@ -74,6 +74,9 @@ import payFail from '@/components/pay/payFail'
 // 绑定用户信息
 import bindingMsg from '@/components/user/my/bindingMsg'
 
+// 退款
+import refund from '@/components/order/refund'
+
 
 
 
@@ -88,7 +91,7 @@ const router = new Router({
 		    name: 'login',
 		    redirect: '/login', /**重定向**/
 		    /*component: login*/
-			component: (resolve) => require(['@/components/login/login.vue'],resolve)
+			 component: (resolve) => require(['@/components/login/login.vue'],resolve)
 		},
 		//登录
 	    {
@@ -107,7 +110,7 @@ const router = new Router({
 	    {
 	    	path: '/forget',
 	    	name: 'forget',
-			component: (resolve) => require(['@/components/login/forget'],resolve)
+			 component: (resolve) => require(['@/components/login/forget'],resolve)
 		},
 		// 首页
 		{
@@ -176,21 +179,21 @@ const router = new Router({
 		{
 			path:'/details/evaluate',
 			name:'evaluate',
-			component: (resolve) => require(['@/components/pay/confirmOrder'],resolve),
+			component: (resolve) => require(['@/components/goods/details/evaluate'],resolve),
 			meta:{requireAuth:true}   //是否需要登录
 		},
 		//发布评价
 		{
 			path:'/my/appraise',
 			name:'appraise',
-			component: (resolve) => require(['@/components/goods/details/evaluate'],resolve),
+			component: (resolve) => require(['@/components/user/my/publishApp'],resolve),
 			meta:{requireAuth:true}   //是否需要登录
 		},
 		// 确认订单
 		{
 			path:'/confirmOrder',
 			name: 'confirmOrder',
-			component: (resolve) => require(['@/components/user/my/publishApp'],resolve),
+			component: (resolve) => require(['@/components/pay/confirmOrder'],resolve),
 			meta:{requireAuth:true}   //是否需要登录
 		},
 		//个人信息
@@ -261,6 +264,13 @@ const router = new Router({
 			path:'/my/bindingMsg',
 			name: 'bindingMsg',
 			component: (resolve) => require(['@/components/user/my/bindingMsg'],resolve),
+			meta:{requireAuth:true}   //是否需要登录
+		},
+		// 退款
+		{
+			path:'/order/refund',
+			name: 'refund',
+			component: (resolve) => require(['@/components/order/refund'],resolve),
 			meta:{requireAuth:true}   //是否需要登录
 		},
 		

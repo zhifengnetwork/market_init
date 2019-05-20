@@ -216,7 +216,7 @@
                                             <input id="pay_code" class="list_item_input js_verifyCode" type="text" placeholder="验证码" v-model="getpayment.newCode">
                                         </div>
                                         <div class="list_item_extra" @click="getCode()">
-                                             <button id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="!pwd.canGet" :disabled="disabled">{{pwd.waitTime+"s后重新获取"}}</button>
+                                             <button id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="!pwd.canGet" disabled="disabled">{{pwd.waitTime+"s后重新获取"}}</button>
                                              <button id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="pwd.canGet" @click="getCode">获取手机验证码</button>
                                             </div>
                                     </div>
@@ -225,7 +225,7 @@
                             </div>
 
                             <!--更新密码-->
-                            <form action="" >
+                        
                             <div class="mod_list">
                                 <div class="mod_list_item">
                                     <div class="list_item_bd">
@@ -247,11 +247,11 @@
                                 </div>
                             </div>
                             
-                            <div class="comment">密码由6位英文字母数字组成</div>
+                            <div class="comment">密码由6位数字组成</div>
                             <div class="mod_btn_group mod_btn_group_block" @click="paymentCode(getpayment.newCode)" >
                                 <a class="mod_btn mod_btn_block mod_btn_primary js_operPayPsw" href="javascript:void(0)">确定</a>
                             </div>
-                            </form >
+                      
                         </div>
                  
                  </div>
@@ -431,14 +431,15 @@ export default {
 						}).then((res)=>{
 							if(res.data.status === 1){
                                 Toast(res.data.msg)
-                                this.alter=0;
+                                setTimeout(()=>{
+                                 that.$router.go(0)
+                                },1000)
 						}else{
 								Dialog.alert({
 								message:res.data.msg
 								})
-							
 						}
-				})
+				        })
                   }
                         
          },
@@ -586,6 +587,7 @@ export default {
 
    .main_wrap 
         position: relative;
+        background: #fff;
 
 
   .main_wrap 
@@ -594,9 +596,18 @@ export default {
    
   .mod_list 
         margin-bottom: 15px;
+        background: #fff;
 
   .mod_list_item:first-child 
         border-top: #e3e3e3 solid 1px;
+
+  .mod_list_item:last-child 
+    border-bottom: #e3e3e3 solid 1px;
+    
+  .mod_list_item:first-child .list_item_cnt
+    border-top: none;
+
+
 
     .mod_list_item 
         display: block;
