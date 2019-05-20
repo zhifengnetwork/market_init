@@ -48,8 +48,10 @@
                                 </div>
                             </router-link>
                             <div class="order-opt" v-if="item.status===1">
-                                <span class="btn cancelBtn" @click="cancellationquan(index,item.order_id,item.status)">取消订单</span>
-                                <span class="btn payBtn">立即付款</span>
+                                <span class="btn cancelBtn" @click="cancellation(index,item.order_id,item.status)">取消订单</span>
+                           
+                                <span class="btn payBtn" @click="payment(item.order_id)">立即付款</span>
+                          
                             </div>
                             <div class="order-opt" v-if="item.status===2">
                                 <router-link :to="'/order/afterSale?order_id='+item.order_id">
@@ -62,7 +64,7 @@
                                  <span class="btn">确认收货</span>
                             </div>
                             <div class="order-opt" v-if="item.status===4">
-                                <span class="btn cancelBtn">删除订单</span>
+                                <span class="btn cancelBtn" @click="delOrder(index,item.order_id,item.status)">删除订单</span>
                                   <router-link to="" >
                                  <span class="btn" @click="evaluateet(item)">评价</span>
                                  </router-link>
@@ -167,7 +169,7 @@
                         </div>
                     </li>
                      <li v-show="nowIndex===4">
-                        <div class="order-good" v-for="item in evaluate" :key="item.id">
+                        <div class="order-good" v-for="(item,index) in evaluate" :key="index">
                             <div class="line1">
                                 <span class="order-number">订单编号:{{item.order_sn}}</span>
                                 <span class="order-state">已完成</span>
@@ -191,7 +193,7 @@
                                 </div>
                             </router-link>
                             <div class="order-opt">
-                                <span class="btn cancelBtn">删除订单</span>
+                                <span class="btn cancelBtn" @click="delOrder(index,item.order_id,item.status)">删除订单</span>
                                   <a href="javascript:;">
                                  <span class="btn" @click='evaluateet(item)'>评价</span>
                                  </a>
@@ -292,16 +294,40 @@
         
                     })
             },
+            //立即付款ajax
+            payment(id){
+               
+                   var url = "order/temporary"
+                   var params = new URLSearchParams();
+                        params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value    tokne
+                        params.append('cart_id', id);                //你要传给后台的参数值 key/value             购物车id
+                        this.$axios({
+                            method:"post",
+                            url:url,
+                            data: params
+                        }).then((res)=>{
+                            if(res.data.status=== 1){
+                                 this.$router.push("/confirmOrder?id="+id);
+                            }else{
+                                Dialog.alert({
+                                message:res.data.msg
+                                });
+                            }
+                            
+                        })
+            },
+            
              //待付款取消订单
             cancellation(index,id,status){
                  var msgg = '您确定要取消订单吗？'
                  this.ajax(index,id,status,this.obligation,msgg)               
             },
-            //全部订单取消订单
-            cancellationquan(index,id,status){
-                 var msgg = '您确定要取消订单吗？'
+            //全部订单页  删除订单
+            delOrder(index,id,status){
+                 var msgg = '您确定要删除订单吗？'
                  this.ajax(index,id,status,this.allOrders,msgg) 
             },
+           
             evaluateet(item){
                 if(item.comment === 1){
                     Toast('你已评价过此商品')
@@ -362,22 +388,22 @@
                                             }
                                             if(this.nowIndex === 1){
 
-                                                this.obligation = res.data.data
+                                                this.allOrders = res.data.data
                                                 
                                             }
                                             if(this.nowIndex === 2){
 
-                                                this.shipments = res.data.data
+                                                this.allOrders = res.data.data
                                                 
                                             }
                                             if(this.nowIndex === 3){
 
-                                                this.delivery = res.data.data
+                                                this.allOrders = res.data.data
                                                 
                                             }
                                             if(this.nowIndex === 4){
 
-                                                this.evaluate = res.data.data
+                                                this.allOrders = res.data.data
                                         
                                             }
                                         }else{

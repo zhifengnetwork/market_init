@@ -149,7 +149,7 @@
         <div class="order-bill">
             <div class="barText">
                 共<span class="red">{{totalNum}}</span>件,
-                总金额&nbsp;<span class="price red">{{total}}</span>
+                总金额&nbsp;<span class="price red">￥{{total}}.00</span>
             </div>
             <button class="barBtn" @click="open">
                 确认订单

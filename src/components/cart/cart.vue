@@ -462,7 +462,14 @@ export default {
                             data: params
                         }).then((res)=>{
                             if(res.data.status=== 1){
-                                 this.$router.push("/confirmOrder?id="+this.cheack);
+                               
+                                 if(res.data.data.addr_res.length === 0){
+                                    this.$router.push('/my/addressAct?id='+this.cheack)
+                                   
+                                }else{
+                                     this.$router.push("/confirmOrder?id="+this.cheack);
+                                }
+                                 
                             }else{
                                 Dialog.alert({
                                 message:res.data.msg

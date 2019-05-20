@@ -4,7 +4,7 @@
             <a href="javascript:;" class="head-bar">
                 <img :src="userItem.avatar" alt="" class="head-img">
             </a>
-            <a href="javascript:;" class="head-name">{{user.userName}}</a>
+            <a href="javascript:;" class="head-name">{{userItem.realname}}</a>
             <a href="javascript:;" class="member" style="background-color: rgb(0, 126, 186); ">
                <i class="vip-icon">{{user.vipRank}}</i></a>
         </header>

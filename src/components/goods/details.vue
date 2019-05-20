@@ -153,7 +153,7 @@
                             />
                             <div data-v-3e366829="" class="van-goods-action-mini-btn van-hairline" :class="{active:goods.collection===1}" @click="onClickMinicollect">
                               <div data-v-3e366829="" class="van-icon  van-goods-action-mini-btn__icon iconfont">&#xe60c;</div>
-                              {{goods.collection===1?'以收藏':'收藏'}}</div>
+                              {{goods.collection===1?'已收藏':'收藏'}}</div>
                             <!-- <van-goods-action-mini-btn  
                                 icon="like-o"
                                 text="收藏"
@@ -898,12 +898,7 @@ export default {
               }).then((res)=>{
                 if(res.data.status === 1){
                   this.goods.collection=1
-                  Toast.success({
-                  message:res.data.msg,
-                  mask:true,
-                  loadingType:'spinner',
-                  forbidClick:true
-                  });
+                  Toast.success(res.data.msg);
                   }
               })
             }else{
@@ -918,12 +913,7 @@ export default {
               }).then((res)=>{
                 if(res.data.status === 1){
                   this.goods.collection=0
-                  Toast.success({
-                  message:res.data.msg,
-                  mask:true,
-                  loadingType:'spinner',
-                  forbidClick:true
-                  });
+                  Toast.success(res.data.msg);
                   }
               })
             }

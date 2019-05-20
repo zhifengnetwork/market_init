@@ -24,8 +24,13 @@
                                 </div>
                                 <div class="coupon-right">
                                     <p class="title">
-                                        <span class="type-activity">[活动券]</span> 【周年庆】{{parseInt(item.price)}}元现金券</p>
+                                        <span class="type-activity">[活动券]</span> 【周年庆】{{parseInt(item.price)}}元现金券
+                                     </p>
+                                     <p class="title">
+                                        <span class="type-activity">{{parseInt(item.threshold)===0?'无门槛':"满"+item.threshold+'可使用'}}</span> 
+                                     </p>
                                     <p class="time">{{item.start_time | formatDate}}一{{item.end_time | formatDate}}</p>
+                                    
                                     <p class="use-intro" @click="frost(item)">
                                         <span class="show-intro-btn">使用说明</span>
                                         <span class="iconfont" :class="item.arrows?'icon-up':'icon-down'"></span>
@@ -48,8 +53,10 @@
 								<div class="coupon-right rightHave">
 									<p class="title">
 										<span class="type-activity">[活动券]</span> 【周年庆】{{parseInt(item.price)}}元现金券</p>
+                                    <p class="title">
+                                        <span class="type-activity">{{parseInt(item.threshold)===0?'无门槛':"满"+item.threshold+'可使用'}}</span> 
+                                     </p>
 									<p class="time">{{item.start_time | formatDate}}一{{item.end_time | formatDate}}</p>
-                                    <!-- <p class="time">{{item.start_time | formatDate}}一{{item.end_time | formatDate}}</p> -->
 									<p class="use-intro"  @click="frost(item)">
 										<span class="show-intro-btn">使用说明</span>
 										<span class="iconfont" :class="item.arrows?'icon-up':'icon-down'"></span>
@@ -72,8 +79,10 @@
 								<div class="coupon-right rightHave">
 									<p class="title">
 										<span class="type-activity">[活动券]</span> 【周年庆】{{parseInt(item.price)}}元现金券</p>
+                                    <p class="title">
+                                        <span class="type-activity">{{parseInt(item.threshold)===0?'无门槛':"满"+item.threshold+'可使用'}}</span> 
+                                     </p>
 									<p class="time">{{item.start_time | formatDate}}一{{item.end_time | formatDate}}</p>
-                                    <!-- <p class="time">{{item.start_time | formatDate}}一{{item.end_time | formatDate}}</p> -->
 									<p class="use-intro"  @click="frost(item)">
 										<span class="show-intro-btn">使用说明</span>
 										<span class="iconfont" :class="item.arrows?'icon-up':'icon-down'"></span>
