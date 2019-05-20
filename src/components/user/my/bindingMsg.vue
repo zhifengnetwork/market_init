@@ -6,14 +6,16 @@
             <form action class="binding-form">
                 <!-- 头像 -->
                 <div class="avatar">
-                    <div class="fl">头像</div>
-                    <div class="fr">
-                        <span>
-                            <img class="avatar-img" src="/static/img/user/userinfo/d058ccbf6c81800aedd20eb5b43533fa828b4752.jpg" >
-                        </span>
-                        
-                        <span class="iconfont icon-icon1"></span>
-                    </div>
+                    <van-uploader :after-read="onRead">
+                        <div class="fl">头像</div>
+                        <div class="fr">
+                            <span>
+                                <img :src="userAvatar" alt="" class="userAvatar">
+                            </span>
+                            <span class="iconfont icon-icon1"></span>
+                        </div>
+                    </van-uploader>
+
                 </div>
 
                 <!-- 用户名 -->
@@ -92,6 +94,7 @@ export default {
     data(){
         return{
             isHide:true,
+            userAvatar:'',//用户头像
             logOnMessage:{
                 userName:'', //用户名
                 phone:'', //用户手机号
@@ -110,6 +113,26 @@ export default {
         // 是否显示密码
         eyeToggle(){
             this.isHide = !this.isHide
+        },
+        // 上传头像
+        onRead(file) {
+            var url = "user/update_head_pic"
+            var params = new URLSearchParams()
+                params.append('head_img', file.content);//你要传给后台的参数值 key/value 
+                params.append('token', this.$store.getters.optuser.Authorization);//你要传给后台的参数值 key/value   //token
+                this.$axios({
+                        method:"post",
+                        url:url,
+                        data:params
+                })
+                .then((res)=>{
+                    if(res.data.status===1){
+                        this.userAvatar = res.data.data;
+                        Toast(res.data.msg)
+                    }else{
+                        Toast(res.data.msg)
+                    }
+                })
         },
 
         // 绑定完成
@@ -233,22 +256,25 @@ export default {
         .avatar 
             height 114px   
             border-bottom .01rem solid #e0e0e0
-            display flex
-            justify-content space-between
-            align-items center
             color #444
-            .fr
+            .van-uploader
+                width 100%
+                height 100%
                 display flex
+                justify-content space-between
                 align-items center
-                .avatar-img
-                    width 90px
-                    height 90px
-                    border-radius 50% 
-                    border 2px solid #eee
-                    display inline-block                    
-                .iconfont
-                    font-size 30px
-                    vertical-align middle
+                .fr
+                    display flex
+                    align-items center
+                    .userAvatar
+                        width 90px
+                        height 90px
+                        border-radius 50% 
+                        border 2px solid #eee
+                        display inline-block                    
+                    .iconfont
+                        font-size 30px
+                        vertical-align middle
         .form-group
             height 76px
             display flex

@@ -10,11 +10,11 @@
                <ul>
                    <li>
                        <van-uploader :after-read="onRead">
-                                <van-icon name="photograph" />
-                       <span>头像</span>
-                       <span>
-                           <img :src="userImg" alt="" class="userImg">
-                       </span>
+                            <van-icon name="photograph" />
+                            <span>头像</span>
+                            <span>
+                                <img :src="userImg" alt="" class="userImg">
+                            </span>
                        </van-uploader>
                    </li>
                    <li @click="amend=false">
