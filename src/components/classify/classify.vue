@@ -51,7 +51,8 @@
 									<router-link 
 										tag="li"
 										:to="'/details?goods_id='+item.goods_id"
-										v-for="item in items.goods"
+										v-for="(item,index) in items.goods"
+										:key="index"
 										>
 										<div class="img-wrap">
 											<img :src="baseUrl + item.img">

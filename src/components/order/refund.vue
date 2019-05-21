@@ -106,7 +106,7 @@
                         <img src="/static/img/user/appraise/close.png" alt="" class="close"  @click="closeImg(index)">
                     </div>
                     <!-- 浏览显示图片 -->
-                    <div class="imgMask" v-if="showBigImg" @click.stop="showBigImg=!showBigImg">
+                    <div class="imgMask" v-if="showBigImg" @click.stop="showBigImg =! showBigImg">
                         <div class="showImg">
                             <mt-swipe :auto="0" :show-indicators="false" @change="handleChange" :continuous="false" :defaultIndex="num">
                             <mt-swipe-item v-for="(items,index) in imgUrls" :key="items.id">
@@ -167,20 +167,19 @@
 
               //上传图片
             onRead(e){
-                console.log(e.target.files.length)
                 if (e.target.files.length <= (this.maxImages - this.imgUrls.length)) {
                     for (var i = 0; i < e.target.files.length; i++) {
-                    let file = e.target.files[i]
-                    this.file = file
+                        let file = e.target.files[i]
+                        this.file = file
 
-                    let reader = new FileReader()
-                    let that = this
-                    reader.readAsDataURL(file)
-                    
-                    reader.onload = function (e) {
-                        that.imgUrls.push(this.result)
+                        let reader = new FileReader()
+                        let that = this
+                        reader.readAsDataURL(file)
+                        
+                        reader.onload = function (e) {
+                            that.imgUrls.push(this.result)
 
-                    }
+                        }
                     }
                     // 剩余张数
                     this.leftImages = this.maxImages - (this.imgUrls.length + e.target.files.length)
@@ -207,8 +206,9 @@
                 this.num = index
             },
 
+            //点击显示大图
             bigImg (index) {
-                this.showBigImg=true;
+                this.showBigImg = true;
                 this.num = index
             },
             
@@ -256,26 +256,78 @@
                 font-size 22px
                 line-height 34px
                 margin-bottom 20px
-            .selPic
-                width 184px
-                height 184px
-                background #f7f7f7
+            .uploader-add
+                width 100%
                 display flex
-                flex-direction column
-                align-items center
-                justify-content center
-                font-size 24px
-                position relative
-                margin 10px
-                .iconfont
-                    font-size 50px
-                .input-file
+                flex-wrap wrap
+                .closeIcon
+                    width 184px
+                    height 184px
+                    background #f7f7f7
+                    display flex
+                    flex-direction column
+                    align-items center
+                    justify-content center
+                    font-size 24px
+                    position relative
+                    margin 10px
+                    .close
+                        position absolute
+                        top -20px
+                        right -20px
+                        width 50px
+                        height 50px
+                .imgMask
+                    position fixed
+                    height 100%
+                    width 100%
+                    top 0
+                    left 0
+                    z-index 101
+                    background #000
+                    .showImg
+                        height 100%
+                        width 100%
+                        position absolute
+                        -webkit-box-align center
+                        -ms-flex-align center
+                        align-items center
+                        left 0
+                        top 0
+                        .num
+                            padding-top 10px
+                            color white
+                            font-size 50px
+                            font-weight bold
+                            text-align center
+                        .img
+                            object-fit scale-down
+                            height auto
+                            width 100%
+                            height 100%
+                .seledPic
                     width 100%
                     height 100%
-                    position absolute
-                    left 0
-                    top 0
-                    opacity 0
+                .selPic
+                    width 184px
+                    height 184px
+                    background #f7f7f7
+                    display flex
+                    flex-direction column
+                    align-items center
+                    justify-content center
+                    font-size 24px
+                    position relative
+                    margin 10px
+                    .iconfont
+                        font-size 50px
+                    .input-file
+                        width 100%
+                        height 100%
+                        position absolute
+                        left 0
+                        top 0
+                        opacity 0
         .refundBtn
             width 100%
             height 80px
@@ -294,69 +346,5 @@
             .confirmBtn
                 background-color #e93d3b
                 color #fff
-.uploader-add
-       width 100%
-       
-       display flex
-       flex-wrap wrap
-.closeIcon
-                width 184px
-                height 184px
-                background #f7f7f7
-                display flex
-                flex-direction column
-                align-items center
-                justify-content center
-                font-size 24px
-                position relative
-                margin 10px
-    .closeIcon .close
-         position absolute
-         top -20px
-         right -20px
-         width 50px
-         height 50px
-.closeIcon .seledPic
-    width: 100%;
-    height: 100%;
-
-.imgMask
-    position: fixed;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    left: 0;
-    z-index: 101;
-    background: #000;
-
-.showImg
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    left: 0;
-    top: 0;
-
-  .num
-            padding-top: 10px;
-            color: white;
-            font-size: 50px
-            font-weight: bold;
-            text-align center
-  .showImg
-            height: 100%;
-            width: 100%;
-            position: absolute;
-            align-items: center;
-            left: 0px;
-            top:0;
-  
-  .img
-            object-fit: scale-down;
-            height: auto;
-            width: 100%;
-            height: 100%;
 
 </style>
