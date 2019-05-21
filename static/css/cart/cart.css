@@ -287,7 +287,7 @@ img {
 }
 
 .good-new-info .num-opt {
-    border: 1px solid #dfdfdf;
+    border: 2px solid #dfdfdf;
     border-radius: .125rem .125rem 0 0;
     display: -webkit-box;
     display: -webkit-flex;
@@ -309,7 +309,7 @@ img {
     display: flex;
     height: .74rem;
     line-height: .74rem;
-    padding-left: .35rem;
+    /* padding-left: .35rem; */
 }
 
 .good-new-info .num-opt .btn.btn-opt-minus {
@@ -393,7 +393,7 @@ img {
     float: left;
     /* height: 5.7rem; */
     margin: .1rem .15rem .4rem;
-    width: 45%;
+    width: 46.9%;
 }
 
 .good-info .tag-container {
@@ -807,8 +807,17 @@ img {
 .chose-panel .block-list, .chose-panel .num {
     font-size: .28rem;
     overflow: hidden;
-    padding-left: .8rem;
+    padding-left: 1rem;
     position: relative;
+}
+
+.chose-panel .num>span.left-num {
+    color: #b0b0b0;
+    overflow: hidden;
+    position: absolute;
+    left: 4.5rem;
+    top:  .2rem;
+    white-space: nowrap;
 }
 
 .chose-panel .block-list>span, .chose-panel .num>span {
@@ -817,8 +826,9 @@ img {
     top: .1rem;
 }
 
+
 .chose-panel .block {
-    border: 1px solid #444;
+    border: 2px solid #444;
     border-radius: 6px;
     box-sizing: border-box;
     display: block;
@@ -837,10 +847,19 @@ img {
     white-space: nowrap;
 }
 
+/* 选中 */
 .chose-panel .block.chosed {
     background: #d0021b;
     border-color: #e10;
     color: #fff;
+}
+/* 禁止选中 */
+.chose-panel .block.noneActive{
+    background: silver;
+    border-color: #e0e0e0;
+    opacity: 0.4;
+    color: #000;
+    pointer-events: none;
 }
 
 .chose-panel .num .btn {
@@ -925,7 +944,7 @@ img {
 
 .cart-zero a, .cart-zero p {
     display: block;
-    font-size: .24rem;
+    font-size: .3rem;
     text-align: center;
 }
 .cart-zero p {
@@ -938,8 +957,8 @@ img {
     border: 1px solid #505050;
     border-radius: 5PX;
     color: #fff;
-    height: .56rem;
-    line-height: .56rem;
+    height: .8rem;
+    line-height: .8rem;
     margin: 0 auto;
     overflow: hidden;
     width: 27%;
@@ -947,14 +966,14 @@ img {
 
 .cart-zero a, .cart-zero p {
     display: block;
-    font-size: .24rem;
+    font-size: .3rem;
     text-align: center;
 }
 
 .cart-zero i {
     background: url(../../img/cart/empty_car.png) no-repeat;
-    width: 1rem;
-    height: 1rem;
+    width: 2rem;
+    height: 2rem;
     color: #505050;
     display: block;
     margin: 0 auto;

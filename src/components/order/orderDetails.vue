@@ -2,7 +2,7 @@
     <div class="order-details">
           <!-- 头部组件 -->
         <headerView custom-title="订单详情" custom-fixed rightNone>
-            <div class="backBtn" slot="backBtn" @click="$router.go(-1)">
+            <div class="backBtn" slot="backBtn" @click="$router.push('user')">
                 <img src="/static/img/public/backBtn.png" />
             </div>
         </headerView>
@@ -10,7 +10,13 @@
         <div class="details-wrap">
             <!-- 订单状态 -->
             <div class="order-state">
-                 <p>订单状态：<span>已完成</span></p>   
+                 <p>订单状态：
+                     <span v-if="order.status==1">待付款</span>
+                     <span v-if="order.status==2">待发货</span>
+                     <span v-if="order.status==3">待收货</span>
+                     <span v-if="order.status==4">待评价</span>
+                     <span v-if="order.status==5">已取消</span>
+                     </p>   
                  <img src="/static/img/order/order-state1.png" alt="">
             </div>
 
@@ -21,43 +27,43 @@
                 </div>
                 <div class="right">
                     <div class="nameInfo">
-                        <span class="name">小辣鸡</span>
-                        <span class="phone">17875596666</span>
+                        <span class="name">{{order.consignee}}</span>
+                        <span class="phone">{{order.mobile}}</span>
                     </div>
                     <div class="addressText">
-                        <p>广东省 广州市 白云区 嘉禾街道嘉禾彭西仁和仁和仁和串钱的二巷69号</p>
+                        <p>{{order.address}}</p>
                     </div>
                 </div> 
             </div>
 
             <!-- 商品信息 -->
-            <div class="order-item">
+            <div class="order-item" v-for="items in order.goods_res" :key="items.id">
                 <div class="img-wrap">
-                    <img src="/static/img/cart/0003.jpg" />
+                    <img :src="baseUrl+items.img" />
                 </div>
                 <div class="text">
-                    <h3>COMBACK 随身便携小挎包随身便携小挎包随身便携小挎包</h3>
+                    <h3>{{items.goods_name}}</h3>
                     <p>
-                        <span class="color">颜色:黑色</span>
-                        <span class="size">尺码:L</span>
+                        <span class="color">{{items.spec_key_name}}</span>
+                        <!-- <span class="size">尺码:L</span> -->
                     </p>
                 </div>
                 <div class="price-wrap">
-                    <p class="price">¥79.00</p>
-                    <p class="sale-price">¥98.00</p>
-                    <p class="count">x1</p>
+                    <p class="price">¥{{items.goods_price}}</p>
+                    <p class="sale-price">¥{{items.original_price}}</p>
+                    <p class="count">x{{items.goods_num}}</p>
                 </div>
             </div>
             
             <div class="order-row">
-                <div class="line">
+                <!-- <div class="line">
                     <div class="left">
                         订单优惠:
                     </div>
                     <div class="right">
                         订单满68元包邮
                     </div>
-                </div>
+                </div> -->
                 <div class="line">
                     <div class="left">
                         运费:
@@ -71,7 +77,7 @@
                         优惠:
                     </div>
                     <div class="right red">
-                        ¥-0.00
+                        ¥-{{order.coupon_price}}
                     </div>
                 </div>
                 <div class="line">
@@ -79,13 +85,29 @@
                         订单总价:
                     </div>
                     <div class="right">
-                        ¥79.00
+                       ¥{{order.total_amount}}
                     </div>
                 </div>
                
             </div>
      
             <div class="order-row">
+                <div class="line">
+                    <div class="left">
+                        订单编号:
+                    </div>
+                    <div class="right">
+                        {{order.order_sn}}
+                    </div>
+                </div>
+                <div class="line">
+                    <div class="left">
+                        下单时间:
+                    </div>
+                    <div class="right">
+                        {{order.add_time | formatDate}}
+                    </div>
+                </div>
                 <div class="line">
                     <div class="left">
                         配送方式:
@@ -99,7 +121,7 @@
                         支付方式:
                     </div>
                     <div class="right">
-                        在线支付
+                        {{pay_name}}
                     </div>
                 </div>
                   <div class="line">
@@ -107,17 +129,9 @@
                         订单备注:
                     </div>
                     <div class="right">
-                        尽快发货！
+                        {{order.user_note}}
                     </div>
-                </div>
-                <div class="line">
-                    <div class="left">
-                        订单编号:
-                    </div>
-                    <div class="right">
-                        294119778362083616
-                    </div>
-                </div>
+                </div>                
                  <div class="line">
                     <div class="left">
                         发票类型:
@@ -147,9 +161,77 @@
     import headerView from '../common/headerView'
     export default {
         name:'orderDetails',
+        data() {
+            return {
+                oride:this.$route.query.order_id,
+                order:[],
+                pay_name:'',
+                //商品图片路径
+               baseUrl:'',
+            }
+        },
         components:{
             headerView
-        }
+        },
+        created(){
+            //图片路径
+           this.baseUrl=this.url
+            // 订单详情 	der/order_detail
+            // 参数：
+            // token
+            // order_id
+             var url =  'order/order_detail'
+             var params = new URLSearchParams();
+                 params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value    tokne
+                 params.append('order_id',this.oride);
+            this.$axios({
+                            method:"post",
+                            url:url,
+                            data: params
+            }).then((res)=>{
+        
+                if(res.data.status===1){
+                    console.log(res.data.data)
+                    this.order = res.data.data
+                    this.pay_name = res.data.data.pay_type.pay_name
+                }
+            })
+        },
+        filters: {
+            formatDate: function (value) {
+                
+                let date = new Date(value*1000);
+                let y = date.getFullYear();
+                let MM = date.getMonth() + 1;
+                MM = MM < 10 ? ('0' + MM) : MM;
+                let d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+                let h = date.getHours();
+                h = h < 10 ? ('0' + h) : h;
+                let m = date.getMinutes();
+                m = m < 10 ? ('0' + m) : m;
+                let s = date.getSeconds();
+                s = s < 10 ? ('0' + s) : s;
+                return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s;
+            }
+            }, //挂载完成后，判断浏览器是否支持popstate
+        mounted(){
+        if (window.history && window.history.pushState) {
+            history.pushState(null, null, document.URL);
+            window.addEventListener('popstate', this.fun, false);//false阻止默认事件
+          }
+        },
+        //页面销毁时，取消监听。否则其他vue路由页面也会被监听
+            destroyed(){
+        window.removeEventListener('popstate', this.fun, false);//false阻止默认事件
+        },
+        methods: {
+            //将监听操作写在methods里面，removeEventListener取消监听内容必须跟开启监听保持一致，
+             fun(){
+                     this.$router.push('/user')
+             }
+        },
+
     }
 </script>
 
@@ -211,6 +293,7 @@
             margin-right 18px
             img 
                 width 100%
+                height 100%
         .text
             flex 1
             font-size 26px

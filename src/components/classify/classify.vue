@@ -27,13 +27,13 @@
 							:key="index"
 							>	
 							<!-- 热门种类 -->
-							<div v-for="item in items.children">
+							<div v-for="item in items.children" :key="item">
 								<h3 class="title">{{item.cat_name}}</h3>
 								<ul class="pro-items">
 									<router-link
 										tag="li"
 										v-for="(it,index) of item.children"
-										to="/details"
+										:to="'/productLsit?cat_id='+item.cat_id"
 										:key="index"
 									>
 									<div class="picture">
@@ -45,19 +45,26 @@
 							</div>
 
 							<!-- 热销商品 -->
-							<div v-for="item in items.goods">
+							<div v-if="items.goods">
 								<h3 class="title">热销商品</h3>
 								<ul class="singleList">
 									<router-link 
 										tag="li"
-										to="/details"
-									>
+										:to="'/details?goods_id='+item.goods_id"
+<<<<<<< HEAD
+										v-for="item in items.goods"
+										 :key="item"
+=======
+										v-for="(item,index) in items.goods"
+										:key="index"
+>>>>>>> c6f7aeb8a7e11aaa70c68c3e3ec73aa568df035a
+										>
 										<div class="img-wrap">
 											<img :src="baseUrl + item.img">
 										</div>
 										<div class="text">
 											<h3>{{item.goods_name}}</h3>
-											<span class="sign">{{item.attr_name[0]}}</span>
+											<span class="sign" v-for="items in item.attr_name" :key="items">{{items}}</span>
 											<div class="line3">
 												<span class="price">¥{{item.price}}</span>
 												<span class="commentNum">评论{{item.comment}}条</span>
@@ -71,7 +78,7 @@
 				</div>
 			</div>
 		</div>
-		
+		  
 		<!-- 底部导航组件 -->
 		<menuBar></menuBar>
 	</div>
@@ -90,7 +97,7 @@
 				resData:[],
 	 			listHeight:[],
 				scrollY:0,
-				baseUrl:'http://www.zfwl.c3w.cc/upload/images/'
+				baseUrl:''
 	 		}
 		},
 		 
@@ -151,20 +158,34 @@
 		 },
 		// dom节点渲染完成后请求接口数据 
 	 	mounted(){
-	 		this.$axios.get("/api/goods/categoryList")
+
+			// 调用loading 
+			this.$store.commit('showLoading')
+			
+	 		this.$axios.get("/goods/categoryList")
 	 		// this.axios.get("/api/classify.json")
 	 		.then((res)=>{
 				 if(res.status === 200){
+					// 数据加载成功，关闭loading 
+					this.$store.commit('hideLoading')
+
 					let resData = res.data.data
 					this.resData = resData
-					console.log(this.resData)
 					this.$nextTick(()=>{
 						this.initScroll()
 						this.getHeight()
 					})
 				 }
-				
-	 		})
+			 })
+			.catch( error => {
+				this.$store.commit('hideLoading')
+				alert(error)
+            })
+			 
+		 },
+		 created() {
+			 //图片路径
+           this.baseUrl=this.url
 		 },
 		// 注册组件 
 		components:{
@@ -209,11 +230,12 @@
 						.pro-items
 							display flex
 							flex-wrap wrap
-							// justify-content space-between
 							li
-								width 33%
+								width 31%
 								height 274px
-								margin 10px 0
+								margin 10px 15px 10px 0
+								&:last-child
+									margin-right 0
 								.picture
 									width 100%;
 									height 215px;
@@ -226,6 +248,7 @@
 										top 50%
 										transform translate(-50%,-50%)
 										z-index 3
+										height 100%
 								p
 									text-align center
 									height 60px
@@ -241,12 +264,14 @@
 								align-items center
 								border-bottom 1px solid #eeeeee
 								padding 10px 0
+								height 200px
 								.img-wrap
 									width 160px
 									height 100%
 									margin-right 10px
 									img 
-										width 99%
+										width 100%
+										height 100%
 								.text
 									flex 1
 									h3
@@ -268,6 +293,7 @@
 										background-color #ff6600
 										margin 15px 0
 										display inline-block
+										margin-right 4px
 									.price
 										font-size 20px
 										color #ff6600

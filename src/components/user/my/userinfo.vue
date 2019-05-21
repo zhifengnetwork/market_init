@@ -3,21 +3,24 @@
         <div class="basic" v-show="amend">
            <headerView custom-title="基本资料">
                     <div class="backBtn" slot="backBtn" @click="($router.go(-1))">
-                        <img src="../../../../static/img/public/backBtn.png" />
+                        <img src="/static/img/public/backBtn.png" />
                       </div>
         </headerView>
-          <div class="user-page">
+          <div class="user-page" >
                <ul>
                    <li>
-                       <span>头像</span>
-                       <span>
-                           <img src="../../../../static/img/user/userinfo/d058ccbf6c81800aedd20eb5b43533fa828b4752.jpg" alt="" class="userImg">
-                       </span>
+                       <van-uploader :after-read="onRead">
+                            <van-icon name="photograph" />
+                            <span>头像</span>
+                            <span>
+                                <img :src="userImg" alt="" class="userImg">
+                            </span>
+                       </van-uploader>
                    </li>
                    <li @click="amend=false">
                        <span>昵称</span>
                        <span>
-                            王思聪
+                            {{userName}}
                        </span>
                        <i class="right-arrow"></i>
                    </li>
@@ -34,15 +37,24 @@
                    </li>
                    <li>
                        <span>生日</span>
-                       <span   @click="openPicker">{{birthday}}</span>
+                       <span   @click.passive="openPicker" >{{birthday}}</span>
                         <i class="right-arrow"></i>
+                          <mt-datetime-picker
+                            ref="picker"
+                            v-model="pickerVisible"
+                            type="date"
+                            @confirm="getTime"
+                            >
+                    </mt-datetime-picker>
                    </li>
                </ul>
                <ul>
                     <router-link to="/my/site">
                    <li>
                        <span>地址管理</span>
-                       <span><i class="right-arrow"></i></span>
+                       <span>
+                           {{address===0?'未设置':'已设置'}}
+                           <i class="right-arrow"></i></span>
                    </li>
                    </router-link>
                </ul>
@@ -61,12 +73,13 @@
                     ref="picker"
                     v-model="pickerVisible"
                     type="date"
-                    @confirm="getTime">
+                    @confirm.passive="getTime"
+                    >
                     </mt-datetime-picker>
         
       </div>
       <!-- 修改昵称 -->
-      <div class="amend-name" v-if="amend==false">
+      <div class="amend-name" v-if="amend==false" >
           <headerView custom-title="昵称"  >
                     <div class="backBtn" slot="backBtn" @click="amend=true">
                        取消
@@ -77,7 +90,7 @@
                 <div class="list_item_bd">
                     <div class="list_item_label"></div>
                     <div class="list_item_cnt">
-                        <input id="nickname" class="list_item_input" type="text" maxlength="10" value="7159" v-model="userName" placeholder="请输入你要修改的昵称哦~">
+                        <input id="nickname" class="list_item_input" type="text" maxlength="10" value="7159" v-model="userName" placeholder="请输入你要修改的昵称哦~" >
                     </div>
                     <div class="list_item_extra">
                         <i class="ico_form_del"></i>
@@ -85,13 +98,16 @@
                 </div>
             </div>
         </div>
-        <div class="comment_1"><a id="btnOperateNickname" href="javascript:void(0)" @click="complete">完成</a> </div>
+        <div class="comment_1"><a id="btnOperateNickname" href="javascript:void(0)" @click="complete(userName)" >完成</a> </div>
       </div>
     </div>
 </template>
 <script>
 // 公共头部
-import headerView from '../../common/headerView.vue'
+import headerView from '@/components/common/headerView.vue'
+import { MessageBox } from 'mint-ui';
+/* 引入 mint-ui 弹窗组件 */
+import {Toast} from "mint-ui"
 export default {
     data(){
         return{
@@ -100,8 +116,13 @@ export default {
               amend:true,
 
               //修改昵称
-              userName:''
-
+              userName:'',
+              baseUrl:'',
+            //   userItem:'',
+            //用户头像
+            userImg:'',
+            //是否设置地址
+            address:'',
         }
     },components:{
         headerView
@@ -113,17 +134,88 @@ export default {
         
         //点击修改生日后确定
           getTime(){
-              console.log(123)
+            //   生日接口传 birthyear  birthmonth  birthday  type传2
+              var url = 'user/set_reabir'
               let y = this.pickerVisible.getFullYear() //年
               let m = this.pickerVisible.getMonth()+1 //月
               let d = this.pickerVisible.getDate()    //日    
-              this.birthday =y+'-'+m+'-'+d
+              var params = new URLSearchParams();
+                    params.append('type', 2);       //你要传给后台的参数值 key/value         //收货人
+                    params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value   //token
+                    params.append('birthyear', y);       //你要传给后台的参数值 key/value   //token
+                    params.append('birthmonth', m);       //你要传给后台的参数值 key/value   //token
+                    params.append('birthday', d);       //你要传给后台的参数值 key/value   //token
+                    this.$axios({
+                            method:"post",
+                            url:url,
+                            data:params
+                        }).then((res)=>{
+                        if(res.data.status===1){
+                            this.birthday =y+'-'+m+'-'+d;
+                            Toast(res.data.msg)
+                            this.amend=true
+                        }else{
+                            Toast(res.data.msg)
+                        }
+                })
           },
 
           /* 修改昵称 */
-          complete(){
-
-          }
+          complete(name){
+              if(name===''){
+                  Toast('用户昵称不能为空!')
+            return
+            }else{
+                 var url="user/set_reabir"
+                   var params = new URLSearchParams();
+                    params.append('type', 1);       //你要传给后台的参数值 key/value         //收货人
+                    params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value   //token
+                    params.append('realname', name);       //你要传给后台的参数值 key/value   //token
+                    this.$axios({
+                            method:"post",
+                            url:url,
+                            data:params
+                        }).then((res)=>{
+                        if(res.data.status===1){
+                            this.userName = name;
+                            Toast(res.data.msg)
+                            this.amend=true
+                        }else{
+                            Toast(res.data.msg)
+                        }
+                })
+            }
+                  
+          },
+          onRead(file) {
+        // update_head_pic 传head_img 头像编辑
+        var url = "user/update_head_pic"
+        var params = new URLSearchParams();
+             params.append('head_img', file.content);       //你要传给后台的参数值 key/value         //收货人
+             params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value   //token
+             this.$axios({
+                    method:"post",
+                    url:url,
+                    data:params
+                }).then((res)=>{
+                  if(res.data.status===1){
+                      this.userImg = res.data.data;
+                     Toast(res.data.msg)
+                  }else{
+                     Toast(res.data.msg)
+                  }
+                })
+            
+    }
+    },
+    created() {
+        //图片路径
+           this.baseUrl=this.url
+           this.userImg = JSON.parse(this.$store.getters.optuser.usin).avatar   //头像
+           this.userName = JSON.parse(this.$store.getters.optuser.usin).realname  //昵称
+           this.birthday = JSON.parse(this.$store.getters.optuser.usin).birthyear+'-'+JSON.parse(this.$store.getters.optuser.usin).birthmonth+'-'+JSON.parse(this.$store.getters.optuser.usin).birthday  //生日
+           //是否设置地址
+           this.address = JSON.parse(this.$store.getters.optuser.usin).is_address
     },
 }
 </script>
@@ -147,6 +239,9 @@ export default {
         overflow: hidden;
         padding-left: 30px
         width: 100%;
+
+    .user-page ul:last-child
+        margin-bottom: 0px;
 
     .user-page ul:first-child li:first-of-type 
         height: 100px
@@ -185,6 +280,7 @@ export default {
         border-radius: 50%
         float: right
         overflow: hidden
+        margin-right 30px
     
     select
         -webkit-appearance: none;
@@ -262,7 +358,10 @@ export default {
         padding-right: 15px;
         font-size: 30px;
     
-    
-
+    .van-uploader
+        width 100%;
+    .van-icon
+        font-size 40px
+        vertical-align: middle
 
 </style>

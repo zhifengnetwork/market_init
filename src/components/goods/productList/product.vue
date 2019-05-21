@@ -3,7 +3,7 @@
     <div class="productL-box">
           <header>
                 <headerView custom-title="商品列表"  rightNone>
-                        <div class="backBtn" slot="backBtn" @click="backBtn($router.go(-1))">
+                        <div class="backBtn" slot="backBtn" @click="$router.go(-1)">
                             <img src="../../../../static/img/public/backBtn.png" />
                         </div>
                         <div class="rightBtn" slot="rightBtn" @click="showTab">
@@ -41,41 +41,20 @@
                     </div>
         </header>
         <!-- 列表 -->
+        <!-- <van-search
+        v-model="value"
+        placeholder="请输入搜索关键词"
+        show-action
+        shape="round"
+        @search="onSearch"
+        >
+        <div slot="action" @click="onSearch">搜索</div>
+        </van-search> -->
         <div class="good-list-page">
                 <div class="filter-tab">
-                    <!-- <ul class="list-nav clearfloat" >
-                        <li :class="{active:index=='default'}"  class="default buriedpoint"  data-ip="default" @click.self='setlocation($event)'>
-                    
-                                
-                                <span >默认</span>
-                                <span class="iconfont drop">&#xe605;</span>
-                           
-                            <div>
-
-                            </div>
-                        </li>
-                        <li :class="{active:index=='new'}" class="neww  buriedpoint"  data-ip="new">
-                                <span>新品</span>
-                        </li>
-                        <li :class="{active:index=='popularity'}" class="popularity  buriedpoint"  data-ip="popularity">
-                                <span>人气</span>
-                        </li>
-                        <li :class="{active:index=='price'}" class="price  buriedpoint"   data-ip="price">
-                                <span>价格</span>
-                                <span class="icon">
-                                     <i class="iconfont up"   :class="{cur:isCur==false}">&#xe609;</i>
-                                     <i class="iconfont down" :class="{cur:isCur==true}">&#xe606;</i>
-                                </span>
-                        </li>
-                        <li :class="{active:index=='filter'}" class="filter buriedpoint"  data-ip="filter">
-                                <span>筛选</span>
-                                <span class="iconfont drop">&#xe605;</span>
-                        </li>
-                    </ul> -->
-                    <!-- tar -->
                      <ul class="list-nav clearfloat" >
-                        <li v-for="item in list" :key="item.id" class="buriedpoint" :class="[index==item.data?'active':'',item.class]"  :data-ip="item.data"   @click='setlocation(item.data)'>
-                            <a href="javascript:;">
+                        <li v-for="item in list" :key="item.id" class="buriedpoint" :class="[listId==item.id?'active':'',item.class]"  :data-ip="item.data"   @click.passive='setlocation(item.id,item.data)'>
+                            <a href="javascript:void(0);" >
                                 <span >{{item.name}}</span>
                                 <span class="iconfont drop" v-html="item.s" v-if="!item.isHide">
                                 </span>
@@ -87,7 +66,7 @@
                          </li>
                     </ul>
                     <ul class="drop-list "  :class="{hide:drop}">
-                            <li  v-for="item in discount" :key="item.id"  :data-ip="item.data" :data-text="item.name" :class="[indexx==item.data?'active':'',item.class]" @click='setloca(item)'>
+                            <li  v-for="item in discount" :key="item.id"  :data-ip="item.data" :data-text="item.name" :class="[indexx==item.id?'active':'',item.class]" @click.passive='setloca(item)'>
                                 <span>{{item.name}}</span>
                                 <span class="chose"></span>
                             </li>
@@ -100,10 +79,11 @@
                        
                      <div class="good-info "  v-for="(item,index) in proList" :key="index" :data-good-id="item.pid" :data-id="item.cat_id" :data-bp-id="item.goods_name">
                             <div class="tag-container clearfloat">
+                                 <p class="good-tag new-tag" v-if="newState">NEW</p>
                             </div>
                             <div class="good-detail-img">
                                 <router-link class="good-thumb" :to="'/details?goods_id='+item.goods_id" :title="item.desc">
-                                        <img class="lazy"  :alt="item.goods_name" :src="baseUrl+item.img" style="display: block;">
+                                        <img class="lazy" v-lazy="baseUrl+item.img"  :alt="item.goods_name" :src="baseUrl+item.img" style="display: block;">
                                 </router-link>
                                 <div class="similar-c">
                                 <div class="bg"></div>
@@ -149,8 +129,11 @@ import headerView from '../../common/headerView'
 export default {
     data(){
         return{
-
+          //搜索关键字
+            value:'',
+          //商品分类id
             cat_id:this.$route.query.cat_id,
+
           //头部显示导航
              isHide:true,
 
@@ -159,6 +142,8 @@ export default {
 
           //选中筛选
              screen:true,
+          
+          REQUIRE: true,
           
           //筛选左边
           classifyName:"性别",
@@ -169,16 +154,23 @@ export default {
 
           //分类id
         //   cat_id:12,
-          sort:'ASC',
-          page:2,
+          sort:'ASC', 
+          page:1,
+        
         //分类列表
-          proList:[],
-          baseUrl:'http://www.zfwl.c3w.cc/upload/images/',
+        proList:[],
+        baseUrl:'',
+        
 
-          
+        //新品
+        newProduct:[],
+        newState:false, //新品状态
+        // newStatee:0,
+        
 
-             index:'default',
-             indexx:'default',
+
+             listId:1,
+             indexx:1,
              isCur:false,
              list:[
                  {id:1,name:"默认",data:"default",s:"&#xe605",class:'default'},
@@ -193,32 +185,7 @@ export default {
                  {id:3,name:"折扣从低到高",text:'折扣',data:'discountt_1',class:'discount asc'}
              ],
              screenList:[
-                //  {id:1,name:"性别",data:"classify_所有性别",title:"所有性别",
-                //      classify:[
-                //      {id:1,name:"所有性别",data:0},
-                //      {id:2,name:"MEN",data:1}
-                //  ]
-                //  },
-                //  {id:2,name:"品牌",data:"classify_所有品牌",title:"所有品牌",
-                //      classify:[
-                //      {id:1,name:"所有品牌",data:0},
-                //      {id:2,name:"F.L.Y.D",data:2},
-                //      {id:3,name:"DUSTY",data:3}
-                //  ]
-                //  },
-                //  {id:3,name:"人群",data:"classify_所有人群",title:"所有人群",
-                //      classify:[
-                //      {id:1,name:"所有人群",data:0},
-                //      {id:2,name:"成人",data:4},
-                //  ]
-                //  },
-                //  {id:4,name:"品类",data:"classify_所有品类",title:"所有品类",
-                //      classify:[
-                //      {id:1,name:"所有品类",data:0},
-                //      {id:2,name:"上衣",data:5},
-                //  ]
-                //  },
-                 {id:5,name:"价格",data:"classify_所有价格",title:"所有价格",
+                 {id:1,name:"价格",data:"classify_所有价格",title:"所有价格",
                      classify:[
                      {id:1,name:"所有价格",data:0},
                      {id:2,name:"￥0-189",data:6},
@@ -238,30 +205,89 @@ export default {
         showTab(){
             this.isHide=!this.isHide
         },
-        setlocation(item){
-            this.index=item
-
-            if(item=='default'){//如果是默认
+        setlocation(id,ip){
             
-                this.drop=!this.drop
+            this.listId=id
+
+            if(this.list[0].data==ip){//如果是默认
+            
+                   this.drop=!this.drop
+
+                // 
+                if(this.indexx==1){ //选中的下标为一
+                     this.ajax()
+                }
+                if(this.indexx==2){ //选中的下标为二
+                     
+                     this.isCur=false
+
+                     this.getGoodsListPirce()//发送请求
+                     
+                }else if(this.indexx==3){
+                     
+                      this.isCur=true
+
+                      this.getGoodsListPirce()//发送请求
+                }
 
             }else{
 
                 this.drop=true  
             }
+
+            if(this.list[1].data==ip){//新品
             
-            if(item=="price"){ //如果是价格
+              
+                // 取消上一次请求
+                this.cancelRequest();
+            
+                var url="/goods/category?goods_attr="+2+'&cat_id='+this.cat_id
 
-            this.isCur=!this.isCur
+                this.$axios.get(url).then((res)=>{
+                        if(res.data.status==1){
+                             this.proList=res.data.data.goods_list;
+                           
+                             this.newState=true;
+                        }
+                })
+               
 
-            this.getGoodsListPirce()//发送请求
+              
+            }else{
+
+                this.newState=false;
+
+            }
+
+            if(this.list[2].data==ip){//人气
+               
+               
+                 // 取消上一次请求
+                this.cancelRequest();
+            
+                var url="/goods/category?goods_attr="+3+'&cat_id='+this.cat_id
+
+                this.$axios.get(url).then((res)=>{
+                        this.proList=res.data.data.goods_list;
+                       
+
+                })
+              
+
+            }
+            
+            if(this.list[3].data==ip){ //如果是价格
+
+                this.isCur=!this.isCur
+
+                this.getGoodsListPirce()//发送请求
 
             }else{
 
                  this.isCur=false  
             }
 
-            if(item=="filter"){
+            if(this.list[4].data==ip){ //筛选
 
                 this.screen=!this.screen
 
@@ -274,16 +300,27 @@ export default {
         },
 
         setloca(item){
-            this.indexx=item.data  //选中
-            this.list[0].name=item.text  //改变tartext
+
+            this.indexx=item.id  //选中
+
+            this.list[0].name=item.text  //改变tabtext
+
             this.drop=!this.drop 
-            console.log(item)
-            if(item.name=='折扣从高到低'){
-                this.isCur=true
-                this.getGoodsListPirce()//发送请求
-            }else if(item.name=='折扣从低到高'){
+
+            if(item.id==2){
+                
                 this.isCur=false
+
                 this.getGoodsListPirce()//发送请求
+
+            }else if(item.id==3){
+
+                this.isCur=true
+
+                this.getGoodsListPirce()//发送请求
+
+            }else{
+                this.ajax()
             }
             
         },
@@ -300,35 +337,84 @@ export default {
         },
 
         getGoodsListPirce(){
-         if(this.isCur){  //升序
+        
+        if(this.isCur){  //升序
+
                     var param = {
                             // 请求时传点击的价格区间数据给后台
                             sort:this.sort="ASC" // 点击的价格区间
         }
+        
+       
+       // 取消上一次请求
+            this.cancelRequest();
+
+       var url="/goods/category?sort="+param.sort+'&cat_id='+this.cat_id
+
+       this.$axios.get(url).then((res)=>{
+            this.proList=res.data.data.goods_list;
+            // this.ascList=res.data.data.goods_list;//保存商品列表
+       })
+
+         this.ascState=1;
+        
         }else if(!this.isCur){
+
                     var param = {
                             // 请求时传点击的价格区间数据给后台
                             sort:this.sort="DESC" // 点击的价格区间
-        }
+                    }
+        
+        
+        // 取消上一次请求
+            this.cancelRequest();
+
+        var url="/goods/category?sort="+param.sort+'&cat_id='+this.cat_id
+        
+        this.$axios.get(url).then((res)=>{
+            this.proList=res.data.data.goods_list
+          
+        })
+
         
         }
-        console.log(param.sort)
-       var url="api/goods/category?sort="+param.sort+'&cat_id='+this.cat_id
-       this.$axios.get(url).then((res)=>{
-           console.log(res.data)
-       })
     },
+     cancelRequest(){
+            if(typeof this.source ==='function'){
+                this.source('终止请求')
+            }
+        },
+        scrollBottom() {
+    //    console.log(window.screen.height + document.body.scrollTop,document.body.clientHeight)
+        if (((window.screen.height + document.body.scrollTop) > (document.body.clientHeight)) && this.REQUIRE) {
+          // 请求的数据未加载完成时，滚动到底部不再请求前一天的数据 this.REQUIRE = false;
+          
+        }
+      },
+      //页面默认
+      ajax(){
+             var url = "/goods/category?cat_id="+this.cat_id
+                this.$axios.get(url).then((res)=>{
+                    this.proList=res.data.data.goods_list;
+                })
+      },
+      //搜索商品
+      onSearch(){
+
+      },
+
     },
 
     mounted(){
-        console.log(this.cat_id)
-             var url = "api/goods/category?cat_id="+this.cat_id
-                this.$axios.get(url).then((res)=>{
-                    console.log(res.data.data.cate_list)
-                    this.proList=res.data.data.goods_list
-                    console.log(res.data.data)
-                })
-    }
+             
+        // 添加滚动事件，检测滚动到页面底部
+      window.addEventListener('scroll', this.scrollBottom)
+    },
+    created() {
+        //图片路径
+           this.baseUrl=this.url
+           this.ajax()
+    },
 }
 </script>
 <style lang="stylus" scoped>

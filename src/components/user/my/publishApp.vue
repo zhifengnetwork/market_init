@@ -4,26 +4,33 @@
                     <div class="backBtn" slot="backBtn" @click="($router.go(-1))">
                         <img src="../../../../static/img/public/backBtn.png" />
                     </div>
-                    <span class="rightBtn" slot="rightBtn" >发布</span>
+                    <span class="rightBtn" slot="rightBtn"  @click="publish">发布</span>
         </headerView>
-         <div class="appraise-info">
+         <div class="appraise-info" v-for="(item,index) in orderList" :key="index">
               <div class="info-grade">
                    <div class="agree-with">
-                       <img src="../../../../static/img/user/appraise/goods.png" alt="" class="goods">
+                       <img :src="baseUrl+item.img" alt="" class="goods">
                        描述相符
                    </div>
                    <van-rate
-                    v-model="value"
+                    v-model="item.value"
                     :size="25"
                     color="#f44"
                     void-icon="star"
                     void-color="#eee"
-                    @change="goodsValue"
+                    @change="goodsValue(item.sku_id)"
                     />
-                    <div class="good">{{goods}}</div>
+                    <div class="good">{{item.values}}</div>
+              </div>
+              <div class="info-pro">
+                    <h3>{{item.goods_name}}</h3>
+                    <p>
+                        <span>{{item.spec_key_name}}</span>
+                        <span>x{{item.goods_num}}</span>
+                    </p>
               </div>
               <div class="info-input">
-                  <textarea name="" id="" cols="30" rows="5" placeholder="宝贝满足你的期待吗? 说说你的使用心得，分享给想买的他们吧" maxlength="250"></textarea>
+                  <textarea name="" id="" cols="30" rows="5" placeholder="宝贝满足你的期待吗? 说说你的使用心得，分享给想买的他们吧" maxlength="250" v-model="item.textmsg"></textarea>
               </div>
               <!-- 上传图片 -->
               <div class="uploader">
@@ -33,36 +40,39 @@
       <img class="seledPic" ref="picture" :src="item?item:require('../../static/Images/imagebj.jpg')" name="avatar" @click="bigImg(index)">
       <img class="delect" src="../../static/Images/del.png" @click="delect(index)">
     </div>   -->
-                        <div class="closeIcon" v-if="imgUrls.length>0" v-for="(item,index) in imgUrls">
-                            <img class="seledPic" :src="item?item:require('../../../../static/img/user/appraise/up.jpg')" name="avatar" @click="bigImg(index)">
-                            <img src="../../../../static/img/user/appraise/close.png" alt="" class="close"  @click="closeImg(index)">
+                        <div class="closeIcon" v-if="item.imgUrls.length>0"  v-for="(itemz,index) in item.imgUrls" :key="index">
+                            <img class="seledPic" :src="itemz?itemz:require('../../../../static/img/user/appraise/up.jpg')" name="avatar" @click="bigImg(index,item)">
+                            <img src="../../../../static/img/user/appraise/close.png" alt="" class="close"  @click="closeImg(index,item)">
                         </div>
                         <!-- 浏览显示图片 -->
-                        <div class="imgMask" v-if="showBigImg" @click.stop="showBigImg=!showBigImg">
+                        <div class="imgMask" v-if="item.showBigImg" @click.stop="item.showBigImg=!item.showBigImg">
                             <div class="showImg">
-                                <mt-swipe :auto="0" :show-indicators="false" @change="handleChange" :continuous="false" :defaultIndex="num">
-                                <mt-swipe-item v-for="(item,index) in imgUrls" :key="item.id">
-                                    <div class="num"  >{{index+1+'/'+imgUrls.length}}</div>
-                                    <img :src="imgUrls[index]" class="img"/>
+                                <mt-swipe :auto="0" :show-indicators="false" @change="handleChange(index,item)" :continuous="false" :defaultIndex="num">
+                                <mt-swipe-item v-for="(items,index) in item.imgUrls" :key="items.id">
+                                    <div class="num"  >{{index+1+'/'+item.imgUrls.length}}</div>
+                                    <img :src="item.imgUrls[index]" class="img"/>
                                 </mt-swipe-item>
                                 </mt-swipe>
                             </div>
                         </div>
-                        <div class="selPic" v-if="imgUrls.length<6"> 
+                        
+                        
+
+                        <div class="selPic" v-if="item.imgUrls.length<6"> 
                             <img src="../../../../static/img/user/appraise/up.jpg" alt="" class="addI"  >
-                                <p class="add-img" >{{pictureNums}}</p>
-                            <input type="file" maxlength="" class="input-file" multiple="multiple" name="avatar" ref="avatarInput" @change="onRead($event)" accept="image/gif,image/jpeg,image/jpg,image/png">
+                                <p class="add-img" >{{item.imgText}}</p>
+                            <input type="file" maxlength="" class="input-file" multiple="multiple" name="avatar" ref="avatarInput" @change="onRead($event,item)"  accept="image/gif,image/jpeg,image/jpg,image/png" >
                         </div>
                     </div>
 
               </div>
               <div class="anonymity">
                     <div class="anonymity-add">
-                        <img :src="checkedT.checked?'../../../../static/img/user/appraise/gou.png':'../../../../static/img/user/appraise/gouactive.png'" alt="" class="addImg" @click="anonymity">
+                        <img :src="item.checked?'../../../../static/img/user/appraise/gouactive.png':'../../../../static/img/user/appraise/gou.png'" alt="" class="addImg" @click="anonymity(item)">
                         <span>匿名</span>
                     </div>
                     <div class="anonymity-text">
-                        {{checkedT.text}}
+                        {{item.text}}
                     </div>
 
               </div>
@@ -75,27 +85,23 @@ import headerView from '../../common/headerView.vue'
 
 import {Swipe, SwipeItem} from 'mint-ui'
 import {MessageBox, Toast} from 'mint-ui'
+import { List } from 'vant';
+
 
 export default {
     data(){
         return{
+         //商品图片路径
+        baseUrl:'',
+        //订单id
+         id : this.$route.query.order_id,
+        //评分
          value: 3,
         
          goods:'一般',
-
-         checkedT:{
-             checked:true,
-             text:'你的评价能帮助其他小伙伴哟'
-         },
-
-         //上传图片
-            showBigImg: false,
-            
-            maxImages: 6,
-
-            leftImages: 0,
-
-            pictureNums: '添加图片',
+        
+        //订单列表
+         orderList:[],
 
             imgUrls: [],   //循环上传图片
 
@@ -104,81 +110,193 @@ export default {
             avatar: '',
 
             file: '',
+        
         }
     },created () {
-    this.avatar = this.imgUrl
+           //图片路径
+            this.baseUrl=this.url
+            // 获取订单商品评论列表 	order/order_comment_list
+            // 参数：
+            // token
+            // order_id
+            var url = 'order/order_comment_list';
+            var params = new URLSearchParams();
+            params.append('token',this.$store.getters.optuser.Authorization);
+            params.append('order_id',this.id);
+            this.$axios({
+                            method:"post",
+                            url:url,
+                            data: params
+            }).then((res)=>{
+
+                if(res.data.status===1){
+                    this.orderList = res.data.data
+                    for(var item in this.orderList){
+                       this.orderList[item].value = 5;
+                       this.$set(this.orderList[item],'values','非常好')
+                       this.$set(this.orderList[item],'text','你的评价能帮助其他小伙伴哟')
+                       this.$set(this.orderList[item],'imgUrls',[])
+                       this.$set(this.orderList[item],'imgText','添加图片')
+                       this.$set(this.orderList[item],'leftImages',0)
+                       this.$set(this.orderList[item],'maxImages',6)
+                       this.$set(this.orderList[item],'showBigImg',false)
+                    }
+                }else{
+                    Toast(res.data.msg)
+                }
+            })
      }
     ,components:{
         headerView
     },
     methods: {
-         goodsValue(e){
-             if(this.value==1){
-                 this.goods="非常差"
-             }
-             if(this.value==2){
-                 this.goods="差"
-             }
-             if(this.value==3){
-                 this.goods="一般"
-             }
-             if(this.value==4){
-                 this.goods="好"
-             }
-             if(this.value==5){
-                 this.goods="非常好"
-             }
+         goodsValue(id){
+        
+             this.orderList.map((data) => { 
+                 if(id === data.sku_id){
+  
+                if(data.value==1){
+                   
+                    this.$set(data,'values','非常差')
+
+                }
+                if(data.value==2){
+  
+                     this.$set(data,'values','差')
+                }
+                if(data.value==3){
+       
+                     this.$set(data,'values','一般')
+                }
+                if(data.value==4){
+           
+                     this.$set(data,'values','好')
+                }
+                if(data.value==5){
+  
+                     this.$set(data,'values','非常好')
+                }
+                 }
+             })
+             
          },
          //上传图片
-         onRead(e){
-                    if (e.target.files.length <= (this.maxImages - this.imgUrls.length)) {
+         onRead(e,item){
+                
+                    this.orderList.map((data) => { 
+            
+                    if(item.sku_id===data.sku_id){
+                 if (e.target.files.length <= (item.maxImages - item.imgUrls.length)) {
                     for (var i = 0; i < e.target.files.length; i++) {
                     let file = e.target.files[i]
                     this.file = file
-                    console.log(this.file)
+
                     let reader = new FileReader()
                     let that = this
                     reader.readAsDataURL(file)
+                    
                     reader.onload = function (e) {
-                        console.log(this.result)
+    
+                        item.imgUrls.push(this.result)
+                     
                         that.imgUrls.push(this.result)
                     }
                     }
                     // 剩余张数
-                    this.leftImages = this.maxImages - (this.imgUrls.length + e.target.files.length)
-                    this.pictureNums = String(this.maxImages - (this.imgUrls.length + e.target.files.length)) + '/' + String(this.maxImages)
+                    item.leftImages = item.maxImages - (item.imgUrls.length + e.target.files.length)
+                    item.imgText = String(item.maxImages - (item.imgUrls.length + e.target.files.length)) + '/' + String(item.maxImages)
                 } else {
-                    Toast('只能选择' + (this.maxImages - this.imgUrls.length) + '张了')
+                    Toast('只能选择' + (item.maxImages - item.imgUrls.length) + '张了')
                 }
+                            }
+                    })
+                    
         },
 
-         anonymity(){
-              this.checkedT.checked=!this.checkedT.checked
-              if(this.checkedT.checked){
-                  console.log(this.checkedT.checked)
-                  this.checkedT.text="你的评价能帮助其他小伙伴哟"
+         anonymity(item){
+             this.orderList.map((data) => { 
+              if(item.sku_id===data.sku_id){
+              if(item.checked){
+                   item.text="你的评价能帮助其他小伙伴哟";
+                   this.$set(item,'checked',false)
               }else{
-                  this.checkedT.text="你写的评价会以匿名的形式展现"
+                  item.text="你写的评价会以匿名的形式展现"
+                   this.$set(item,'checked',true)
               }
+                    }
+             })
+              
          },
+         onChange(index) {
+            // this.indexx = index+1;
+            // console.log(index)
+     
+            },
          //删除照片
-         closeImg(index){
-               this.imgUrls.splice(index, 1)
-                this.leftImages++
-                if (this.leftImages === this.maxImages) {
-                    this.pictureNums = '上传图片'
+         closeImg(index,item){
+                item.imgUrls.splice(index, 1)
+                item.leftImages++
+                if (item.leftImages === item.maxImages) {
+                    item.imgText = '上传图片'
                 } else {
-                    this.pictureNums = String(this.leftImages) + '/' + String(this.maxImages)
+                    item.imgText = String(item.leftImages) + '/' + String(item.maxImages)
                 }
          },
-         handleChange (index) {
+         handleChange (index,item) {
             this.num = index
-            },
-            bigImg (index) {
-            this.showBigImg = true
+        },
+
+        bigImg (index,item) {
+            item.showBigImg=true;
             this.num = index
+        },
+        //发布评论
+    publish(){
+            // order/order_comment
+            //参数
+            // order_id
+            // goods_id
+            // sku_id
+            // content
+            // star_rating
+            // img
+            var params = new URLSearchParams();
+            var returnObj = new Object();//创建一个对象
+            var url = 'order/order_comment'
+            var order_list = [];
+            for(var i=0;i<this.orderList.length;i++){
+                var item = this.orderList[i];
+                returnObj.order_id = this.id;
+　　　　　　　　  returnObj.goods_id = item.goods_id;
+                returnObj.sku_id = item.sku_id;
+                returnObj.content = item.textmsg;
+                returnObj.star_rating =item.value;
+                returnObj.img = item.imgUrls;
+                
+                order_list[i] = returnObj;
+                var returnObj = new Object();//创建一个对象
             }
+         console.log(order_list)
+            var s = JSON.stringify(order_list)
+                params.append('token',this.$store.getters.optuser.Authorization)
+                params.append('comments', s);
+                this.$axios({
+                            method:"post",
+                            url:url,
+                            data: params
+                }).then((res)=>{
+                    if(res.data.status === 1){
+                        Toast(res.data.msg)
+                        // this.$router.push('/order?type=0')
+                        this.$router.go(-1)
+                    }else{
+                        Toast(res.data.msg)
+                    }
+                })
+    }
+
     },
+
 }
 </script>
 <style lang="stylus" scoped>
@@ -218,9 +336,15 @@ export default {
        vertical-align: middle;
        margin-bottom  6px
 
-    .appraise-info .info-input 
+    .appraise-info .info-input,.info-pro
        padding 20px
-
+    .info-pro h3
+       font-size 30px
+    .info-pro span 
+       font-size 25px
+       color #666666
+    .info-pro span:last-child
+       float right
     .appraise-info .info-input      textarea
        width 100%
        border none
@@ -309,7 +433,7 @@ export default {
     .selPic
         position relative
         height 100%
-        z-index 100
+        z-index 10
         width 30%
         height 200px
         margin-left 15px
@@ -322,7 +446,7 @@ export default {
             background: red;
             opacity: 0;
       .imgMask
-            position: absolute;
+            position fixed
             height: 100%;
             width:100%;
             top:0px;
@@ -335,6 +459,7 @@ export default {
             color: white;
             font-size: 50px
             font-weight: bold;
+            text-align center
   .showImg
             height: 100%;
             width: 100%;

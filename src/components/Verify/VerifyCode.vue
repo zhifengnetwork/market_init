@@ -146,7 +146,7 @@
 //                      this.codeShow = codeShow.split('') // 转数组
 //                  }
                 }
-                console.log(this.codeChose);
+                // console.log(this.codeChose);
                 // collectCode是在父组件on监听的方法
 		        // 第二个参数this.codeChose是需要传的值
 		        this.$emit('collectCode', this.codeChose)

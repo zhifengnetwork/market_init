@@ -1,356 +1,394 @@
 <template>
-	<div>
-		<!--最大边框O-->
-		<div class="warpperO">
-			<!--头部Title,背景颜色class="headWrapColor"-->
-			<div class="headWrap headWrapColor">
-				<span class="returnImg" @click="$router.back(-1)"><img src="/static/img/headWrap/topReturnKey.png"/></span>
-				<span>注册</span>
-			</div>
-			<!--内容 wrpa O-->
-			<div class="contentWrapO">
-				<!--public 隔开上线 box-->
-				<p class="publicSeptum"></p>
-
-				<!--公共的class=>项Wrap，class="publicButtomLIne"=>(伪类)'底边框线'-->
-				<div class="pblicTermWrapO">
-					<!--公共的class=>项box-->
-					<div class="publicTermBoxO">
-						<!--左-->
-						<p class="publicTermLeftO">账号<span class="importantColor">*</span></p>
-						<!--右-->
-						<div class="publicTermRightO">
-							<!--input-->
-							<input type="text" class="publicTROInput" v-model="userData.userName" placeholder="请输入帐号">
-						</div>
-					</div>
+	<div class="reg-new-page">
+		       <headerView custom-title="注册"  >
+				<div class="backBtn" slot="backBtn" @click="$router.go(-1)">
+					<img src="../../../static/img/public/backBtn.png" />
 				</div>
-
-				<!--public 隔开上线 box-->
-				<p class="publicSeptum"></p>
-
-				<!--公共的class=>项Wrap，class="publicButtomLIne"=>(伪类)'底边框线'-->
-				<div class="pblicTermWrapO publicButtomLIne">
-					<!--公共的class=>项box-->
-					<div class="publicTermBoxO">
-						<!--左-->
-						<p class="publicTermLeftO">绑定邮箱<span class="importantColor">*</span></p>
-						<!--右-->
-						<div class="publicTermRightO">
-							<!--input-->
-							<input type="text" class="publicTROInput" v-model="userData.mailbox" placeholder="请输入邮箱帐号">
-						</div>
-					</div>
-				</div>
-				<!--公共的class=>项Wrap，class="publicButtomLIne"=>(伪类)'底边框线'-->
-				<div class="pblicTermWrapO publicButtomLIne">
-					<!--公共的class=>项box-->
-					<div class="publicTermBoxO">
-						<!--左-->
-						<p class="publicTermLeftO">登录密码<span class="importantColor">*</span></p>
-						<!--右-->
-						<div class="publicTermRightO">
-							<!--input-->
-							<input type="text" class="publicTROInput" v-model="userData.passOne" placeholder="请输入登录密码">
-						</div>
-					</div>
-				</div>
-				<!--公共的class=>项Wrap，class="publicButtomLIne"=>(伪类)'底边框线'-->
-				<div class="pblicTermWrapO">
-					<!--公共的class=>项box-->
-					<div class="publicTermBoxO">
-						<!--左-->
-						<p class="publicTermLeftO">重复密码<span class="importantColor">*</span></p>
-						<!--右-->
-						<div class="publicTermRightO">
-							<!--input-->
-							<input type="text" class="publicTROInput" v-model="userData.passTwo" placeholder="请重复输入密码">
-						</div>
-					</div>
-				</div>
-
-				<!--public 隔开上线 box-->
-				<p class="publicSeptum"></p>
-
-				<!--公共的class=>项Wrap，class="publicButtomLIne"=>(伪类)'底边框线'-->
-				<div class="pblicTermWrapO">
-					<!--公共的class=>项box-->
-					<div class="publicTermBoxO">
-						<!--左-->
-						<p class="publicTermLeftO">邀请码<span class="importantColor">*</span></p>
-						<!--右-->
-						<div class="publicTermRightO">
-							<!--input-->
-							<input type="text" class="publicTROInput" v-model="userData.invitationCode" placeholder="请输入邀请人账号">
-						</div>
-					</div>
-				</div>
-
-			</div>
-
-			<!--注册 按钮 box，样式=>public.css-->
-			<div class="registerButBox">
-				<p class="registerButton" @click="registerBut">注册</p>
-			</div>
-
-			<!--请求'loading'-->
-			<loading-request></loading-request>
-			<!--提示对话框-->
-			<tips-alert></tips-alert>
-		</div>
+				<span class="rightBtn" slot="rightBtn" @click="$router.push('/login')">登录</span>
+			</headerView> 
+    <form action="" class="reg-form">
+		  <!-- <div class="form-group account">
+			   <i class="iconfont label">&#xe60f;</i>
+			   <input type="text" name="userName" placeholder="请输入用户名" class="account-input" autocomplete="off" v-model="logOnMessage.userName">
+		  </div> -->
+		  <div class="form-group mobile">
+			   <i class="iconfont label">&#xe62c;</i>
+			   <input type="tel" name="mobile" placeholder="请输入手机号" class="mobile-input" autocomplete="off" v-model="logOnMessage.mobile" :disabled="!clickState">
+		  </div>
+		  <div class="form-group verifyCode">
+			   <i class="iconfont label">&#xe645;</i>
+			   <input type="number" name="verifyCode" placeholder="请输入验证码" class="verify-input" autocomplete="off" v-model="logOnMessage.verifyCode" >
+			   <button id="getVerifyCodeBtn" class="get-verify-code" type="button" @click="getCode(logOnMessage.mobile)" :disabled="!clickState"  :class="{active:clickState}">{{codeText}}</button>
+		  </div>
+		  <div class="form-group password">
+			   <i class="iconfont label">&#xe60e;</i>
+			   <input :type="isHide?'password':'text' " name="pwd" placeholder="请输入密码" class="password-input" autocomplete="off" v-model="logOnMessage.password">
+			   <span id="passwordEyeIcon" class="eye" @click="hideShow">
+				   <i class="iconfont eye-close" :class="{hide:isHide==false}">&#xe6f2;</i>
+				   <i class="iconfont eye-open"  :class="{hide:isHide==true}">&#xe657;</i>
+				</span>
+		  </div>
+		  <div class="form-group password2">
+			   <i class="iconfont label">&#xe60e;</i>
+			   <input :type="isHide?'password':'text' " name="pwd2" placeholder="请再次输入密码" class="password-input" autocomplete="off" v-model="logOnMessage.passwordTwo">
+		  </div>
+		  <div class="form-group email">
+			   <i class="iconfont label">&#xe61c;</i>
+			   <input type="text" name="email" placeholder="请输入电子邮箱" class="email-input" autocomplete="off" v-model="logOnMessage.email">
+		  </div>
+		  <div class="form-group invite-code">
+			   <i class="iconfont label">&#xe670;</i>
+			   <input type="text" name="inviteCode" placeholder="邀请口令（非必填）" class="invite-input" autocomplete="off" v-model="logOnMessage.invite">
+		  </div>
+		  <button id="regBtn" class="reg-btn" type="button" @click="registerBut">注册</button>
+	</form>
 	</div>
 </template>
-
 <script>
-	// 引入 管理数据商店
-	import store from '../../vuex/vueShop.js';
-	/*引用loading蒙版*/
-	import loadingRequest from '../publicComponents/loadingRequest'
-	/*引用提示对话框*/
-	import tipsAlert from '../publicComponents/tipsAlert.vue'
-	export default {
-		name: 'register',
-		/*注册*/
-		store,
-		components: {
-			loadingRequest,
-			tipsAlert,
-		},
-		data(){
-			return {
-				/*收集=>用户输入的数据*/
-				userData: {
-					/*账号*/
-					userName: '',
-					/*邮箱*/
-					mailbox: '',
-					/*新密码*/
-					passOne: '',
-					/*确认密码*/
-					passTwo: '',
-					/*邀请码*/
-					invitationCode: '',
-					/*提示弹窗的text(vuex里面的方法只能接受一个参数，所以传个'对象'过去)*/
-					tipsText: '注册成功',
-					/*提示弹窗的url*/
-					tipsUrl: '/login',
-				}
-			}
-		},
-		/*钩子函数=> 方法*/
-		methods: {
-			/*注册按钮*/
-			registerBut(){
-				/*保存指向*/
-				var that = this;
-				console.log('用户数据:',that.userData);
-				/*账号*/
-				var uName = /^\w{3,10}$/;
-				if(that.userData['userName'] == ''){
-					alert('账号不能为空！');
-					return false;
-				}else if(!uName.test(that.userData['userName'])){
-					alert('账号格式:3-10个字母、数字、下划线！');
-					return false;
-				}
-				/*邮箱*/
-				var mailbox = /^[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/;
-				if(that.userData['mailbox'] == ''){
-					alert('邮箱不能为空！');
-					return false;
-				}else if(!mailbox.test(that.userData['mailbox'])){
-					alert('邮箱格式错误，请输入正确邮箱！');
-					return false;
-				}
-				/*新密码*/
-				var pass = /^[a-zA-Z]\w{5,17}$/;
-				if(that.userData['passOne'] == ''){
-					alert('登陆密码不能为空！');
-					return false;
-				}else if(!pass.test(that.userData['passOne'])){
-					alert('密码长度要在6~18位之间,且必须以字母开头！');
-					return false;
-				}
-				/*重复密码*/
-				if(that.userData['passTwo'] != that.userData['passOne']){
-					alert('密码不一致！');
-					return false;
-				}
-				/*邀请码*/
-				if(that.userData['invitationCode'] == ''){
-					alert('邀请码不能为空');
-					return false;
-				}
-				/*出现请求loading(更改vuex里的数据)*/
-				this.$store.state.loadingState = true;
-				/*ajax*/
-				if(!null){
-					console.log('register',that.userData);
-					/*获取数据=> 插入表格*/
-					that.$store.commit('insertData',that.userData);
-					/*初始化，用户信息*/
-					that.userData = {
-						/*账号*/
-						userName: '',
-						/*邮箱*/
-						mailbox: '',
-						/*新密码*/
-						passOne: '',
-						/*确认密码*/
-						passTwo: '',
-						/*邀请码*/
-						invitationCode: '',
-						/*提示弹窗的text(vuex里面的方法只能接受一个参数，所以传个'对象'过去)*/
-						tipsText: '注册成功',
-						/*提示弹窗的url*/
-						tipsUrl: '/login',
-					}
-				}
-				
-			},
-			
-		},
-		/** 钩子函数
-		 *  挂载结束状态
-		 * **/
-		mounted() {
-			/*初始化数据库*/
-			this.$store.commit('createDb');
-		}
-	}
-</script>
+// 公共头部
+import headerView from '../common/headerView.vue'
 
-<style scoped>
-	/*最大边框*/
-	.warpperO {
-		padding: 88px 0 98px 0;
-		box-sizing: border-box;
-		-webkit-box-sizing: border-box;
-		-moz-box-sizing: border-box;
-		width: 100%;
-		height: auto;
+	/* 引入 mint-ui 弹窗组件 */
+	import {Toast} from "vant"
+	import { Dialog } from 'vant';
+
+		/* md5 */
+	import md5 from 'js-md5';
+export default {
+	data(){
+		return{
+			isHide:true,  //是否显示密码
+
+            logOnMessage:{
+				// userName:'', 			//用户账号
+
+				mobile:'',              //用户手机号
+
+				verifyCode:'',          //手机验证码
+
+				password:'',            //用户密码
+
+				passwordTwo:'',         //确认密码 二次输入
+
+				email:'',               //用户邮箱
+
+				invite:'',              //用户邀请码
+
+			},
+			//正则
+			regular:{
+				// userName:/^\w{3,10}$/, 			             //用户账号正则
+
+				mobile:/^[1]([3-9])[0-9]{9}$/,              //用户手机号正则
+
+				password:/^[a-zA-Z]\w{5,17}$/,             //用户密码正则
+
+				email:/^[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/,               //用户邮箱正则
+			},
+
+			    /*定时器Id*/
+				timer: null,
+				/*获取验证码-倒计时的'时间'*/
+				timerNum: 60,
+				/*'获取验证码的状态'点击，默认:true,同时=>控制'获取验证码'按钮color颜色*/
+				clickState: true,
+				/*获取验证码-text*/
+				codeText: '获取验证码',
+		}
+	},
+	methods: {
+		   //用户注册
+		   registerBut(){
+				  var that = this;
+
+				  //用户名
+				//   if(that.logOnMessage.userName==""){
+				// 		 Dialog.alert({
+				// 		 message: '用户名不能为空噢~!'
+				// 		 })
+				// 		 return
+				//   }else if(!that.regular.userName.test(that.logOnMessage.userName)){
+                //         Dialog.alert({
+				// 		message: '用户名格式:3-10个字母、数字、下划线!'
+				// 		})
+				// 		return
+				//   }
+				 
+				 //用户手机号
+                 if(that.logOnMessage.mobile==""){
+						 
+						 Toast('手机号不能为空噢!')
+						 return
+				  }else if(!that.regular.mobile.test(that.logOnMessage.mobile)){
+                  
+						Toast('手机号码输入不规范,请输入正确的手机格式!')
+						return
+				  }
+
+				  //验证码
+				//    if(that.clickState==true){
+				// 	                        	Dialog.alert({
+				// 								message: '请获手机取验证码!'
+				// 							})
+				// 								return
+				//    }else{
+					   if(that.logOnMessage.verifyCode==""){
+											
+											Toast('验证码不能为空，请获取验证码!')
+												return
+				//    }
+				   }
+
+				  //用户密码
+				  if(that.logOnMessage.password==""){
+						
+						 Toast('密码不能为空噢~!')
+						 return
+				  }else if(!that.regular.password.test(that.logOnMessage.password)){
+               
+						Toast('密码长度要在6~18位之间,且必须以字母开头!')
+						return
+				  }
+
+				  //二次输入密码
+				  if(that.logOnMessage.passwordTwo==""){
+						
+						 Toast('确认密码不能为空噢')
+						 return
+				  }else if(that.logOnMessage.passwordTwo != that.logOnMessage.password){
+                       
+						Toast('输入的密码不一致噢！')
+						return
+				  }
+
+				  //邮箱
+				//   if(that.logOnMessage.email==""){
+				// 		 Dialog.alert({
+				// 		 message: '邮箱不能为空噢~!'
+				// 		 })
+				// 		 return
+				//   }else
+				   if(that.logOnMessage.email!=""){
+						if(!that.regular.email.test(that.logOnMessage.email)){
+												Dialog.alert({
+												message: '邮箱格式错误，请输入正确邮箱!'
+											})
+												return
+										}
+				   }
+
+				//注册接口
+					var params = new URLSearchParams();
+						params.append('mobile', that.logOnMessage.mobile);       //你要传给后台的参数值 key/value
+						params.append('code', that.logOnMessage.verifyCode);
+						params.append('password', that.logOnMessage.password);
+						params.append('uid', that.logOnMessage.invite);
+					var url =  "/User/register"
+				// ?mobile="+that.logOnMessage.mobile+"&code="+that.logOnMessage.verifyCode+"&password="+that.logOnMessage.password+"&uid="+that.logOnMessage.invite;
+				that.$axios({
+					        method: 'post',
+									url:url,
+									data: params
+				}).then((res)=>{
+					if(res.data.status === 1){
+							Toast('注册成功~')
+							setTimeout(() => {
+								this.$router.push("/login");
+							}, 1000);
+							
+					}else{
+						   	Dialog.alert({
+												message: res.data.msg
+							})
+					}
+				})
+				   
+		   },
+
+		   //获取验证码
+		   getCode(code){
+
+                  if(code==""){
+						 
+						 Toast('请填写手机号码~!')
+						 return
+				  }else if(!this.regular.mobile.test(code)){
+               
+						 Toast('手机号码输入不规范,请输入正确的手机格式!')
+						return
+				  }else{
+					    let that = this;
+						var temp='sms_reg';
+						var auth = md5( code + md5(temp+'android+app') );
+						var url = "/Phone_auth/verifycode"
+						var params = new URLSearchParams();
+						params.append('mobile', code);       //你要传给后台的参数值 key/value
+						params.append('temp', temp);
+						params.append('auth', auth);
+                        if (that.clickState) {
+						that.$axios({
+							method: 'post',
+							url:url,
+							data: params
+						}).then((res)=>{
+							if(res.data.status == 1){
+							Toast(res.data.msg)
+							that.timer = setInterval(that.countDown,1000);
+							/*不能=>获取验证码*/
+							this.clickState = false;
+						    }else{
+							Dialog.alert({
+							message: res.data.msg
+							})
+						}
+						})
+					}
+				  }
+		   },
+
+		   /*(倒计时)获取验证码期间60S=>执行的函数*/
+			countDown(){
+				// this.setStorage(this.timerNum);   //localstorage
+				this.timerNum--;
+				this.codeText = '重新获取' + (this.timerNum + 's');
+				// console.log('找回密码=>获取验证码=>定时器:',this.timerNum);
+
+				if(this.timerNum <= 0){
+					/*清除定时器*/
+					clearInterval(this.timer); 
+					/*可以=>再次获取验证码*/
+					this.clickState = true; 
+					this.codeText = '获取验证码';
+					/*初始化，倒计时'时间'*/
+					this.timerNum = 60; 
+					// console.log('可以-获取验证。')
+					return false;
+				}
+			},
+// 			//写入和读取localstorage:
+// 			setStorage(parm) {
+// 	            localStorage.setItem("dalay", parm);
+// 	            localStorage.setItem("_time", new Date().getTime());
+//         	},
+
+//         	getStorage() {
+// 	            let localDelay = {};
+// 	            localDelay.delay = localStorage.getItem("dalay");
+// 	            localDelay.sec = localStorage.getItem("_time");
+// 	            return localDelay;
+//             },
+
+// 			judgeCode() {
+// 			            let that = this;
+// 			            let localDelay = that.getStorage();
+// 			            let secTime = parseInt(
+// 			                (new Date().getTime() - localDelay.sec) / 1000
+// 			);
+// 					let _delay = localDelay.delay - secTime; 
+// 					that.timerNum = _delay;
+// 					that.timer = setInterval(function() { 
+// 					if (_delay > 1) { 
+// 					that.clickState = false; 
+// 					_delay--; 
+// 					that.setStorage(_delay);
+// 					that.timerNum = _delay; 
+// 					that.codeText = '重新获取' + (that.timerNum + 's');
+// 					} else { 
+// 								 that.clickState = true;
+// 								 that.codeText = '获取验证码'
+// 								 that.timerNum = 60; 
+// 								 window.clearInterval(that.timer);
+// 					} 
+// 						 }, 1000) 
+// 				},
+			
+			//是否显示密码
+			hideShow(){ 
+
+				 if(this.isHide==true){
+					 this.isHide=false
+				 }else{
+					 this.isHide=true
+				 }
+
+			}
 	}
-	/*public 隔开上线 box*/
-	
-	.publicSeptum {
-		width: 100%;
-		height: 20px;
+	,components:{
+        // 公告头部
+        headerView,
+	},
+	mounted() {
+			// this.judgeCode()
 	}
-	/*内容*/
-	
-	.contentWrapO {
-		width: 100%;
-		height: auto;
-	}
-	/*公共的class=>项Wrap*/
-	
-	.pblicTermWrapO {
-		position: relative;
-		width: 100%;
-		height: 110px;
-	}
-	/*公共的class=>项(伪类)'底边框线'*/
-	
-	.publicButtomLIne:after {
-		content: " ";
-		width: 690px;
-		height: 2px;
-		border-bottom: 2px solid #dcdcdc;
-		position: absolute;
-		bottom: 0;
-		left: 30px;
-	}
-	/*公共的class=>项box*/
-	
-	.publicTermBoxO {
-		padding: 27px 0 0 30px;
-		box-sizing: border-box;
-		width: 100%;
-		height: 110px;
-		font-size: 30px;
-		background-color: #fff;
-	}
-	/*左*/
-	
-	.publicTermLeftO {
-		float: left;
-		width: 179px;
-		height: 67px;
-		color: #666;
-		font: 30px/67px "微软雅黑";
-		text-indent: 3px;
-		letter-spacing: 4px;
-	}
-	/*右*/
-	
-	.publicTermRightO {
-		float: left;
-		width: 511px;
-		height: 67px;
-		line-height: 67px;
-	}
-	/*input*/
-	
-	.publicTROInput {
-		outline: none;
-		border: none;
-		width: 500px;
-		/* height: 67px; */
-		height: 40px;
-		font-size: 30px;
-		color: #666;
-		letter-spacing: 1px;
-		background-color: #fff;
-	}
-	/*input=>提示文本*/
-	
-	.publicTROInput::-webkit-input-placeholder {
-		/* WebKit browsers */
-		color: #bbb;
-		font-size: 26px;
-		font-family: "微软雅黑";
-	}
-	
-	.publicTROInput:-moz-placeholder {
-		/* Mozilla Firefox 4 to 18 */
-		color: #bbb;
-		font-size: 26px;
-		font-family: "微软雅黑";
-	}
-	
-	.publicTROInput::-moz-placeholder {
-		/* Mozilla Firefox 19+ */
-		color: #bbb;
-		font-size: 26px;
-		font-family: "微软雅黑";
-	}
-	
-	.publicTROInput:-ms-input-placeholder {
-		/* Internet Explorer 10+ */
-		color: #bbb;
-		font-size: 26px;
-		font-family: "微软雅黑";
-	}
-	/*注册 box*/
-	
-	.registerButBox {
-		padding-top: 112px;
-		box-sizing: border-box;
-		width: 100%;
-		height: auto;
-	}
-	/*注册 按钮*/
-	
-	.registerButton {
-		margin: 0 auto;
-		width: 690px;
-		height: 90px;
-		display: flex;
-		align-items: center;
-		justify-content: center;		
-		font: 30px "微软雅黑";
-		color: #fff;
-		border-radius: 7px;
-		background-color: #1e82d2;
-	}
+}
+</script>
+<style lang="stylus" scoped>
+  .reg-new-page
+    background #ffffff
+    height 100vh
+  .reg-new-page .reg-form
+    margin-top 100px
+    padding 0 75px
+
+  .reg-new-page .reg-form>.form-group 
+    border-bottom: 1px solid #e0e0e0
+    height: 49px
+    margin-bottom: 56px
+   
+   .reg-new-page .reg-form>.form-group>label 
+    font-size: 12px
+    margin-right: 36px
+
+  
+  .reg-new-page .reg-form>.form-group>input 
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    width: 400px;
+    font-size 30px
+
+  .reg-new-page .reg-form>.form-group>input.verify-input
+    width: 260px
+
+  .reg-new-page .reg-form>.form-group>.get-verify-code 
+    background-color: #b0b0b0;
+    border-radius: .625rem;
+    color: #fff;
+    float: right;
+    font-size: 30px
+    height: 50px
+    line-height: 50px
+    margin-top: -8px
+    padding: 0 16px;
+
+   .reg-new-page .active 
+    background-color: #444!important;
+
+   
+   .reg-new-page .reg-form .reg-btn 
+    background-color: #323232;
+    border-radius: .1rem;
+    color: #fff;
+    font-size: 25px
+    height: 68px
+    width: 588px
+    display block
+    margin 40px auto 
+
+   .reg-new-page .reg-form>.form-group>.label
+    font-size 30px
+    color #000000
+    margin-right 30px
+
+   .reg-new-page .reg-form>.form-group.password>.eye 
+    float: right;
+    text-align: center;
+    width: 30px
+
+   .reg-new-page .reg-form>.form-group.password>.eye>i 
+    color: #000000;
+    font-size 40px
+
+
+
 </style>

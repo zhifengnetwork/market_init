@@ -1,4 +1,4 @@
-'use strict'
+﻿'use strict'
 // Template version: 1.3.1
 // see http://vuejs-templates.github.io/webpack for documentation.
 
@@ -10,28 +10,27 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    // proxyTable: {},
     proxyTable: {
 		  "/api": {
-		    target: "http://www.zfwl.c3w.cc",//接口的域名
-		    // target: "http://localhost:8888",//接口的域名
+        target: "http://api.zhifengwangluo.c3w.cc",//接口的域名
 		    //secure: false,  //如果是https接口，需要配置这个参数
 		    changeOrigin: true, //如果接口跨域，需要进行这个参数配置
 		    pathRewrite: {
-		    	// "^/api" : "/static/mock"}
-		    	"^/api" : "/api"}
+		    	"^/api" : ""
+		    	}
 		  }
 		},
 
     // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8888, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+//  host: 'zf_shop.zhifengwangluo.com', // can be overwritten by process.env.HOST
+    host: '192.168.1.112',
+    port: 80, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+    
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
     poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
 
-    
     /**
      * Source Maps
      */
@@ -62,7 +61,7 @@ module.exports = {
      * Source Maps
      */
 
-    productionSourceMap: true,
+    productionSourceMap: false,
     // https://webpack.js.org/configuration/devtool/#production
     devtool: '#source-map',
 

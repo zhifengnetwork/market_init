@@ -2,9 +2,9 @@
     <div class="user_box">
         <header class="elementary-bar">
             <a href="javascript:;" class="head-bar">
-                <img src="../../../static/img/user/defaultHeadImg.png" alt="" class="head-img">
+                <img :src="userItem.avatar" alt="" class="head-img">
             </a>
-            <a href="javascript:;" class="head-name">{{user.userName}}</a>
+            <a href="javascript:;" class="head-name">{{userItem.realname}}</a>
             <a href="javascript:;" class="member" style="background-color: rgb(0, 126, 186); ">
                <i class="vip-icon">{{user.vipRank}}</i></a>
         </header>
@@ -18,7 +18,7 @@
                </router-link>
                <ul class="order_icon clearfloat">
                    <li v-for="(item,index) in orderIcon" :key="index">
-                       <router-link :to="'/order?'+item.ar" class="icont-or">
+                       <router-link :to="item.ar" class="icont-or">
                            <img :src="item.imgUrl" alt="">
                            <p class="p-tit">{{item.name}}</p>
                         </router-link>
@@ -67,20 +67,25 @@
                       </router-link>
             </div>
         </div>
+         <div class="quitOut-box" @click="quitOut">
+             <button class="quitOut">退出登录</button>
+         </div>
         <menuBar></menuBar>
     </div>
 </template>
 <script>
 import menuBar from '../common/menuBar.vue'
+import store from '../../store/store'
+import { Toast,Dialog} from 'vant';
 export default {
     data() {
         return {
              orderIcon:[
-                 {id:1,name:'待支付',imgUrl:'../../../static/img/user/yinghang.png',ar:'type=1'},
-                 {id:2,name:'待收货',imgUrl:'../../../static/img/user/liwu.png',ar:'type=3'},
-                 {id:3,name:'待发货',imgUrl:'../../../static/img/user/yunsu.png',ar:'type=2'},
-                 {id:4,name:'评价管理',imgUrl:'../../../static/img/user/pingjia.png',ar:'type=4'},
-                 {id:5,name:'退款/售后',imgUrl:'../../../static/img/user/shouhou.png',ar:''}
+                 {id:1,name:'待支付',imgUrl:'../../../static/img/user/yinghang.png',ar:'/order?type=1'},
+                 {id:2,name:'待收货',imgUrl:'../../../static/img/user/liwu.png',ar:'/order?type=3'},
+                 {id:3,name:'待发货',imgUrl:'../../../static/img/user/yunsu.png',ar:'/order?type=2'},
+                 {id:4,name:'评价管理',imgUrl:'../../../static/img/user/pingjia.png',ar:'/order?type=4'},
+                 {id:5,name:'退款/售后',imgUrl:'../../../static/img/user/shouhou.png',ar:'/order/afterSale'}
              ],
              btnBar:[
                  {id:1,name:'会员福利社',viceName:'签到送积分',imgUrl:'../../../static/img/user/Member@2x.png',aUrl:''},
@@ -91,17 +96,60 @@ export default {
                  {id:6,name:'帮助中心',imgUrl:'../../../static/img/user/Help@2x.png',aUrl:''},
                  {id:7,name:'设置',viceName:'用户设置•地址',imgUrl:'../../../static/img/user/Set_up@2x.png',aUrl:'/my/userinfo'}
              ],
-             user:{ id:1,userName:'马冬梅',vipRank:'白金会员'}
-                
+             user:{ id:1,userName:'马冬梅',vipRank:'白金会员'},
+             userItem:[]   
              
         }
     },
     components:{
         menuBar
-    }
+    },
+    methods: {
+        quitOut(){
+           store.commit('del_token'); //token，清除它;
+            Dialog.confirm({
+            title: '提示',
+            message: '你确定要退出登录吗?'
+            }).then(() => {
+               Toast('退出成功')
+               
+               setTimeout(() => {
+								this.$router.push("/login");
+			   }, 1000);
+            }).catch(() => {
+            // on cancel
+            });
+        }
+    },
+    created() {
+         var url = "user/userinfo"
+           var params = new URLSearchParams();
+            params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value
+            this.$axios({
+                    method:"post",
+                    url:url,
+                    data:params
+                }).then((res)=>{
+                    
+                  if(res.data.status===1){
+                     this.userItem = res.data.data
+                     this.$store.commit("userInfo",res.data.data);
+                  }
+                })
+    },
 }
 </script>
-<style>
+<style lang="stylus" scoped>
     /*用户中心样式*/
     @import "../../../static/css/user/user.css";
+   .quitOut-box
+      background  #323232;
+      height 80px;
+      width 500px;
+      border-radius 10px
+      margin 0 auto 
+      line-height 80px
+      text-align center
+    .quitOut
+      color #ffffff
 </style>
