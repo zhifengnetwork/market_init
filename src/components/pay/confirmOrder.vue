@@ -690,7 +690,8 @@ import {Toast,Dialog} from "vant"
             margin-bottom 20px
             background url(/static/img/bg-addr-box-line.png) #fff left bottom repeat-x; 
             background-size 70px
-            justify-content space-between
+            .right
+                flex 1
             .address-icon
                 width 42px
                 height 42px
