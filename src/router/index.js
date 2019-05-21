@@ -74,6 +74,9 @@ import payFail from '@/components/pay/payFail'
 // 绑定用户信息
 import bindingMsg from '@/components/user/my/bindingMsg'
 
+// 退款
+import refund from '@/components/order/refund'
+
 
 
 
@@ -263,6 +266,13 @@ const router = new Router({
 			component: (resolve) => require(['@/components/user/my/bindingMsg'],resolve),
 			meta:{requireAuth:true}   //是否需要登录
 		},
+		// 退款
+		{
+			path:'/order/refund',
+			name: 'refund',
+			component: (resolve) => require(['@/components/order/refund'],resolve),
+			meta:{requireAuth:true}   //是否需要登录
+		},
 		
   	]
 })
@@ -273,7 +283,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
 	/*滚动条置顶*/
 	window.scrollTo(0, 0)
-  	next()
+  next()
 
 	if (to.matched.some(r => r.meta.requireAuth)) { 
 
