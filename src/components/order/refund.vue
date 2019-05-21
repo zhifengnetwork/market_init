@@ -108,7 +108,7 @@
                     <!-- 浏览显示图片 -->
                     <div class="imgMask" v-if="showBigImg" @click.stop="showBigImg=!showBigImg">
                         <div class="showImg">
-                            <mt-swipe :auto="0" :show-indicators="false" @change="handleChange(index)" :continuous="false" :defaultIndex="num">
+                            <mt-swipe :auto="0" :show-indicators="false" @change="handleChange" :continuous="false" :defaultIndex="num">
                             <mt-swipe-item v-for="(items,index) in imgUrls" :key="items.id">
                                 <div class="num"  >{{index+1+'/'+imgUrls.length}}</div>
                                 <img :src="imgUrls[index]" class="img"/>
@@ -132,7 +132,6 @@
                 <button class="cancelBtn">取消</button>
                 <button class="confirmBtn">确认</button>
             </div>
-
         </div>
     </div>
 </template>
@@ -180,6 +179,7 @@
                     
                     reader.onload = function (e) {
                         that.imgUrls.push(this.result)
+
                     }
                     }
                     // 剩余张数
@@ -203,7 +203,7 @@
                 }
             },
 
-            handleChange (index,item) {
+            handleChange (index) {
                 this.num = index
             },
 
@@ -319,5 +319,44 @@
 .closeIcon .seledPic
     width: 100%;
     height: 100%;
+
+.imgMask
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 101;
+    background: #000;
+
+.showImg
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    left: 0;
+    top: 0;
+
+  .num
+            padding-top: 10px;
+            color: white;
+            font-size: 50px
+            font-weight: bold;
+            text-align center
+  .showImg
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            align-items: center;
+            left: 0px;
+            top:0;
+  
+  .img
+            object-fit: scale-down;
+            height: auto;
+            width: 100%;
+            height: 100%;
 
 </style>
