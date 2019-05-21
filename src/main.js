@@ -81,7 +81,7 @@ Vue.component(Spinner.name, Spinner);
 import '../static/css/font/iconfont.css'
 
 
-
+/*拼接图片路径 */
 Vue.prototype.url = 'http://api.zhifengwangluo.c3w.cc/upload/images/'
 
 //全局获取倒计时

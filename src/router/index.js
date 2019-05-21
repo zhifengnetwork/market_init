@@ -88,7 +88,7 @@ const router = new Router({
 		    name: 'login',
 		    redirect: '/login', /**重定向**/
 		    /*component: login*/
-			component: (resolve) => require(['@/components/login/login.vue'],resolve)
+			 component: (resolve) => require(['@/components/login/login.vue'],resolve)
 		},
 		//登录
 	    {
@@ -107,7 +107,7 @@ const router = new Router({
 	    {
 	    	path: '/forget',
 	    	name: 'forget',
-			component: (resolve) => require(['@/components/login/forget'],resolve)
+			 component: (resolve) => require(['@/components/login/forget'],resolve)
 		},
 		// 首页
 		{
@@ -176,21 +176,21 @@ const router = new Router({
 		{
 			path:'/details/evaluate',
 			name:'evaluate',
-			component: (resolve) => require(['@/components/pay/confirmOrder'],resolve),
+			component: (resolve) => require(['@/components/goods/details/evaluate'],resolve),
 			meta:{requireAuth:true}   //是否需要登录
 		},
 		//发布评价
 		{
 			path:'/my/appraise',
 			name:'appraise',
-			component: (resolve) => require(['@/components/goods/details/evaluate'],resolve),
+			component: (resolve) => require(['@/components/user/my/publishApp'],resolve),
 			meta:{requireAuth:true}   //是否需要登录
 		},
 		// 确认订单
 		{
 			path:'/confirmOrder',
 			name: 'confirmOrder',
-			component: (resolve) => require(['@/components/user/my/publishApp'],resolve),
+			component: (resolve) => require(['@/components/pay/confirmOrder'],resolve),
 			meta:{requireAuth:true}   //是否需要登录
 		},
 		//个人信息
@@ -271,6 +271,9 @@ const router = new Router({
 // 导航守卫
 // 使用 router.beforeEach 注册一个全局前置守卫，判断用户是否登陆
 router.beforeEach((to, from, next) => {
+	/*滚动条置顶*/
+	window.scrollTo(0, 0)
+  	next()
 
 	if (to.matched.some(r => r.meta.requireAuth)) { 
 

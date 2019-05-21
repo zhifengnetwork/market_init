@@ -58,7 +58,7 @@
 										</div>
 										<div class="text">
 											<h3>{{item.goods_name}}</h3>
-											<span class="sign">{{item.attr_name[0]}}</span>
+											<span class="sign" v-for="items in item.attr_name" :key="items">{{items}}</span>
 											<div class="line3">
 												<span class="price">¥{{item.price}}</span>
 												<span class="commentNum">评论{{item.comment}}条</span>
@@ -242,6 +242,7 @@
 										top 50%
 										transform translate(-50%,-50%)
 										z-index 3
+										height 100%
 								p
 									text-align center
 									height 60px
@@ -257,12 +258,14 @@
 								align-items center
 								border-bottom 1px solid #eeeeee
 								padding 10px 0
+								height 200px
 								.img-wrap
 									width 160px
 									height 100%
 									margin-right 10px
 									img 
-										width 99%
+										width 100%
+										height 100%
 								.text
 									flex 1
 									h3
@@ -284,6 +287,7 @@
 										background-color #ff6600
 										margin 15px 0
 										display inline-block
+										margin-right 4px
 									.price
 										font-size 20px
 										color #ff6600

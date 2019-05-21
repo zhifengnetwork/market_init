@@ -18,9 +18,11 @@
 			<div class="modle_box" v-if="v.id == 'searchId'? true:''" :key="v.id">
 				<div class="search" :style="{'background':v.params.backColor}">
 					<form action="#" :style="{'border-color':v.params.borderColor}" :class="v.params.reStyle">
-						<input type="submit" class="searchBtn" value="">
+						<input type="submit" class="searchBtn" value="" >
 						<input type="text" class="searchText" :placeholder="v.data.tipeText" :style="{'color':v.params.textColor}">
 					</form>
+					<!--跳转-搜索页面-->
+					<p class="mask_input" @click.stop="routing_jump('/home')"></p>
 				</div>
 
 			</div>
@@ -52,12 +54,16 @@
 			<div class="modle_box" v-if="v.id == 'productListId'? true:''" :key="v.id">
 				<div class="modle_shop clearfloat">
 					<div class="modle_shop_title" :style="{color:v.params.titleColor}" v-if="v.params.titletext!=''&&v.params.title=='true'">{{v.params.titletext}}</div>
-					<!-- 显示一个 -->
-					<div class="modle_shop_item" v-if="v.params.listStyle=='modle_shop_item'" v-for="item in v.data.msg">
+					<!-- 显示一个 ，
+						传参-路由跳转:routing_jump('商品id')
+					-->
+					<div class="modle_shop_item" v-if="v.params.listStyle=='modle_shop_item'" v-for="item in v.data.msg" @click.stop="routing_jump('/details?goods_id=',item['goods_id'])">
+						
 						<div class="modle_shop_img">
 							<img :src="item.img" alt="">
 							<div class="modle_shop_attr" :class="v.params.attr"></div>
 						</div>
+						
 						<div class="modle_shop_info">
 							<p class="modle_shop_name">{{item.goods_name}}</p>
 							<div class="modle_shop_price" :class="v.params.price">
@@ -67,7 +73,7 @@
 						</div>
 					</div>
 					<!-- 显示多个 -->
-					<div :class="v.params.listStyle" v-if="v.params.listStyle!='modle_shop_item'" v-for="item in v.data.msg">
+					<div :class="v.params.listStyle" v-if="v.params.listStyle!='modle_shop_item'" v-for="item in v.data.msg" @click.stop="routing_jump('/details?goods_id=',item['goods_id'])">
 						<div class="modle_shop_img">
 							<img :src="item.img" alt="">
 							<div class="modle_shop_attr" :class="v.params.attr"></div>
@@ -177,9 +183,9 @@
 			/*axios=>请求-页面数据 -s*/
 			that.$axios.post("/shop/getShopData")
 				.then(function(response) {
-					
 					if(response["data"]["code"] == 1) {
 						/*alert(response['data']['msg']);*/
+						console.log('页面数据:',response["data"]["data"]["data"]);
 						/*页面名字*/
 						that.backData["page_name"] = response["data"]["data"]["page_name"];
 						/*页面渲染数据*/
@@ -215,9 +221,9 @@
 
 		},
 		methods: {
+			/*（轮播图）根据传过来的data=>创建 swiper 的分页器*/
 			carousel(res) {
 				for(let l = 0; l < res.length; l++) {
-					console.log(res);
 					var swiper = new Swiper('.' + res[l].data.id + res[l].key, {
 						autoplay: { //自动播放
 							delay: 3000,
@@ -244,6 +250,23 @@
 					});
 				}
 			},
+			/*路由-跳转*/
+			routing_jump(_router,_id){
+				console.log(_router,_id);
+				/*商品-路由跳转*/
+				if(_router && _id){
+					console.log('商品-路由:',_router,'传的id:',_id);
+					this.$router.push('/details?goods_id=' +_id);
+					return false;
+				}
+				/*搜索-路由跳转*/
+				if(_router && !_id){
+					console.log('搜索-路由:',_router);
+					this.$router.push(_router);
+					return false;
+				}
+			},
+			
 		},
 	};
 </script>
@@ -367,6 +390,7 @@
 	/* 搜索 -s */
 	
 	.search {
+		position: relative;
 		height: 80px;
 		padding: 10px;
 		box-sizing: border-box;
@@ -392,7 +416,7 @@
 		width: 40px;
 		height: 40px;
 		background: url(/static/img/home/searchObj/search_ico.png) no-repeat center;
-		background-size: 70%;
+		background-size: 80%;
 		border: 0;
 	}
 	
@@ -403,28 +427,56 @@
 		border: 0px;
 		padding: 0px 8px;
 		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
 		margin-left: 40px;
 		outline: none;
 		color: #999;
 		float: left;
 	}
+	/*inout的提示文字 样式修改*/
+	.searchText::-webkit-input-placeholder { /* WebKit browsers */ 
+		line-height: 44px;		
+		letter-spacing: 1px;
+	} 
+	.searchText:-moz-placeholder { /* Mozilla Firefox 4 to 18 */ 
+		line-height: 44px;	
+		letter-spacing: 1px;
+	} 
+	.searchText:-moz::-moz-placeholder { /* Mozilla Firefox 19+ */ 
+		line-height: 44px;	
+		letter-spacing: 1px;
+	} 
+	.searchText:-moz:-ms-input-placeholder { /* Internet Explorer 10+ */ 
+		letter-spacing: 1px;
+	}
+	.style2, .style1 {
+		height: 100%;
+	}
 	/* 搜索样式一 */
-	
 	.search .style1 .searchBtn {
 		top: 0;
 		left: 5px;
 		bottom: 0;
 	}
 	/* 搜索样式二 */
-	
 	.search .style2 .searchBtn {
 		top: 0;
 		right: 5px;
 		bottom: 0;
 	}
+	/*搜索-遮罩层*/
+	.mask_input {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 1;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0,0,0,0);
+	}
 	/* 搜索 -e */
 	/* 按钮组 -s*/
-	
 	.modle_bottons {
 		padding-top: 10px;
 		box-sizing: border-box;
@@ -434,18 +486,15 @@
 		height: auto;
 	}
 	/*四个按钮=>20%，五个按钮=>25%*/
-	
 	.modle_mod_nav {
 		display: inline-block;
 		/*width: 25%;*/
 		height: 100%;
 	}
-	
 	.modle_mod_img img {
 		width: 100%;
 		height: 100%;
 	}
-	
 	.modle_mod_text {
 		width: 100%;
 		height: 30px;
@@ -591,6 +640,7 @@
 		margin: auto;
 		display: block;
 		width: 100%;
+		height: 100%;
 	}
 	
 	.modle_shop_attr {

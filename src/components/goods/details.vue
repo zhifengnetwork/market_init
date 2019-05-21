@@ -153,7 +153,7 @@
                             />
                             <div data-v-3e366829="" class="van-goods-action-mini-btn van-hairline" :class="{active:goods.collection===1}" @click="onClickMinicollect">
                               <div data-v-3e366829="" class="van-icon  van-goods-action-mini-btn__icon iconfont">&#xe60c;</div>
-                              {{goods.collection===1?'以收藏':'收藏'}}</div>
+                              {{goods.collection===1?'已收藏':'收藏'}}</div>
                             <!-- <van-goods-action-mini-btn  
                                 icon="like-o"
                                 text="收藏"
@@ -226,7 +226,9 @@
                                             <button type="button"  :class="['coupon-btn',{'coupon-btn-valid':item.is_lq===0}]" @click="getCouponBt(item)" >{{item.is_lq===0?'立即领取':'已领取'}}</button>
                                         </div>
                                         <div class="coupon-intro">
-                                            <div class="coupon-price">¥ {{item.price}}</div>
+                                            <div class="coupon-price">¥ {{item.price}}
+                                              <span style="font-size:12px">{{parseInt(item.threshold)===0?'无门槛':"满"+item.threshold+'可使用'}}</span>
+                                            </div>
                                             <div class="coupon-desc">{{item.title}}</div>
                                             <div class="coupon-time">使用期限: {{item.start_time | formatDate}}一{{item.end_time | formatDate}}</div>
                                         </div>
@@ -813,7 +815,7 @@ export default {
                     }).then((res)=>{
                       if(res.data.status === 1){
                         Toast('商品添加购物车成功~')
-                        // this.$store.commit("increment") 
+                        this.is_sku=false;
                         var num =this.$store.getters.optCartCount
                         this.$store.commit("cartNum",num+this.selectArarr.goods_num);
                         // 数据加载成功，关闭loading 
@@ -896,12 +898,7 @@ export default {
               }).then((res)=>{
                 if(res.data.status === 1){
                   this.goods.collection=1
-                  Toast.success({
-                  message:res.data.msg,
-                  mask:true,
-                  loadingType:'spinner',
-                  forbidClick:true
-                  });
+                  Toast.success(res.data.msg);
                   }
               })
             }else{
@@ -916,12 +913,7 @@ export default {
               }).then((res)=>{
                 if(res.data.status === 1){
                   this.goods.collection=0
-                  Toast.success({
-                  message:res.data.msg,
-                  mask:true,
-                  loadingType:'spinner',
-                  forbidClick:true
-                  });
+                  Toast.success(res.data.msg);
                   }
               })
             }
@@ -1145,7 +1137,7 @@ export default {
                     overflow: hidden;
                     padding-left:40px
                     width: 100%;
-        ul   li   span
+        ul   li>span
                             border-bottom: 1px solid #444;
                             color: #fff;
                             display: block;

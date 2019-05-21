@@ -34,6 +34,8 @@ import {Toast} from "mint-ui"
               //详细地址搜索结果
             searchResult: [],
             addressId:this.$route.query.items,
+            //购物车id
+             cartId:this.$route.query.id,
             //收货人信息初始值
             addressInfo:'',
             // titleE:'添加地址',
@@ -45,7 +47,6 @@ import {Toast} from "mint-ui"
 
         //点击保存按钮时触发
     onSave(content) {
-        console.log(content)
         var url = "user/add_address";
         var s;
         if(content.isDefault){
@@ -67,9 +68,12 @@ import {Toast} from "mint-ui"
                     data:params
                 }).then((res)=>{
                   if(res.data.status===1){
-
-                     Toast(res.data.msg)
-                     this.$router.go(-1)
+                      Toast(res.data.msg)
+                     if(this.cartId){
+                          this.$router.push("/confirmOrder?id="+this.cartId);
+                     }else{
+                          this.$router.go(-1)
+                     }
                   }else{
                      Toast(res.data.msg)
                   }

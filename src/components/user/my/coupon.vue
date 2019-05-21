@@ -24,40 +24,48 @@
                                 </div>
                                 <div class="coupon-right">
                                     <p class="title">
-                                        <span class="type-activity">[活动券]</span> 【周年庆】{{parseInt(item.price)}}元现金券</p>
+                                        <span class="type-activity">[活动券]</span> 【周年庆】{{parseInt(item.price)}}元现金券
+                                     </p>
+                                     <p class="title">
+                                        <span class="type-activity">{{parseInt(item.threshold)===0?'无门槛':"满"+item.threshold+'可使用'}}</span> 
+                                     </p>
                                     <p class="time">{{item.start_time | formatDate}}一{{item.end_time | formatDate}}</p>
-                                    <p class="use-intro" @click="frost">
+                                    
+                                    <p class="use-intro" @click="frost(item)">
                                         <span class="show-intro-btn">使用说明</span>
-                                        <span class="iconfont" :class="arrows?'icon-up':'icon-down'"></span>
+                                        <span class="iconfont" :class="item.arrows?'icon-up':'icon-down'"></span>
                                     </p>
                                     <span class="tip"></span>
                                 </div>
                                     <router-link :to="'/details?goods_id='+item.goods_id" href="" class="use-now">立即使用</router-link>
                             </div>
-                            <ul class="coupon-intro" v-show="arrows">
+                            <ul class="coupon-intro" v-show="item.arrows">
                                 <li>特例商品不支持使用优惠券</li>
                             </ul>
                         </section>
 						
 						<!-- 已使用 -->
-						<section class="coupon-section"  v-if="indexx==1">
+						<section class="coupon-section"  v-if="indexx==1" v-for="item in list" :key="item.id">
 							<div class="coupon coupon-have">
 								<div class="coupon-left have">
-									<p class="value"><span>40</span></p>
+									<p class="value"><span>{{parseInt(item.price)}}</span></p>
 								</div>
 								<div class="coupon-right rightHave">
 									<p class="title">
-										<span class="type-activity">[活动券]</span> 【周年庆】40元现金券</p>
-									<p class="time">2019.04.23-2019.04.27</p>
-									<p class="use-intro"  @click="frost">
+										<span class="type-activity">[活动券]</span> 【周年庆】{{parseInt(item.price)}}元现金券</p>
+                                    <p class="title">
+                                        <span class="type-activity">{{parseInt(item.threshold)===0?'无门槛':"满"+item.threshold+'可使用'}}</span> 
+                                     </p>
+									<p class="time">{{item.start_time | formatDate}}一{{item.end_time | formatDate}}</p>
+									<p class="use-intro"  @click="frost(item)">
 										<span class="show-intro-btn">使用说明</span>
-										<span class="iconfont" :class="arrows?'icon-up':'icon-down'"></span>
+										<span class="iconfont" :class="item.arrows?'icon-up':'icon-down'"></span>
 									</p>
 									<span class="tip"></span>
 								</div>
 										<div class="stamp used-stamp"></div>
 							</div>
-							<ul class="coupon-intro " v-show="arrows">
+							<ul class="coupon-intro " v-show="item.arrows">
 								<li>特例商品不支持使用优惠券</li>
 							</ul>
 					    </section>
@@ -71,16 +79,19 @@
 								<div class="coupon-right rightHave">
 									<p class="title">
 										<span class="type-activity">[活动券]</span> 【周年庆】{{parseInt(item.price)}}元现金券</p>
+                                    <p class="title">
+                                        <span class="type-activity">{{parseInt(item.threshold)===0?'无门槛':"满"+item.threshold+'可使用'}}</span> 
+                                     </p>
 									<p class="time">{{item.start_time | formatDate}}一{{item.end_time | formatDate}}</p>
-									<p class="use-intro"  @click="frost">
+									<p class="use-intro"  @click="frost(item)">
 										<span class="show-intro-btn">使用说明</span>
-										<span class="iconfont" :class="arrows?'icon-up':'icon-down'"></span>
+										<span class="iconfont" :class="item.arrows?'icon-up':'icon-down'"></span>
 									</p>
 									<span class="tip"></span>
 								</div>
 										<div class="stamp overtime-stamp"></div>
 							</div>
-							<ul class="coupon-intro " v-show="arrows">
+							<ul class="coupon-intro " v-show="item.arrows">
 								<li>特例商品不支持使用优惠券</li>
 							</ul>
 					    </section>
@@ -122,8 +133,15 @@ export default {
         headerView
     },methods: {
 		    // 使用说明
-		frost(){
-			this.arrows=!this.arrows
+		frost(item){
+            
+            //    this.arrows=!this.arrows
+                if(typeof item.arrows == "undefined"){
+                this.$set(item,"arrows",true)
+            }else{
+                item.arrows=!item.arrows;
+            }
+            
 		},  
 			//tabr
 		tabrs(index){
@@ -182,7 +200,6 @@ export default {
     filters: {
             formatDate: function (value) {
                 let date = new Date(value*1000);
-                 console.log(date)
                 let y = date.getFullYear();
                 let MM = date.getMonth() + 1;
                 MM = MM < 10 ? ('0' + MM) : MM;

@@ -149,7 +149,7 @@
         <div class="order-bill">
             <div class="barText">
                 共<span class="red">{{totalNum}}</span>件,
-                总金额&nbsp;<span class="price red">{{total}}</span>
+                总金额&nbsp;<span class="price red">￥{{total}}.00</span>
             </div>
             <button class="barBtn" @click="open">
                 确认订单
@@ -200,9 +200,6 @@
                     @delete="onDelete"
                     @blur="showKeyboard = false"
             />
-            <!-- 加载 -->
-                 
-                <van-loading color="#000000" v-show="lodiong" />
     </div>
 </template>
 
@@ -218,8 +215,6 @@ import {Toast,Dialog} from "vant"
                 value: '',
                 showPwd:false,
                 showKeyboard:false,
-                //加载
-                lodiong:false,
                 //总价格
                 total:0,
                 //总商品数量
@@ -250,14 +245,12 @@ import {Toast,Dialog} from "vant"
                 chosenCoupon: -1,
                 //优惠券列表
                 coupons: [],
-                //优惠券
-                couponss:0,
+                //优惠券id
+                couponssId:0,
                 couponsPrice:'',
                 //显示领取优惠券
                 getCoupon:false, //优惠券
-                disabledCoupons: [
-
-                ],
+             
                 showList:false,//优惠券
                 delivery:"普通快递 : 免运费",
                 show:false,//是否显示支付方式上拉列表
@@ -363,31 +356,35 @@ import {Toast,Dialog} from "vant"
             },
             //使用优惠券
             getCouponBt(item){
+                    
                     this.coupons.map((data) => { 
-                    if (item.coupon_id === data.coupon_id) {
-                        if (item.select){
-                        this.$set(data, 'select',false);
-                        this.getCoupon=false
-                        this.couponsPrice = ``
-                        var tot = 0;
-                        for(var i = 0;i<this.orderData.length;i++){     //从新计算总价
-                        tot += parseFloat(this.orderData[i].subtotal_price)
-                        }
-                        this.total = tot
-                        } else {
-                            for(var i = 0;i<this.coupons.length;i++){
-                                this.$set( this.coupons[i], 'select',false);
-                            }
-                            this.$set(data,'select',true);
-                            this.couponsPrice = `-￥${item.price}`
+                        
+                            if (item.coupon_id === data.coupon_id) {
+                            this.couponssId = item.coupon_id  //优惠券id
+                            if (item.select){
+                            this.$set(data, 'select',false);
                             this.getCoupon=false
+                            this.couponsPrice = ``
                             var tot = 0;
-                            for(var i = 0;i<this.orderData.length;i++){   //从新计算总价
+                            for(var i = 0;i<this.orderData.length;i++){     //从新计算总价
                             tot += parseFloat(this.orderData[i].subtotal_price)
                             }
-                            this.total = parseFloat((tot*100)-(item.price*100))/100  //总价减去优惠卷价格
-                        };
+                            this.total = tot
+                            } else {
+                                for(var i = 0;i<this.coupons.length;i++){
+                                    this.$set( this.coupons[i], 'select',false);
+                                }
+                                this.$set(data,'select',true);
+                                this.couponsPrice = `-￥${item.price}`
+                                this.getCoupon=false;
+                                var tot = 0;
+                                for(var i = 0;i<this.orderData.length;i++){   //从新计算总价
+                                tot += parseFloat(this.orderData[i].subtotal_price)
+                                }
+                                this.total = parseFloat((tot*100)-(item.price*100))/100  //总价减去优惠卷价格
+                            };
                     }
+                        
                     });
 
 
@@ -405,6 +402,7 @@ import {Toast,Dialog} from "vant"
                     // user_note	//订单备注
                     if(this.payId === 1){  //余额支付
                          this.showPwd=true;
+                         this.showKeyboard=true;
                          return
                     }
                     if(this.payId === ''){
@@ -413,13 +411,14 @@ import {Toast,Dialog} from "vant"
                                 });
                                 return
                     }
-                    else{
+                    else{       
                                 var params = new URLSearchParams();
                                 params.append('token', this.$store.getters.optuser.Authorization);           //token
                                 params.append('cart_id',this.home );                       //购物车ID（多个逗号分开）
                                 params.append('address_id', this.tacitlySite.address_id); //收货ID
                                 params.append('pay_type', this.payId);                   //支付方式
                                 params.append('user_note', this.message);               //订单备注
+                                params.append('coupon_id',this.couponssId)             //优惠券id
                                 var url = "	order/submitOrder"
                                 this.$axios({
                                         method:"post",
@@ -427,10 +426,10 @@ import {Toast,Dialog} from "vant"
                                         data: params
                                     }).then((res)=>{
                                         if(res.data.status=== 1){
-                                           
-                                            // console.log(this.home)
-                                            // console.log(res)
-                                            // return
+                                            
+                                        // console.log(this.home)
+                                        // console.log(res)
+                                         // return
                                         // order_id  int
                                         // pay_type string  (alipay
                                         // 支付宝，weixin
@@ -449,6 +448,7 @@ import {Toast,Dialog} from "vant"
                                             data: params
                                         }).then((res)=>{
                                             if(res.data.status ===1){
+                                            
                                                 if(this.payId === 1){
                                                    
                                                 }else{
@@ -492,7 +492,6 @@ import {Toast,Dialog} from "vant"
             //输入密码
             onInput(key) {
                this.value = (this.value + key).slice(0, 6);
-            //    console.log(value)
                       if(this.value.length === 6){
                                         var url = 'user/check_pwd'
                                         var params = new URLSearchParams();
@@ -504,12 +503,13 @@ import {Toast,Dialog} from "vant"
                                             data: params
                                         }).then((res)=>{
                                       if(res.data.status ===1){  //提交成功
-                                           this.lodiong=true;
-                                            setTimeout(()=>{
-                                                this.lodiong=false;
+                                                Toast.loading({
+                                                mask: true,
+                                                message: '支付中...'
+                                                });
                                                 this.value = '';
                                                  //请求支付接口  
-                                                 },2000)
+                                           
 
                                 var params = new URLSearchParams();
                                 params.append('token', this.$store.getters.optuser.Authorization);           //token
@@ -517,6 +517,7 @@ import {Toast,Dialog} from "vant"
                                 params.append('address_id', this.tacitlySite.address_id); //收货ID
                                 params.append('pay_type', this.payId);                   //支付方式
                                 params.append('user_note', this.message);               //订单备注
+                                params.append('coupon_id',this.couponssId)             //优惠券id
                                 var url = "	order/submitOrder"
                                 this.$axios({
                                         method:"post",
@@ -524,13 +525,14 @@ import {Toast,Dialog} from "vant"
                                         data: params
                                     }).then((res)=>{
                                         if(res.data.status=== 1){         //请求成功
-
                                         // order_id  int
                                         // pay_type string  (alipay
                                         // 支付宝，weixin
                                         // 微信，credit
                                         // 余额，cash
                                         // 货到付款)
+
+                                         
                                         var orderId = res.data.data
                                         var urll = 'pay/payment'
                                         var params = new URLSearchParams();
@@ -543,56 +545,50 @@ import {Toast,Dialog} from "vant"
                                             data: params
                                         }).then((res)=>{
                                             if(res.data.status ===1){  //余额支付成功
-                                            Toast(res.data.msg)
-                                            console.log(res.data.data)
-                                            var data = JSON.stringify(res.data.data)
-                                            // setTimeout(()=>{
+                                            setTimeout(()=>{
+                                                Toast.success(res.data.msg);
+                                                var data = JSON.stringify(res.data.data)
                                                 this.$router.push(
                                                     {
-                                                     
                                                      path:'/paySucceed',
                                                      name: 'paySucceed',
                                                       params: {
                                                          list:data
-                                                      }
-                                                            
+                                                      }      
                                                     })
-                                                    
-                                            // },1000)
+                                                },2000)
+                                            
 
                                             }else{                     //余额支付失败
 
-                                            Dialog.alert({
-                                            message:res.data.msg
-                                            }).then(() => {
-                                                this.lodiong=true;
                                             setTimeout(()=>{
+                                                Toast.fail(res.data.msg);
                                                 this.close();
-                                                this.lodiong=false;
-                                            },1000)
-                                            });
+                                                this.showKeyboard = false
+                                            },2000)
                                             }
 
                                           })
 
                                         }else{
-                                            Dialog.alert({
-                                            message:res.data.msg
-                                            });
+                                            setTimeout(()=>{
+                                                Toast.fail(res.data.msg);
+                                                this.showKeyboard = false
+                                            },2000)
                                         }
                                         
                                          })  
 
-                                            }else{    //请求失败
-                                            Dialog.alert({
-                                            message:res.data.msg
-                                            }).then(() => {
-                                                this.lodiong=true;
-                                            setTimeout(()=>{
-                                                this.close();
-                                                this.lodiong=false;
-                                            },1000)
+                                       }else{    //请求失败
+                                            Toast.loading({
+                                                mask: true,
+                                                message: '支付中...'
                                             });
+                                            setTimeout(()=>{
+                                                Toast.fail(res.data.msg);
+                                                // this.close();
+                                                // this.showKeyboard = false
+                                            },2000)
                                             }
                                         })
                }
