@@ -74,13 +74,10 @@ import payFail from '@/components/pay/payFail'
 // 绑定用户信息
 import bindingMsg from '@/components/user/my/bindingMsg'
 
-<<<<<<< HEAD
 //搜索
 import search from '@/components/home/search'
-=======
 // 退款
 import refund from '@/components/order/refund'
->>>>>>> f2948f9cf0f600adfd5620f695783c36932d6924
 
 
 
@@ -271,19 +268,17 @@ const router = new Router({
 			component: (resolve) => require(['@/components/user/my/bindingMsg'],resolve),
 			meta:{requireAuth:true}   //是否需要登录
 		},
-<<<<<<< HEAD
 		// 搜索
 		{
 			path:'/search',
 			name: 'search',
 			component: (resolve) => require(['@/components/home/search'],resolve),
-=======
+		},
 		// 退款
 		{
 			path:'/order/refund',
 			name: 'refund',
 			component: (resolve) => require(['@/components/order/refund'],resolve),
->>>>>>> f2948f9cf0f600adfd5620f695783c36932d6924
 			meta:{requireAuth:true}   //是否需要登录
 		},
 		
