@@ -22,11 +22,10 @@ module.exports = {
 		},
 
     // Various Dev Server settings
-    //host: 'http://zf_shop.zhifengwangluo.com/', // can be overwritten by process.env.HOST
-    //port: 80, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+//  host: 'zf_shop.zhifengwangluo.com', // can be overwritten by process.env.HOST
+    host: '192.168.1.10',
+    port: 80, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     
-    host: '192.168.1.112', // can be overwritten by process.env.HOST
-    port: 8888, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
     notifyOnErrors: true,
