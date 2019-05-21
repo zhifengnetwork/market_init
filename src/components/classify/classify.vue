@@ -45,12 +45,14 @@
 							</div>
 
 							<!-- 热销商品 -->
-							<div v-for="item in items.goods">
+							<div v-if="items.goods">
 								<h3 class="title">热销商品</h3>
 								<ul class="singleList">
 									<router-link 
 										tag="li"
-										:to="'/details?goods_id='+item.goods_id">
+										:to="'/details?goods_id='+item.goods_id"
+										v-for="item in items.goods"
+										>
 										<div class="img-wrap">
 											<img :src="baseUrl + item.img">
 										</div>
@@ -222,11 +224,12 @@
 						.pro-items
 							display flex
 							flex-wrap wrap
-							// justify-content space-between
 							li
-								width 33%
+								width 31%
 								height 274px
-								margin 10px 0
+								margin 10px 15px 10px 0
+								&:last-child
+									margin-right 0
 								.picture
 									width 100%;
 									height 215px;

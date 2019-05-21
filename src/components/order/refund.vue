@@ -21,32 +21,32 @@
                     <van-actionsheet v-model="show" title="请选择退款原因" class="select-wrap">
                         <van-radio-group v-model="reason">
                             <van-cell-group>
-                                <van-cell title="商品无货" clickable @click="selectReason">
-                                    <van-radio name="商品无货"/>
+                                <van-cell title="7天无理由退款" clickable @click="selectReason">
+                                    <van-radio name="7天无理由退款"/>
                                 </van-cell>
-                                <van-cell title="配送时间问题" clickable @click="selectReason">
-                                    <van-radio name="配送时间问题"/>
+                                <van-cell title="退运费" clickable @click="selectReason">
+                                    <van-radio name="退运费"/>
                                 </van-cell>
-                                <van-cell title="不想要了" clickable @click="selectReason">
-                                    <van-radio name="不想要了"/>
+                                <van-cell title="商品描述不符" clickable @click="selectReason">
+                                    <van-radio name="商品描述不符"/>
                                 </van-cell>
-                                <van-cell title="商品信息填写错误" clickable @click="selectReason">
-                                    <van-radio name="商品信息填写错误"/>
+                                <van-cell title="质量问题" clickable @click="selectReason">
+                                    <van-radio name="质量问题"/>
                                 </van-cell>
-                                <van-cell title="地址信息填写错误" clickable @click="selectReason">
-                                    <van-radio name="地址信息填写错误"/>
+                                <van-cell title="少件漏发" clickable @click="selectReason">
+                                    <van-radio name="少件漏发"/>
                                 </van-cell>
-                                <van-cell title="商品降价" clickable @click="selectReason">
-                                    <van-radio name="商品降价"/>
+                                <van-cell title="包装/商品破损/污渍" clickable @click="selectReason">
+                                    <van-radio name="包装/商品破损/污渍"/>
                                 </van-cell>
-                                <van-cell title="货物破损已拒签" clickable @click="selectReason">
-                                    <van-radio name="货物破损已拒签"/>
+                                <van-cell title="假冒品牌" clickable @click="selectReason">
+                                    <van-radio name="假冒品牌"/>
                                 </van-cell>
-                                <van-cell title="快递/物流无物流跟踪记录" clickable @click="selectReason">
-                                    <van-radio name="快递/物流无物流跟踪记录"/>
+                                <van-cell title="发票问题" clickable @click="selectReason">
+                                    <van-radio name="发票问题"/>
                                 </van-cell>
-                                <van-cell title="非本人签收" clickable @click="selectReason">
-                                    <van-radio name="非本人签收"/>
+                                <van-cell title="卖家发错货" clickable @click="selectReason">
+                                    <van-radio name="卖家发错货"/>
                                 </van-cell>
                                 <van-cell title="其他" clickable @click="selectReason">
                                     <van-radio name="其他"/>
@@ -80,11 +80,24 @@
                 <div class="fl">联系电话:</div>
                 <div class="fr reasonText">178****2622</div>
             </div>
+
+            <!-- 退款备注 -->
+            <div class="">
+                <van-cell-group>
+                    <van-field
+                        label="问题描述"
+                        type="textarea"
+                        placeholder="问题描述(选填)"
+                        rows="1"
+                        autosize
+                    />
+                </van-cell-group>
+            </div>
             
             <!-- 上传图片 -->
             <div class="upload-pictures">
                 <h3>上传图片 (选填) :</h3>
-                <p>上传商品破损照片可以增加申请通过率，最多5张</p>
+                <p>上传商品破损照片可以增加申请通过率，最多3张</p>
                 <!-- 选择图片 -->
                 <div class="selPic">
                     <span class="iconfont icon-xiangji"></span>
@@ -141,6 +154,7 @@
 
               //上传图片
             onRead(e,item){
+                console.log(e.target.files.length)
                 // if (e.target.files.length <= (item.maxImages - item.imgUrls.length)) {
                 //     for (var i = 0; i < e.target.files.length; i++) {
                 //     let file = e.target.files[i]
@@ -192,6 +206,9 @@
                 margin-right 20px
             .fr
                 float left
+                .remarksVal
+                    width 100%
+                    height 60px
             .gray
                 color #969799       
             .select-wrap /deep/ .van-cell__value
