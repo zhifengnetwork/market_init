@@ -165,7 +165,6 @@
                                   <p >选择地址</p>
                                   </div>
                                   <div class="site-list" v-for="item in site"  :key="item.id" @click="selectSite(item)">
-                                  
                                         <div class="right">
                                             <div class="nameInfo">
                                                 <span class="name">{{item.consignee}}</span>
@@ -186,7 +185,6 @@
             </div>
             <!-- 密码输入框 -->
             <van-popup v-model="showPwd" class="popup" @click-overlay="close()">
-
                   <van-password-input
                     :value="value"
                     info="密码为 6 位数字"
@@ -285,7 +283,8 @@ import {Toast,Dialog} from "vant"
                                   this.coupons = res.data.data.coupon           //优惠券
                                   for(var i in this.site){                  
                                       if(this.site[i].is_default === 1 ){        //等于一就是显示默认地址
-                                              this.tacitlySite = this.site[i]
+                                              this.tacitlySite = this.site[i];
+                                              this.sitess = this.site[i].address_id
                                       }else{
                                               this.tacitlySite = this.site[i]
                                       }

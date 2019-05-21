@@ -12,7 +12,8 @@
                 <ul>
                     <li v-for="(item,index) in tabList"
                         :class="{active:index === nowIndex}"
-                        @click="handleClick(index)">
+                        @click="handleClick(index)"
+                        :key="index">
                         {{item.tabTitle}}
                     </li>
                 </ul>
@@ -61,13 +62,13 @@
                             </div>
                             <div class="order-opt" v-if="item.status===3">
                                 <!-- <span class="btn cancelBtn">删除订单</span> -->
-                                 <span class="btn">确认收货</span>
+                                 <span class="btn"  @click="receipt(index,item.order_id,item.status)">确认收货</span>
                             </div>
                             <div class="order-opt" v-if="item.status===4">
                                 <span class="btn cancelBtn" @click="delOrder(index,item.order_id,item.status)">删除订单</span>
-                                  <router-link :to="'/my/appraise?order_id='+item.order_id" >
+                                  <!-- <router-link :to="'/my/appraise?order_id='+item.order_id" > -->
                                  <span class="btn" @click="evaluateet(item)">评价</span>
-                                 </router-link>
+                                 <!-- </router-link> -->
                             </div>
                             <!-- <div class="order-opt">
                                 <span class="btn">删除订单</span>
@@ -78,7 +79,7 @@
                         
                     </li>
                     <li v-show="nowIndex===1">
-                        <div class="order-good" v-for="(item,index) in obligation" :key="index">
+                        <div class="order-good" v-for="(item,index) in allOrders" :key="index">
                             <div class="line1">
                                 <span class="order-number">订单编号:{{item.order_sn}}</span>
                                 <span class="order-state">待付款</span>
@@ -109,7 +110,7 @@
 
                     </li>
                     <li v-show="nowIndex===2">
-                        <div class="order-good" v-for="item in shipments" :key="item.id">
+                        <div class="order-good" v-for="item in allOrders" :key="item.id">
                             <div class="line1">
                                 <span class="order-number">订单编号:{{item.order_sn}}</span>
                                 <span class="order-state">待发货</span>
@@ -139,7 +140,7 @@
                         </div>
                     </li>
                      <li v-show="nowIndex===3">
-                        <div class="order-good" v-for="item in delivery" :key="item.id">
+                        <div class="order-good" v-for="item in allOrders" :key="item.id">
                             <div class="line1">
                                 <span class="order-number">订单编号:{{item.order_sn}}</span>
                                 <span class="order-state">待收货</span>
@@ -164,12 +165,12 @@
                             </router-link>
                             <div class="order-opt">
                                 <!-- <span class="btn cancelBtn">删除订单</span> -->
-                                 <span class="btn">确认收货</span>
+                                 <span class="btn" @click="receipt(index,item.order_id,item.status)">确认收货</span>
                             </div>
                         </div>
                     </li>
                      <li v-show="nowIndex===4">
-                        <div class="order-good" v-for="(item,index) in evaluate" :key="index">
+                        <div class="order-good" v-for="(item,index) in allOrders" :key="index">
                             <div class="line1">
                                 <span class="order-number">订单编号:{{item.order_sn}}</span>
                                 <span class="order-state">已完成</span>
@@ -194,16 +195,16 @@
                             </router-link>
                             <div class="order-opt">
                                 <span class="btn cancelBtn" @click="delOrder(index,item.order_id,item.status)">删除订单</span>
-                                  <router-link :to="'/my/appraise?order_id='+item.order_id" >
+                                  <!-- <router-link :to="'/my/appraise?order_id='+item.order_id" > -->
                                  <span class="btn" @click='evaluateet(item)'>评价</span>
-                                 </router-link>
+                                 <!-- </router-link> -->
                             </div>
                         </div>
                     </li>
 
                 </ul>
                 <!-- 无数据 -->
-                <div class="none">
+                <div class="none vacancy" v-if="allOrders.length===0">
                     <img src="/static/img/public/none.png" alt="">
                     <p>暂无数据</p>
                 </div>
@@ -228,14 +229,14 @@
                 type:this.$route.query.type,
                 //全部订单
                 allOrders:[],
-                //代付款
-                obligation:[],
-                //待发货
-                shipments:[],
-                //待收货
-                delivery:[],
-                //待评价
-                evaluate:[],
+                // //代付款
+                // obligation:[],
+                // //待发货
+                // shipments:[],
+                // //待收货
+                // delivery:[],
+                // //待评价
+                // evaluate:[],
                 tabList:[
 					{
 						tabTitle:"全部订单"
@@ -283,6 +284,7 @@
                                 data: params
                                 }).then((res)=>{
                         if(res.data.status === 1){
+                            console.log(1)
                         s.splice(index,1)
                         Toast(res.data.msg)
                     }else{
@@ -320,12 +322,18 @@
              //待付款取消订单
             cancellation(index,id,status){
                  var msgg = '您确定要取消订单吗？'
-                 this.ajax(index,id,status,this.obligation,msgg)               
+                 this.ajax(index,id,status,this.allOrders,msgg)       
+                 console.log(index)        
             },
             //全部订单页  删除订单
             delOrder(index,id,status){
                  var msgg = '您确定要删除订单吗？'
                  this.ajax(index,id,status,this.allOrders,msgg) 
+            },
+            //确认收货
+            receipt(index,id,status){
+                var msgg = '您要确认收货吗？'
+                this.ajax(index,id,status,this.allOrders,msgg) 
             },
            
             evaluateet(item){
@@ -389,6 +397,7 @@
                                             if(this.nowIndex === 1){
 
                                                 this.allOrders = res.data.data
+                                                console.log(this.allOrders.length===0)
                                                 
                                             }
                                             if(this.nowIndex === 2){
@@ -514,9 +523,9 @@
                         color #fff
                         background-color #d0021b
                         border-color #d0021b
-            .none
-                display none
+            .vacancy
                 text-align center
+                padding-top 50%
                 img 
                     width 80px
                 p

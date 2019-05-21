@@ -787,7 +787,6 @@ export default {
         addCart(){
             let le = [];
             let sele = []
-            console.log(this.selectArarr)
                  if(this.selectArr == ''){
                       for (let i = 0; i < this.good.length; i++) {
                         le.push(this.good[i].spec_name) 
@@ -817,7 +816,6 @@ export default {
                    }  
                 
                  }
-                 console.log( this.selectArarr)
                   this.selectArarr.token = localStorage.Authorization;
                   this.selectArarr.goods_num = this.sku_num;
                   var params = new URLSearchParams();
@@ -1063,6 +1061,7 @@ export default {
               }
                //初始化规格
                 this.initializeSpecification();
+                
             })
             .catch( error => {
             this.$store.commit('hideLoading')
