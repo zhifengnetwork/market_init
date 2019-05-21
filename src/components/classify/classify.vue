@@ -27,7 +27,7 @@
 							:key="index"
 							>	
 							<!-- 热门种类 -->
-							<div v-for="item in items.children" :key="item">
+							<div v-for="(item,index) in items.children" :key="index">
 								<h3 class="title">{{item.cat_name}}</h3>
 								<ul class="pro-items">
 									<router-link
@@ -51,7 +51,8 @@
 										tag="li"
 										:to="'/details?goods_id='+item.goods_id"
 										v-for="(item,index) in items.goods"
-										:key="index">
+										:key="index"
+										>
 										<div class="img-wrap">
 											<img :src="baseUrl + item.img">
 										</div>
