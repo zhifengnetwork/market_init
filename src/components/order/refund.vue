@@ -98,24 +98,32 @@
             <div class="upload-pictures">
                 <h3>上传图片 (选填) :</h3>
                 <p>上传商品破损照片可以增加申请通过率，最多3张</p>
-                <!-- 选择图片 -->
-                <div class="selPic">
-                    <span class="iconfont icon-xiangji"></span>
-                    <span>上传凭证</span>
-                    <input type="file" class="input-file" multiple="multiple" @change="onRead($event,item)" accept="image/gif,image/jpeg,image/jpg,image/png" >
-                </div>
 
-                <!-- 浏览显示图片 -->
-                <!-- <div class="imgMask" v-if="item.showBigImg" @click.stop="item.showBigImg=!item.showBigImg">
-                    <div class="showImg">
-                        <mt-swipe :auto="0" :show-indicators="false" @change="handleChange(index,item)" :continuous="false" :defaultIndex="num">
-                        <mt-swipe-item v-for="(items,index) in item.imgUrls" :key="items.id">
-                            <div class="num"  >{{index+1+'/'+item.imgUrls.length}}</div>
-                            <img :src="item.imgUrls[index]" class="img"/>
-                        </mt-swipe-item>
-                        </mt-swipe>
+                <!-- 选择图片 -->
+                <div class="uploader-add">
+                    <div class="closeIcon" v-if="imgUrls.length>0"  v-for="(itemz,index) in imgUrls" :key="index">
+                        <img class="seledPic" :src="itemz" @click="bigImg(index)">
+                        <img src="/static/img/user/appraise/close.png" alt="" class="close"  @click="closeImg(index)">
                     </div>
-                </div> -->
+                    <!-- 浏览显示图片 -->
+                    <div class="imgMask" v-if="showBigImg" @click.stop="showBigImg=!showBigImg">
+                        <div class="showImg">
+                            <mt-swipe :auto="0" :show-indicators="false" @change="handleChange(index)" :continuous="false" :defaultIndex="num">
+                            <mt-swipe-item v-for="(items,index) in imgUrls" :key="items.id">
+                                <div class="num"  >{{index+1+'/'+imgUrls.length}}</div>
+                                <img :src="imgUrls[index]" class="img"/>
+                            </mt-swipe-item>
+                            </mt-swipe>
+                        </div>
+                    </div>
+                    <div class="selPic" v-if="imgUrls.length<3">
+                        <span class="iconfont icon-xiangji"></span>
+                        <span>上传凭证</span>
+                        <input type="file" class="input-file" multiple="multiple" @change="onRead($event)" accept="image/gif,image/jpeg,image/jpg,image/png" >
+                    </div>
+
+                </div>
+           
 
             </div>
             
@@ -131,12 +139,18 @@
 
 <script>
     import headerView from '../common/headerView'
+    import {Swipe, SwipeItem} from 'mint-ui'
     export default {
         name:'refund',
         data(){
             return{
                 reason:'请选择退款原因',
-                show:false
+                show:false,
+                maxImages:3,
+                imgUrls:[],
+                leftImages:0,
+                showBigImg:false,
+                num: 0,
             }
         },
         methods:{
@@ -153,34 +167,50 @@
             },
 
               //上传图片
-            onRead(e,item){
+            onRead(e){
                 console.log(e.target.files.length)
-                // if (e.target.files.length <= (item.maxImages - item.imgUrls.length)) {
-                //     for (var i = 0; i < e.target.files.length; i++) {
-                //     let file = e.target.files[i]
-                //     this.file = file
+                if (e.target.files.length <= (this.maxImages - this.imgUrls.length)) {
+                    for (var i = 0; i < e.target.files.length; i++) {
+                    let file = e.target.files[i]
+                    this.file = file
 
-                //     let reader = new FileReader()
-                //     let that = this
-                //     reader.readAsDataURL(file)
+                    let reader = new FileReader()
+                    let that = this
+                    reader.readAsDataURL(file)
                     
-                //     reader.onload = function (e) {
-    
-                //         item.imgUrls.push(this.result)
-                    
-                //         that.imgUrls.push(this.result)
-                //     }
-                //     }
-                //     // 剩余张数
-                //     item.leftImages = item.maxImages - (item.imgUrls.length + e.target.files.length)
-                //     item.imgText = String(item.maxImages - (item.imgUrls.length + e.target.files.length)) + '/' + String(item.maxImages)
-                // }
-                // else {
-                //     Toast('只能选择' + (item.maxImages - item.imgUrls.length) + '张了')
-                // }
+                    reader.onload = function (e) {
+                        that.imgUrls.push(this.result)
+                    }
+                    }
+                    // 剩余张数
+                    this.leftImages = this.maxImages - (this.imgUrls.length + e.target.files.length)
+                    this.imgText = String(this.maxImages - (this.imgUrls.length + e.target.files.length)) + '/' + String(this.maxImages)
+                }
+                else {
+                    Toast('只能选择' + (this.maxImages - this.imgUrls.length) + '张了')
+                }
             
             },
 
+            //删除照片
+            closeImg(index){
+                this.imgUrls.splice(index, 1)
+                this.leftImages++
+                if (this.leftImages === this.maxImages) {
+                    this.imgText = '上传图片'
+                } else {
+                    this.imgText = String(this.leftImages) + '/' + String(this.maxImages)
+                }
+            },
+
+            handleChange (index,item) {
+                this.num = index
+            },
+
+            bigImg (index) {
+                this.showBigImg=true;
+                this.num = index
+            },
             
         },
         components:{
@@ -236,6 +266,7 @@
                 justify-content center
                 font-size 24px
                 position relative
+                margin 10px
                 .iconfont
                     font-size 50px
                 .input-file
@@ -263,6 +294,30 @@
             .confirmBtn
                 background-color #e93d3b
                 color #fff
-
+.uploader-add
+       width 100%
+       
+       display flex
+       flex-wrap wrap
+.closeIcon
+                width 184px
+                height 184px
+                background #f7f7f7
+                display flex
+                flex-direction column
+                align-items center
+                justify-content center
+                font-size 24px
+                position relative
+                margin 10px
+    .closeIcon .close
+         position absolute
+         top -20px
+         right -20px
+         width 50px
+         height 50px
+.closeIcon .seledPic
+    width: 100%;
+    height: 100%;
 
 </style>
