@@ -21,36 +21,36 @@
                     <van-actionsheet v-model="show" title="请选择退款原因" class="select-wrap">
                         <van-radio-group v-model="reason">
                             <van-cell-group>
-                                <van-cell title="商品无货" clickable @click="selectReason">
-                                    <van-radio name="商品无货"/>
+                                <van-cell v-for="item in refund.refund_reason" :key="item.id" :title="item" clickable @click="selectReason">
+                                    <van-radio :name="item"/>
                                 </van-cell>
-                                <van-cell title="配送时间问题" clickable @click="selectReason">
-                                    <van-radio name="配送时间问题"/>
+                                <!-- <van-cell title="退运费" clickable @click="selectReason">
+                                    <van-radio name="退运费"/>
                                 </van-cell>
-                                <van-cell title="不想要了" clickable @click="selectReason">
-                                    <van-radio name="不想要了"/>
+                                <van-cell title="商品描述不符" clickable @click="selectReason">
+                                    <van-radio name="商品描述不符"/>
                                 </van-cell>
-                                <van-cell title="商品信息填写错误" clickable @click="selectReason">
-                                    <van-radio name="商品信息填写错误"/>
+                                <van-cell title="质量问题" clickable @click="selectReason">
+                                    <van-radio name="质量问题"/>
                                 </van-cell>
-                                <van-cell title="地址信息填写错误" clickable @click="selectReason">
-                                    <van-radio name="地址信息填写错误"/>
+                                <van-cell title="少件漏发" clickable @click="selectReason">
+                                    <van-radio name="少件漏发"/>
                                 </van-cell>
-                                <van-cell title="商品降价" clickable @click="selectReason">
-                                    <van-radio name="商品降价"/>
+                                <van-cell title="包装/商品破损/污渍" clickable @click="selectReason">
+                                    <van-radio name="包装/商品破损/污渍"/>
                                 </van-cell>
-                                <van-cell title="货物破损已拒签" clickable @click="selectReason">
-                                    <van-radio name="货物破损已拒签"/>
+                                <van-cell title="假冒品牌" clickable @click="selectReason">
+                                    <van-radio name="假冒品牌"/>
                                 </van-cell>
-                                <van-cell title="快递/物流无物流跟踪记录" clickable @click="selectReason">
-                                    <van-radio name="快递/物流无物流跟踪记录"/>
+                                <van-cell title="发票问题" clickable @click="selectReason">
+                                    <van-radio name="发票问题"/>
                                 </van-cell>
-                                <van-cell title="非本人签收" clickable @click="selectReason">
-                                    <van-radio name="非本人签收"/>
+                                <van-cell title="卖家发错货" clickable @click="selectReason">
+                                    <van-radio name="卖家发错货"/>
                                 </van-cell>
                                 <van-cell title="其他" clickable @click="selectReason">
                                     <van-radio name="其他"/>
-                                </van-cell>
+                                </van-cell> -->
                             </van-cell-group>    
                         </van-radio-group>
                     </van-actionsheet>
@@ -72,37 +72,58 @@
             <!-- 退款联系人 -->
             <div class="dispatch-row">
                 <div class="fl">退款联系人 :</div>
-                <div class="fr reasonText"> 小腊肉</div>
+                <div class="fr reasonText"> {{refund.consignee}}</div>
             </div>
 
             <!-- 联系电话 -->
             <div class="dispatch-row">
                 <div class="fl">联系电话:</div>
-                <div class="fr reasonText">178****2622</div>
+                <div class="fr reasonText">{{refund.mobile}}</div>
+            </div>
+
+            <!-- 退款备注 -->
+            <div class="">
+                <van-cell-group>
+                    <van-field
+                        label="问题描述"
+                        type="textarea"
+                        placeholder="问题描述(选填)"
+                        rows="1"
+                        autosize
+                    />
+                </van-cell-group>
             </div>
             
             <!-- 上传图片 -->
             <div class="upload-pictures">
                 <h3>上传图片 (选填) :</h3>
-                <p>上传商品破损照片可以增加申请通过率，最多5张</p>
-                <!-- 选择图片 -->
-                <div class="selPic">
-                    <span class="iconfont icon-xiangji"></span>
-                    <span>上传凭证</span>
-                    <input type="file" class="input-file" multiple="multiple" @change="onRead($event,item)" accept="image/gif,image/jpeg,image/jpg,image/png" >
-                </div>
+                <p>上传商品破损照片可以增加申请通过率，最多3张</p>
 
-                <!-- 浏览显示图片 -->
-                <!-- <div class="imgMask" v-if="item.showBigImg" @click.stop="item.showBigImg=!item.showBigImg">
-                    <div class="showImg">
-                        <mt-swipe :auto="0" :show-indicators="false" @change="handleChange(index,item)" :continuous="false" :defaultIndex="num">
-                        <mt-swipe-item v-for="(items,index) in item.imgUrls" :key="items.id">
-                            <div class="num"  >{{index+1+'/'+item.imgUrls.length}}</div>
-                            <img :src="item.imgUrls[index]" class="img"/>
-                        </mt-swipe-item>
-                        </mt-swipe>
+                <!-- 选择图片 -->
+                <div class="uploader-add">
+                    <div class="closeIcon" v-if="imgUrls.length>0"  v-for="(itemz,index) in imgUrls" :key="index">
+                        <img class="seledPic" :src="itemz" @click="bigImg(index)">
+                        <img src="/static/img/user/appraise/close.png" alt="" class="close"  @click="closeImg(index)">
                     </div>
-                </div> -->
+                    <!-- 浏览显示图片 -->
+                    <div class="imgMask" v-if="showBigImg" @click.stop="showBigImg =! showBigImg">
+                        <div class="showImg">
+                            <mt-swipe :auto="0" :show-indicators="false" @change="handleChange" :continuous="false" :defaultIndex="num">
+                            <mt-swipe-item v-for="(items,index) in imgUrls" :key="items.id">
+                                <div class="num"  >{{index+1+'/'+imgUrls.length}}</div>
+                                <img :src="imgUrls[index]" class="img"/>
+                            </mt-swipe-item>
+                            </mt-swipe>
+                        </div>
+                    </div>
+                    <div class="selPic" v-if="imgUrls.length<3">
+                        <span class="iconfont icon-xiangji"></span>
+                        <span>上传凭证</span>
+                        <input type="file" class="input-file" multiple="multiple" @change="onRead($event)" accept="image/gif,image/jpeg,image/jpg,image/png" >
+                    </div>
+
+                </div>
+           
 
             </div>
             
@@ -111,19 +132,27 @@
                 <button class="cancelBtn">取消</button>
                 <button class="confirmBtn">确认</button>
             </div>
-
         </div>
     </div>
 </template>
 
 <script>
     import headerView from '../common/headerView'
+    import {Swipe, SwipeItem} from 'mint-ui'
     export default {
         name:'refund',
         data(){
             return{
                 reason:'请选择退款原因',
-                show:false
+                show:false,
+                maxImages:3,
+                imgUrls:[],
+                leftImages:0,
+                showBigImg:false,
+                num: 0,
+                //退款id
+                orderId:this.$route.query.order_id,
+                refund:[],
             }
         },
         methods:{
@@ -140,38 +169,76 @@
             },
 
               //上传图片
-            onRead(e,item){
-                // if (e.target.files.length <= (item.maxImages - item.imgUrls.length)) {
-                //     for (var i = 0; i < e.target.files.length; i++) {
-                //     let file = e.target.files[i]
-                //     this.file = file
+            onRead(e){
+                if (e.target.files.length <= (this.maxImages - this.imgUrls.length)) {
+                    for (var i = 0; i < e.target.files.length; i++) {
+                        let file = e.target.files[i]
+                        this.file = file
 
-                //     let reader = new FileReader()
-                //     let that = this
-                //     reader.readAsDataURL(file)
-                    
-                //     reader.onload = function (e) {
-    
-                //         item.imgUrls.push(this.result)
-                    
-                //         that.imgUrls.push(this.result)
-                //     }
-                //     }
-                //     // 剩余张数
-                //     item.leftImages = item.maxImages - (item.imgUrls.length + e.target.files.length)
-                //     item.imgText = String(item.maxImages - (item.imgUrls.length + e.target.files.length)) + '/' + String(item.maxImages)
-                // }
-                // else {
-                //     Toast('只能选择' + (item.maxImages - item.imgUrls.length) + '张了')
-                // }
+                        let reader = new FileReader()
+                        let that = this
+                        reader.readAsDataURL(file)
+                        
+                        reader.onload = function (e) {
+                            that.imgUrls.push(this.result)
+
+                        }
+                    }
+                    // 剩余张数
+                    this.leftImages = this.maxImages - (this.imgUrls.length + e.target.files.length)
+                    this.imgText = String(this.maxImages - (this.imgUrls.length + e.target.files.length)) + '/' + String(this.maxImages)
+                }
+                else {
+                    Toast('只能选择' + (this.maxImages - this.imgUrls.length) + '张了')
+                }
             
             },
 
+            //删除照片
+            closeImg(index){
+                this.imgUrls.splice(index, 1)
+                this.leftImages++
+                if (this.leftImages === this.maxImages) {
+                    this.imgText = '上传图片'
+                } else {
+                    this.imgText = String(this.leftImages) + '/' + String(this.maxImages)
+                }
+            },
+
+            handleChange (index) {
+                this.num = index
+            },
+
+            //点击显示大图
+            bigImg (index) {
+                this.showBigImg = true;
+                this.num = index
+            },
             
         },
         components:{
 			headerView
-        }
+        },
+        created() {
+                //  获取订单退款信息	order/get_refund
+                // 参数：
+                // token
+                // order_id
+                var url = 'order/get_refund'
+                 var params = new URLSearchParams();
+                                params.append('token', this.$store.getters.optuser.Authorization);           //token
+                                params.append('order_id',this.orderId );                      
+                                this.$axios({
+                                        method:"post",
+                                        url:url,
+                                        data: params
+                                        }).then((res)=>{
+                                               if(res.data.status === 1){
+                                                   console.log(res.data.data)
+                                                   this.refund = res.data.data
+                                               }
+                                        })
+        },
     }
 </script>
 
@@ -192,6 +259,9 @@
                 margin-right 20px
             .fr
                 float left
+                .remarksVal
+                    width 100%
+                    height 60px
             .gray
                 color #969799       
             .select-wrap /deep/ .van-cell__value
@@ -209,25 +279,78 @@
                 font-size 22px
                 line-height 34px
                 margin-bottom 20px
-            .selPic
-                width 184px
-                height 184px
-                background #f7f7f7
+            .uploader-add
+                width 100%
                 display flex
-                flex-direction column
-                align-items center
-                justify-content center
-                font-size 24px
-                position relative
-                .iconfont
-                    font-size 50px
-                .input-file
+                flex-wrap wrap
+                .closeIcon
+                    width 184px
+                    height 184px
+                    background #f7f7f7
+                    display flex
+                    flex-direction column
+                    align-items center
+                    justify-content center
+                    font-size 24px
+                    position relative
+                    margin 10px
+                    .close
+                        position absolute
+                        top -20px
+                        right -20px
+                        width 50px
+                        height 50px
+                .imgMask
+                    position fixed
+                    height 100%
+                    width 100%
+                    top 0
+                    left 0
+                    z-index 101
+                    background #000
+                    .showImg
+                        height 100%
+                        width 100%
+                        position absolute
+                        -webkit-box-align center
+                        -ms-flex-align center
+                        align-items center
+                        left 0
+                        top 0
+                        .num
+                            padding-top 10px
+                            color white
+                            font-size 50px
+                            font-weight bold
+                            text-align center
+                        .img
+                            object-fit scale-down
+                            height auto
+                            width 100%
+                            height 100%
+                .seledPic
                     width 100%
                     height 100%
-                    position absolute
-                    left 0
-                    top 0
-                    opacity 0
+                .selPic
+                    width 184px
+                    height 184px
+                    background #f7f7f7
+                    display flex
+                    flex-direction column
+                    align-items center
+                    justify-content center
+                    font-size 24px
+                    position relative
+                    margin 10px
+                    .iconfont
+                        font-size 50px
+                    .input-file
+                        width 100%
+                        height 100%
+                        position absolute
+                        left 0
+                        top 0
+                        opacity 0
         .refundBtn
             width 100%
             height 80px
@@ -246,6 +369,5 @@
             .confirmBtn
                 background-color #e93d3b
                 color #fff
-
 
 </style>

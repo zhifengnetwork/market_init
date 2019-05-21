@@ -41,10 +41,19 @@
                     </div>
         </header>
         <!-- 列表 -->
+        <!-- <van-search
+        v-model="value"
+        placeholder="请输入搜索关键词"
+        show-action
+        shape="round"
+        @search="onSearch"
+        >
+        <div slot="action" @click="onSearch">搜索</div>
+        </van-search> -->
         <div class="good-list-page">
                 <div class="filter-tab">
                      <ul class="list-nav clearfloat" >
-                        <li v-for="item in list" :key="item.id" class="buriedpoint" :class="[listId==item.id?'active':'',item.class]"  :data-ip="item.data"   @click='setlocation(item.id,item.data)'>
+                        <li v-for="item in list" :key="item.id" class="buriedpoint" :class="[listId==item.id?'active':'',item.class]"  :data-ip="item.data"   @click.passive='setlocation(item.id,item.data)'>
                             <a href="javascript:void(0);" >
                                 <span >{{item.name}}</span>
                                 <span class="iconfont drop" v-html="item.s" v-if="!item.isHide">
@@ -57,7 +66,7 @@
                          </li>
                     </ul>
                     <ul class="drop-list "  :class="{hide:drop}">
-                            <li  v-for="item in discount" :key="item.id"  :data-ip="item.data" :data-text="item.name" :class="[indexx==item.id?'active':'',item.class]" @click.stop='setloca(item,)'>
+                            <li  v-for="item in discount" :key="item.id"  :data-ip="item.data" :data-text="item.name" :class="[indexx==item.id?'active':'',item.class]" @click.passive='setloca(item)'>
                                 <span>{{item.name}}</span>
                                 <span class="chose"></span>
                             </li>
@@ -120,6 +129,8 @@ import headerView from '../../common/headerView'
 export default {
     data(){
         return{
+          //搜索关键字
+            value:'',
           //商品分类id
             cat_id:this.$route.query.cat_id,
 
@@ -374,7 +385,7 @@ export default {
             }
         },
         scrollBottom() {
-       console.log(window.screen.height + document.body.scrollTop,document.body.clientHeight)
+    //    console.log(window.screen.height + document.body.scrollTop,document.body.clientHeight)
         if (((window.screen.height + document.body.scrollTop) > (document.body.clientHeight)) && this.REQUIRE) {
           // 请求的数据未加载完成时，滚动到底部不再请求前一天的数据 this.REQUIRE = false;
           
@@ -385,9 +396,12 @@ export default {
              var url = "/goods/category?cat_id="+this.cat_id
                 this.$axios.get(url).then((res)=>{
                     this.proList=res.data.data.goods_list;
-                    
                 })
-      }
+      },
+      //搜索商品
+      onSearch(){
+
+      },
 
     },
 

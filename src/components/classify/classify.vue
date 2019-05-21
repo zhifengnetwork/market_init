@@ -27,7 +27,7 @@
 							:key="index"
 							>	
 							<!-- 热门种类 -->
-							<div v-for="item in items.children">
+							<div v-for="item in items.children" :key="item">
 								<h3 class="title">{{item.cat_name}}</h3>
 								<ul class="pro-items">
 									<router-link
@@ -45,12 +45,20 @@
 							</div>
 
 							<!-- 热销商品 -->
-							<div v-for="item in items.goods">
+							<div v-if="items.goods">
 								<h3 class="title">热销商品</h3>
 								<ul class="singleList">
 									<router-link 
 										tag="li"
-										:to="'/details?goods_id='+item.goods_id">
+										:to="'/details?goods_id='+item.goods_id"
+<<<<<<< HEAD
+										v-for="item in items.goods"
+										 :key="item"
+=======
+										v-for="(item,index) in items.goods"
+										:key="index"
+>>>>>>> c6f7aeb8a7e11aaa70c68c3e3ec73aa568df035a
+										>
 										<div class="img-wrap">
 											<img :src="baseUrl + item.img">
 										</div>
@@ -70,7 +78,7 @@
 				</div>
 			</div>
 		</div>
-		
+		  
 		<!-- 底部导航组件 -->
 		<menuBar></menuBar>
 	</div>
@@ -222,11 +230,12 @@
 						.pro-items
 							display flex
 							flex-wrap wrap
-							// justify-content space-between
 							li
-								width 33%
+								width 31%
 								height 274px
-								margin 10px 0
+								margin 10px 15px 10px 0
+								&:last-child
+									margin-right 0
 								.picture
 									width 100%;
 									height 215px;

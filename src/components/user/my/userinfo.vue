@@ -6,7 +6,7 @@
                         <img src="/static/img/public/backBtn.png" />
                       </div>
         </headerView>
-          <div class="user-page">
+          <div class="user-page" >
                <ul>
                    <li>
                        <van-uploader :after-read="onRead">
@@ -37,13 +37,14 @@
                    </li>
                    <li>
                        <span>生日</span>
-                       <span   @click="openPicker">{{birthday}}</span>
+                       <span   @click.passive="openPicker" >{{birthday}}</span>
                         <i class="right-arrow"></i>
                           <mt-datetime-picker
                             ref="picker"
                             v-model="pickerVisible"
                             type="date"
-                            @confirm="getTime">
+                            @confirm="getTime"
+                            >
                     </mt-datetime-picker>
                    </li>
                </ul>
@@ -51,7 +52,9 @@
                     <router-link to="/my/site">
                    <li>
                        <span>地址管理</span>
-                       <span><i class="right-arrow"></i></span>
+                       <span>
+                           {{address===0?'未设置':'已设置'}}
+                           <i class="right-arrow"></i></span>
                    </li>
                    </router-link>
                </ul>
@@ -70,12 +73,13 @@
                     ref="picker"
                     v-model="pickerVisible"
                     type="date"
-                    @confirm="getTime">
+                    @confirm.passive="getTime"
+                    >
                     </mt-datetime-picker>
         
       </div>
       <!-- 修改昵称 -->
-      <div class="amend-name" v-if="amend==false">
+      <div class="amend-name" v-if="amend==false" >
           <headerView custom-title="昵称"  >
                     <div class="backBtn" slot="backBtn" @click="amend=true">
                        取消
@@ -94,7 +98,7 @@
                 </div>
             </div>
         </div>
-        <div class="comment_1"><a id="btnOperateNickname" href="javascript:void(0)" @click="complete(userName)">完成</a> </div>
+        <div class="comment_1"><a id="btnOperateNickname" href="javascript:void(0)" @click="complete(userName)" >完成</a> </div>
       </div>
     </div>
 </template>
@@ -116,7 +120,9 @@ export default {
               baseUrl:'',
             //   userItem:'',
             //用户头像
-            userImg:''
+            userImg:'',
+            //是否设置地址
+            address:'',
         }
     },components:{
         headerView
@@ -208,6 +214,8 @@ export default {
            this.userImg = JSON.parse(this.$store.getters.optuser.usin).avatar   //头像
            this.userName = JSON.parse(this.$store.getters.optuser.usin).realname  //昵称
            this.birthday = JSON.parse(this.$store.getters.optuser.usin).birthyear+'-'+JSON.parse(this.$store.getters.optuser.usin).birthmonth+'-'+JSON.parse(this.$store.getters.optuser.usin).birthday  //生日
+           //是否设置地址
+           this.address = JSON.parse(this.$store.getters.optuser.usin).is_address
     },
 }
 </script>
@@ -352,6 +360,8 @@ export default {
     
     .van-uploader
         width 100%;
-
+    .van-icon
+        font-size 40px
+        vertical-align: middle
 
 </style>
