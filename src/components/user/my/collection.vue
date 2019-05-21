@@ -36,10 +36,10 @@
 						<router-link to="/classify" class="go-shopping">随便逛逛</router-link>
 					</div>
 				</div>
-				    <div class="fav-type" v-if="indexx==1">
+				    <div class="fav-type fav-product-list" v-if="indexx==1">
 					<!--商品为空时显示-->
 					<div class="fav-null-box">
-						<div class="fav-null"></div>
+						<div class="fav-null" style="margin: 5px 0 15px 135px;"></div>
 						<p class="p-tit ">您暂无收藏任何品牌</p>
 					</div>
 					

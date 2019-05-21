@@ -13,7 +13,7 @@
                     <div class="backBtn" slot="backBtn" @click="($router.go(-1))">
                         <img src="../../../static/img/public/backBtn.png" />
                     </div>
-                    <span class="rightBtn" slot="rightBtn" @click="redact">{{redactText}}</span>
+                    <span class="rightBtn" slot="rightBtn" @click="redact" v-if="list.length>0">{{redactText}}</span>
                 </headerView>
                 <div class="shopping-cart-page cart-page ">
                      <div class="cart-box">

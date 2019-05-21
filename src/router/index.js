@@ -74,6 +74,9 @@ import payFail from '@/components/pay/payFail'
 // 绑定用户信息
 import bindingMsg from '@/components/user/my/bindingMsg'
 
+//搜索
+import search from '@/components/home/search'
+
 
 
 
@@ -261,6 +264,13 @@ const router = new Router({
 			path:'/my/bindingMsg',
 			name: 'bindingMsg',
 			component: (resolve) => require(['@/components/user/my/bindingMsg'],resolve),
+			meta:{requireAuth:true}   //是否需要登录
+		},
+		// 搜索
+		{
+			path:'/search',
+			name: 'search',
+			component: (resolve) => require(['@/components/home/search'],resolve),
 			meta:{requireAuth:true}   //是否需要登录
 		},
 		

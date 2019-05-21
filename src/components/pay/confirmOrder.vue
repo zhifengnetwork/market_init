@@ -255,11 +255,14 @@ import {Toast,Dialog} from "vant"
                 delivery:"普通快递 : 免运费",
                 show:false,//是否显示支付方式上拉列表
                 show2:false,//是否显示配送方式上拉列表
+                
+                //用户信息
+                userItem:''
             };
         },
         created(){
             //图片路径
-           this.baseUrl=this.url
+                this.baseUrl=this.url
                  //获取订单信息
                     // 购物车提交订单	order/temporary
                     // 参数：
@@ -294,7 +297,23 @@ import {Toast,Dialog} from "vant"
                                 message:res.data.msg
                                 });
                             } 
-                        })       
+                        })  
+                
+                //获取用户信息
+                var urll = "user/userinfo"
+                var paramss = new URLSearchParams();
+                paramss.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value
+                this.$axios({
+                    method:"post",
+                    url:urll,
+                    data:paramss
+                }).then((res)=>{
+                    
+                  if(res.data.status===1){
+                     this.userItem = res.data.data
+                     this.$store.commit("userInfo",res.data.data);
+                  }
+                })
 
 
         },
@@ -400,6 +419,27 @@ import {Toast,Dialog} from "vant"
                     // address_id	//收货ID
                     // pay_type	//支付方式
                     // user_note	//订单备注
+                    if(this.userItem.is_address === 0){
+                                Dialog.confirm({
+                                title: '提示',
+                                message: '您未设置收货地址 点击确认前往设置'
+                                }).then(() => {
+                                this.$router.push('/my/addressAct?id='+this.home)
+                                }).catch(() => {
+                                
+                                });
+                                return
+                    }
+                    if(this.userItem.is_pwd === 0){
+                                Dialog.confirm({
+                                title: '提示',
+                                message: '您未设置支付密码 点击确认前往设置'
+                                }).then(() => {
+                                this.$router.push('/my/changePwd?id='+this.home)
+                                }).catch(() => {
+                                });
+                                return 
+                    }
                     if(this.payId === 1){  //余额支付
                          this.showPwd=true;
                          this.showKeyboard=true;
