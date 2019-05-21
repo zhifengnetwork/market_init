@@ -21,10 +21,10 @@
                     <van-actionsheet v-model="show" title="请选择退款原因" class="select-wrap">
                         <van-radio-group v-model="reason">
                             <van-cell-group>
-                                <van-cell title="7天无理由退款" clickable @click="selectReason">
-                                    <van-radio name="7天无理由退款"/>
+                                <van-cell v-for="item in refund.refund_reason" :key="item.id" :title="item" clickable @click="selectReason">
+                                    <van-radio :name="item"/>
                                 </van-cell>
-                                <van-cell title="退运费" clickable @click="selectReason">
+                                <!-- <van-cell title="退运费" clickable @click="selectReason">
                                     <van-radio name="退运费"/>
                                 </van-cell>
                                 <van-cell title="商品描述不符" clickable @click="selectReason">
@@ -50,7 +50,7 @@
                                 </van-cell>
                                 <van-cell title="其他" clickable @click="selectReason">
                                     <van-radio name="其他"/>
-                                </van-cell>
+                                </van-cell> -->
                             </van-cell-group>    
                         </van-radio-group>
                     </van-actionsheet>
@@ -72,13 +72,13 @@
             <!-- 退款联系人 -->
             <div class="dispatch-row">
                 <div class="fl">退款联系人 :</div>
-                <div class="fr reasonText"> 小腊肉</div>
+                <div class="fr reasonText"> {{refund.consignee}}</div>
             </div>
 
             <!-- 联系电话 -->
             <div class="dispatch-row">
                 <div class="fl">联系电话:</div>
-                <div class="fr reasonText">178****2622</div>
+                <div class="fr reasonText">{{refund.mobile}}</div>
             </div>
 
             <!-- 退款备注 -->
@@ -150,6 +150,9 @@
                 leftImages:0,
                 showBigImg:false,
                 num: 0,
+                //退款id
+                orderId:this.$route.query.order_id,
+                refund:[],
             }
         },
         methods:{
@@ -215,7 +218,27 @@
         },
         components:{
 			headerView
-        }
+        },
+        created() {
+                //  获取订单退款信息	order/get_refund
+                // 参数：
+                // token
+                // order_id
+                var url = 'order/get_refund'
+                 var params = new URLSearchParams();
+                                params.append('token', this.$store.getters.optuser.Authorization);           //token
+                                params.append('order_id',this.orderId );                      
+                                this.$axios({
+                                        method:"post",
+                                        url:url,
+                                        data: params
+                                        }).then((res)=>{
+                                               if(res.data.status === 1){
+                                                   console.log(res.data.data)
+                                                   this.refund = res.data.data
+                                               }
+                                        })
+        },
     }
 </script>
 

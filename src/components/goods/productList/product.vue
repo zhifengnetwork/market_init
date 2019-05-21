@@ -385,7 +385,7 @@ export default {
             }
         },
         scrollBottom() {
-       console.log(window.screen.height + document.body.scrollTop,document.body.clientHeight)
+    //    console.log(window.screen.height + document.body.scrollTop,document.body.clientHeight)
         if (((window.screen.height + document.body.scrollTop) > (document.body.clientHeight)) && this.REQUIRE) {
           // 请求的数据未加载完成时，滚动到底部不再请求前一天的数据 this.REQUIRE = false;
           
@@ -396,7 +396,6 @@ export default {
              var url = "/goods/category?cat_id="+this.cat_id
                 this.$axios.get(url).then((res)=>{
                     this.proList=res.data.data.goods_list;
-                    
                 })
       },
       //搜索商品

@@ -55,7 +55,7 @@
                           
                             </div>
                             <div class="order-opt" v-if="item.status===2">
-                                <router-link :to="'/order/afterSale?order_id='+item.order_id">
+                                <router-link :to="'/order/refund?order_id='+item.order_id">
                                 <span class="btn cancelBtn">退款</span>
                                 </router-link>
                                 <!-- <span class="btn">确认收货</span> -->
@@ -104,7 +104,7 @@
                             </router-link>
                             <div class="order-opt">
                                 <span class="btn cancelBtn" @click="cancellation(index,item.order_id,item.status)">取消订单</span>
-                                <span class="btn payBtn" @click="lipay()">立即付款</span>
+                                <span class="btn payBtn" @click="payment(item.order_id)">立即付款</span>
                             </div>
                         </div>
 
@@ -134,8 +134,10 @@
                                 </div>
                             </router-link>
                             <div class="order-opt">
+                                <router-link :to="'/order/refund?order_id='+item.order_id">
                                 <span class="btn cancelBtn">退款</span>
                                 <!-- <span class="btn">确认收货</span> -->
+                                </router-link>
                             </div>
                         </div>
                     </li>
@@ -302,7 +304,7 @@
                    var url = "order/temporary"
                    var params = new URLSearchParams();
                         params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value    tokne
-                        params.append('cart_id', id);                //你要传给后台的参数值 key/value             购物车id
+                        params.append('order_id', id);                //你要传给后台的参数值 key/value             购物车id
                         this.$axios({
                             method:"post",
                             url:url,
@@ -397,7 +399,6 @@
                                             if(this.nowIndex === 1){
 
                                                 this.allOrders = res.data.data
-                                                console.log(this.allOrders.length===0)
                                                 
                                             }
                                             if(this.nowIndex === 2){

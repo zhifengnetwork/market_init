@@ -49,12 +49,12 @@
                 @search="onSearch"
                 @keyup="onSearch(value)"
                 >
-                <div slot="action" @click="onSearch(value)">搜索</div>
+                <div slot="action" @click="onSSearch(value)">搜索</div>
             </van-search>
             <!-- 搜索关键字 -->
-             <ul class="search-associate">
-                      <li>
-                          <span class="keyword">11</span>
+             <ul class="search-associate" v-if="value!=''">
+                      <li v-for="item in keywo" :key="item.id">
+                          <span class="keyword">{{item.goods_name}}</span>
                           <span class="">
                               <i class="right-arrow"></i>
                           </span>
@@ -64,7 +64,12 @@
             <div class="hot-search-new ">
                 <div class="now-hot">
                     <div class="hot-goods hot-title">热搜</div>
-                    <div class="hot-goods">
+                    <div class="hot-goods"  v-for="item in hot" :key="item.id">
+                        <router-link to=''>
+                            {{item}}
+                        </router-link>
+                    </div>
+                <!-- <div class="hot-goods">
                         <router-link to=''>
                             开饭了
                         </router-link>
@@ -83,12 +88,7 @@
                         <router-link to=''>
                             开饭了
                         </router-link>
-                    </div>
-                <div class="hot-goods">
-                        <router-link to=''>
-                            开饭了
-                        </router-link>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <!-- item -->
@@ -103,8 +103,8 @@
                           </div>
                           <div class="search-content">
                                <ul class="history">
-                                   <li>
-                                       <a href="">22keme</a>
+                                   <li v-for="item in history" :key="item.id">
+                                       <a href="">{{item.keywords}}</a>
                                    </li>
                                </ul>
                           </div>
@@ -113,10 +113,10 @@
                         <h3>猜你想找</h3>
                         <div class="search-content">
                             <ul class="want clearfix">
-                                    <li>
-                                        <a href="javascript:void(0);">运动鞋</a>
+                                    <li v-for="item in like" :key="item.id">
+                                        <a href="javascript:void(0);">{{item}}</a>
                                     </li>
-                                    <li>
+                                    <!-- <li>
                                         <a href="javascript:void(0);">短袖T恤</a>
                                     </li>
                                     <li>
@@ -142,7 +142,7 @@
                                     </li>
                                     <li>
                                         <a href="javascript:void(0);">AliyaStore</a>
-                                    </li>
+                                    </li> -->
                             </ul>
                         </div>
                     </div>
@@ -162,6 +162,10 @@ export default {
 
               //搜索关键字
               value:'',
+              history: [],  //热搜
+              hot: [],        //最近搜索
+              like: [],       //猜你想找
+              keywo:[],       //搜索列表
          }
      },
      methods: {
@@ -172,15 +176,89 @@ export default {
 
         //搜索
         onSearch(value){
-            
-           console.log(value)
-        }
+            // 搜索 search/search
+            // 参数：
+            // token
+            // keywords
+            // sort
+            // goods_attr
+            // page
+            var url = 'search/search'
+            var params = new URLSearchParams();
+            params.append('token', this.$store.getters.optuser.Authorization);           //token
+            params.append('keywords', value);           //token
+            params.append('sort','' );           //token
+            params.append('goods_attr','' );           //token
+            params.append('page', '');           //token
+            if(value!=''){
+                 this.$axios({
+                 method:"post",
+                 url:url,
+                 data: params
+                }).then((res)=>{
+                    if(res.data.status === 1){
+                       this.keywo=res.data.data.goods_list
+                    }else{
+                        Dialog.alert({
+                         message:res.data.msg
+                     })
+                    }
+                })
+            }
+        },
+        // onSSearch(value){
+        //    var url = 'search/search'
+        //     var params = new URLSearchParams();
+        //     params.append('token', this.$store.getters.optuser.Authorization);           //token
+        //     params.append('keywords', value);           //token
+        //     params.append('sort','' );                  //token
+        //     params.append('goods_attr','' );            //token
+        //     params.append('page', '');                  //token
+        //     if(value!=''){
+        //          this.$axios({
+        //          method:"post",
+        //          url:url,
+        //          data: params
+        //         }).then((res)=>{
+        //             if(res.data.status === 1){
+        //                this.keywo=res.data.data.goods_list
+        //             }else{
+        //                 Dialog.alert({
+        //                  message:res.data.msg
+        //              })
+        //             }
+        //         })
+        //     }
+        // }
      },
 
      components:{
         // 公告头部
         headerView,
-    }
+    },
+    created()  {
+        //         获取搜索信息 search/get_search
+        // 参数：
+        // token
+         var url = 'search/get_search'
+            var params = new URLSearchParams();
+            params.append('token', this.$store.getters.optuser.Authorization);           //token
+           this.$axios({
+                 method:"post",
+                 url:url,
+                 data: params
+                }).then((res)=>{
+                    if(res.data.status === 1){
+                        this.history=res.data.data.history
+                        this.hot=res.data.data.hot
+                        this.like=res.data.data.like
+                    }else{  
+                         Dialog.alert({
+                                 message:res.data.msg
+                         })
+                    }
+                })
+    },
      
 }
 </script>
@@ -189,14 +267,13 @@ export default {
   
 //搜索关键字内容
 .search-associate 
-    background: #f8f8f8;
-    display: none;
+    background: #ffffff
     position: absolute;
     width: 100%;
     z-index: 1;
 
 .search-associate li 
-    background: #fff;
+    background: #f0f0f0
     box-sizing: border-box;
     clear: both;
     height:84px
@@ -204,6 +281,7 @@ export default {
     margin-bottom:5px
     padding: 0 20px
     width: 100%;
+    position relative
 
 .search-associate .keyword 
     float: left;
