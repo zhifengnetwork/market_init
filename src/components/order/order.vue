@@ -65,7 +65,7 @@
                             </div>
                             <div class="order-opt" v-if="item.status===4">
                                 <span class="btn cancelBtn" @click="delOrder(index,item.order_id,item.status)">删除订单</span>
-                                  <router-link to="" >
+                                  <router-link :to="'/my/appraise?order_id='+item.order_id" >
                                  <span class="btn" @click="evaluateet(item)">评价</span>
                                  </router-link>
                             </div>
@@ -194,9 +194,9 @@
                             </router-link>
                             <div class="order-opt">
                                 <span class="btn cancelBtn" @click="delOrder(index,item.order_id,item.status)">删除订单</span>
-                                  <a href="javascript:;">
+                                  <router-link :to="'/my/appraise?order_id='+item.order_id" >
                                  <span class="btn" @click='evaluateet(item)'>评价</span>
-                                 </a>
+                                 </router-link>
                             </div>
                         </div>
                     </li>

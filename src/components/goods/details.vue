@@ -572,6 +572,7 @@ export default {
       }
       if (haveChangedId.length) {
         //点击显示库存
+         
         this.sku_stock_s = true;
         //获得组合key价格
  
@@ -592,6 +593,7 @@ export default {
         //用已选中的节点验证待测试节点
         let daiceshi = []; //待测试节点
         let daiceshiId = [];
+        
         for (let i = 0; i < this.good.length; i++) {
           for (let j = 0; j < this.good[i].res.length; j++) {
             if (this.good[n].res[index].attr_id != this.good[i].res[j].attr_id ) {
@@ -602,15 +604,27 @@ export default {
               }) ;
               daiceshiId.push(this.good[i].res[j].attr_id);
             }
+            if(this.good[n].res[index].attr_id.length === this.good[i].res[j].attr_id.length){   //如果规格相等的
+              daiceshi.push({
+                index: i,
+                cindex: j,
+                id: this.good[i].res[j].attr_id
+              }) ;
+              daiceshiId.push(this.good[i].res[j].attr_id);
+            }
           }
         }
-
-        for (let i = 0; i < haveChangedId.length; i++) {
+        if(haveChangedId.length===1){
+          
+        }else{
+          for (let i = 0; i < haveChangedId.length; i++) {
           var indexs = daiceshiId.indexOf(haveChangedId[i]);
           if (indexs > -1) {
             daiceshi.splice(indexs, 1);
           }
+          }
         }
+        // if(daiceshi.length)
         for (let i = 0; i < daiceshi.length; i++) {
           let testAttrIds = []; //从选中节点中去掉选中的兄弟节点
           let siblingsId = "";
@@ -635,7 +649,6 @@ export default {
           testAttrIds.sort(function(value1, value2) {
             return parseInt(value1) - parseInt(value2);
           });
-
           if (!this.shopItemInfo[testAttrIds.join(";")] ) {
             this.good[daiceshi[i].index].res[
               daiceshi[i].cindex
@@ -676,13 +689,15 @@ export default {
             }
           }
         }
+         
       }
+
     },
 
 
         //规格弹窗 减少数量
         minusNum(){
-       
+                    
                  let le = [];
                  let sele = []
                  if(this.selectArr == ''){
@@ -759,7 +774,6 @@ export default {
                  }
                   if( this.sku_num < 10){  //如果数量小于10
             
-                      // this.$store.commit("increment");
                       this.sku_num++;
                   }else{
 
@@ -773,6 +787,7 @@ export default {
         addCart(){
             let le = [];
             let sele = []
+            console.log(this.selectArarr)
                  if(this.selectArr == ''){
                       for (let i = 0; i < this.good.length; i++) {
                         le.push(this.good[i].spec_name) 
@@ -802,6 +817,7 @@ export default {
                    }  
                 
                  }
+                 console.log( this.selectArarr)
                   this.selectArarr.token = localStorage.Authorization;
                   this.selectArarr.goods_num = this.sku_num;
                   var params = new URLSearchParams();
@@ -1138,7 +1154,7 @@ export default {
                     overflow: hidden;
                     padding-left:40px
                     width: 100%;
-         ul>li span
+         ul>li>a>span
                             border-bottom: 1px solid #444;
                             color: #fff;
                             display: block;
@@ -1478,7 +1494,8 @@ export default {
                  content: "\F075";
                  color red
 
-
+.van-cell:not(:last-child)::after
+     left 0
 
 
 </style>

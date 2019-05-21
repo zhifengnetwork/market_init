@@ -287,6 +287,8 @@ export default {
                 }).then((res)=>{
                     if(res.data.status === 1){
                         Toast(res.data.msg)
+                        // this.$router.push('/order?type=0')
+                        this.$router.go(-1)
                     }else{
                         Toast(res.data.msg)
                     }

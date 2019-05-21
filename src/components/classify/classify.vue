@@ -72,7 +72,7 @@
 				</div>
 			</div>
 		</div>
-		
+		  
 		<!-- 底部导航组件 -->
 		<menuBar></menuBar>
 	</div>

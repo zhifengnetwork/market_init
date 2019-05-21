@@ -85,10 +85,10 @@
                                         <div class="list_item_cnt">
                                             <input id="pay_code" class="list_item_input js_verifyCode" type="text" placeholder="验证码"  v-model="getpwd.newCode">
                                         </div>
-                                        <div class="list_item_extra" @click="getCode()">
-                                             <button type="submit" id="pay_getcode1" class="list_item_extra_btn js_getcode" v-show="!pwd.canGet" disabled="disabled">{{pwd.waitTime+"s后重新获取"}}</button>
-                                             <button type="submit" id="pay_getcode" class="list_item_extra_btn js_getcode"  v-show="pwd.canGet" @click="getCode">获取手机验证码</button>
-                                            </div>
+                                        <div class="list_item_extra" >
+                                             <button type="submit" id="pay_getcode1" class="list_item_extra_btn js_getcode" v-show="!LoginPwd.canGet" disabled="disabled">{{pwd.waitTime+"s后重新获取"}}</button>
+                                             <button type="submit" id="pay_getcode" class="list_item_extra_btn js_getcode"  v-show="LoginPwd.canGet" @click="loginGetCode()">获取手机验证码</button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="mod_list_item">
@@ -154,9 +154,9 @@
                                     <div class="list_item_cnt item_cnt">
                                         <input id="code" class="list_item_input" type="text" placeholder="验证码" v-model="newCode">
                                     </div>
-                                    <div class="list_item_extra" @click="getPhoneCode(newPhone)">
+                                    <div class="list_item_extra" >
                                         <button id="getcode" class="list_item_extra_btn" v-show="!phone.canGet" disabled="disabled">{{phone.waitTime+"s后重新获取"}}</button>
-                                         <button id="getcode" class="list_item_extra_btn"  v-show="phone.canGet" >获取手机验证码</button>
+                                         <button id="getcode" class="list_item_extra_btn"  v-show="phone.canGet" @click="getPhoneCode(newPhone)">获取手机验证码</button>
                                         </div>
                                 </div>
                             </div>
@@ -215,9 +215,9 @@
                                         <div class="list_item_cnt">
                                             <input id="pay_code" class="list_item_input js_verifyCode" type="text" placeholder="验证码" v-model="getpayment.newCode">
                                         </div>
-                                        <div class="list_item_extra" @click="getCode()">
+                                        <div class="list_item_extra" >
                                              <button id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="!pwd.canGet" disabled="disabled">{{pwd.waitTime+"s后重新获取"}}</button>
-                                             <button id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="pwd.canGet" @click="getCode">获取手机验证码</button>
+                                             <button id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="pwd.canGet" @click="pwdGetCode()">获取手机验证码</button>
                                             </div>
                                     </div>
                                 </div>
@@ -282,7 +282,8 @@ export default {
                  newCode:'',
             },
             password:/^[a-zA-Z]\w{5,17}$/,             //用户密码正则
-            pwdd:/^[a-zA-Z0-9]{6}$/,                   //支付密码
+            // pwdd:/^[a-zA-Z0-9]{6}$/,                   //支付密码
+            pwdd:/^\d{6}$/,                   //支付密码
             email:/^[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/,               //用户邮箱正则
             mobile:/^[1]([3-9])[0-9]{9}$/,              //用户手机号正则
             alter:0,
@@ -295,7 +296,7 @@ export default {
             //邮箱
             emile:'',
            //商城支付
-            tempPwd:{ //定义一个临时对象
+        tempPwd:{ //定义一个临时对象
             canGet: true,
             timer: null,
             waitTime: 60
@@ -305,18 +306,31 @@ export default {
             canGet: true,
             timer: null,
             waitTime: 60
-          }
+          },
+          //登录密码
+          tempLoginPwd:{
+            canGet: true,
+            timer: null,
+            waitTime: 60
+          },
+          //购物车id
+          cartId:this.$route.query.id,
         }
     },components:{
         headerView
     },
     methods: {
-
+         loginGetCode(){
+             this.getCode(this.LoginPwd);
+         },
+         pwdGetCode(){
+             this.getCode(this.pwd);
+         },
          //获取验证码  商城支付
-         getCode(){
+         getCode(getCodee){
                     //倒计时开始
-                     var that = this
-                     var temp='sms_forget';
+                        var that = this
+                        var temp='sms_forget';
 						var auth = md5( this.userList.mobile + md5(temp+'android+app') );
 						var url = "/Phone_auth/verifycode"
 						var params = new URLSearchParams();
@@ -329,9 +343,9 @@ export default {
 							data: params
 						}).then((res)=>{
 							if(res.data.status === 1){
-							Toast(res.data.msg)
-							//倒计时开始
-							 this.timeCountdown(this.pwd);  //参数为最终对象
+                            Toast(res.data.msg)
+							 //倒计时开始
+							 this.timeCountdown(getCodee);  //参数为最终对象
 						}else{
 								Dialog.alert({
 								message:res.data.msg
@@ -378,13 +392,14 @@ export default {
 							data: params
 						}).then((res)=>{
 							if(res.data.status === 1){
-                                // this.alter=0;
+                   
                                 Toast(res.data.msg)
                                 store.commit('del_token'); //token，清除它;
                                  setTimeout(() => {
 								this.$router.push("/login");
 			                    }, 1000);
 						}else{
+                        
 								Dialog.alert({
 								message:res.data.msg
 								})
@@ -416,7 +431,7 @@ export default {
 						})
 						return
                   }else{
-                          var that = this
+                        var that = this
 						var url = "/user/reset_pwd"
 						var params = new URLSearchParams();
 						params.append('password1', this.getpayment.pwd);       //你要传给后台的参数值 key/value
@@ -430,10 +445,17 @@ export default {
 							data: params
 						}).then((res)=>{
 							if(res.data.status === 1){
-                                Toast(res.data.msg)
-                                setTimeout(()=>{
-                                 that.$router.go(0)
-                                },1000)
+                                if(this.cartId){
+                                    Toast(res.data.msg)
+                                    setTimeout(()=>{
+                                    that.$router.go(-1)
+                                    },1000)
+                                }else{
+                                    Toast(res.data.msg)
+                                    setTimeout(()=>{
+                                    that.$router.go(0)
+                                    },1000)
+                                }
 						}else{
 								Dialog.alert({
 								message:res.data.msg
@@ -505,7 +527,8 @@ export default {
                                 this.userList.mobile = phone
 						}else{
 								Dialog.alert({
-								message:res.data.msg
+                                message:res.data.msg
+                                
 								})
 							
 						}
@@ -551,7 +574,6 @@ export default {
 								Dialog.alert({
 								message:res.data.msg
 						})
-							
 						}
                 })
                   }
@@ -572,12 +594,24 @@ export default {
             }else{
                 return this.tempPhone;
             }
+        },
+        //登录密码
+        LoginPwd(){
+            if(!this.tempLoginPwd.canGet){
+                return this.timeCountdown(this.tempLoginPwd);
+            }else{
+                return this.tempLoginPwd;
+            }
         }
 
     },
     created() {
         this.userList = JSON.parse(this.$store.getters.optuser.usin)
         this.emile  = this.$store.getters.optuser.usin.mailbox
+        
+        if(this.cartId){
+               this.alter=4
+        }
     },
 }
 </script>
