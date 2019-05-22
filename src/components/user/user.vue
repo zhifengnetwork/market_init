@@ -106,13 +106,12 @@ export default {
     },
     methods: {
         quitOut(){
-           store.commit('del_token'); //token，清除它;
             Dialog.confirm({
             title: '提示',
             message: '你确定要退出登录吗?'
             }).then(() => {
                Toast('退出成功')
-               
+               store.commit('del_token'); //token，清除它;
                setTimeout(() => {
 								this.$router.push("/login");
 			   }, 1000);

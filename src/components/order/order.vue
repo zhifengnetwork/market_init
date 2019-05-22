@@ -286,7 +286,6 @@
                                 data: params
                                 }).then((res)=>{
                         if(res.data.status === 1){
-                            console.log(1)
                         s.splice(index,1)
                         Toast(res.data.msg)
                     }else{
@@ -391,31 +390,9 @@
                                         if( res.data.status === 1){
                                             // 数据加载成功，关闭loading 
 					                        this.$store.commit('hideLoading')
-                                            if(this.nowIndex === 0){
-
-                                                this.allOrders = res.data.data
-                                                
-                                            }
-                                            if(this.nowIndex === 1){
-
-                                                this.allOrders = res.data.data
-                                                
-                                            }
-                                            if(this.nowIndex === 2){
-
-                                                this.allOrders = res.data.data
-                                                
-                                            }
-                                            if(this.nowIndex === 3){
-
-                                                this.allOrders = res.data.data
-                                                
-                                            }
-                                            if(this.nowIndex === 4){
-
+                                          
                                                 this.allOrders = res.data.data
                                         
-                                            }
                                         }else{
                                             Dialog.alert({
                                             message:res.data.msg

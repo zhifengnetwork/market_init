@@ -133,6 +133,8 @@ export default {
             value:'',
           //商品分类id
             cat_id:this.$route.query.cat_id,
+          //搜索
+            searchInfo:this.$route.query.query,
 
           //头部显示导航
              isHide:true,
@@ -356,7 +358,7 @@ export default {
             // this.ascList=res.data.data.goods_list;//保存商品列表
        })
 
-         this.ascState=1;
+        //  this.ascState=1;
         
         }else if(!this.isCur){
 
@@ -413,7 +415,36 @@ export default {
     created() {
         //图片路径
            this.baseUrl=this.url
-           this.ajax()
+        //    获取搜索信息
+            // 搜索 search/search
+            // 参数：
+            // token
+            // keywords
+            // sort
+            // goods_attr
+            // page
+           if(this.searchInfo){
+               let url = 'search/search'
+               var params = new URLSearchParams();
+               params.append('token', this.$store.getters.optuser.Authorization);           //token
+               params.append('keywords', this.searchInfo);           //token
+               this.$axios({
+                    method:"post",
+                    url:url,
+                    data: params
+                    }).then((res)=>{
+                        if(res.data.status === 1){
+                            console.log(res.data.data.goods_list    )
+                            this.proList=res.data.data.goods_list
+                        }else{  
+                            Dialog.alert({
+                                    message:res.data.msg
+                            })
+                        }
+                    })
+           }else{
+                this.ajax()
+           }
     },
 }
 </script>
