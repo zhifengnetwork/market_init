@@ -81,7 +81,7 @@ export default {
 
 				mobile:/^[1]([3-9])[0-9]{9}$/,              //用户手机号正则
 
-				password:/^[a-zA-Z]\w{5,17}$/,             //用户密码正则
+				password:/^([\d]|[\w]){6,20}$/,               //用户密码正则
 
 				email:/^[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/,               //用户邮箱正则
 			},
@@ -146,7 +146,7 @@ export default {
 						 return
 				  }else if(!that.regular.password.test(that.logOnMessage.password)){
                
-						Toast('密码长度要在6~18位之间,且必须以字母开头!')
+						Toast('密码长度为6-20位可以为数字、字母、特殊字符的密码')
 						return
 				  }
 

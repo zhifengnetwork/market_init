@@ -2,7 +2,7 @@
     <!-- 商品列表 -->
     <div class="productL-box">
           <header>
-                <headerView custom-title="商品列表"  rightNone>
+                <headerView :custom-title="searchInfo"  rightNone>
                         <div class="backBtn" slot="backBtn" @click="$router.go(-1)">
                             <img src="../../../../static/img/public/backBtn.png" />
                         </div>
@@ -11,46 +11,58 @@
                         </div>
                 </headerView> 
                 <div class="homebuttom" :class="{hide:isHide}">
-                            <div class="ul-arr"></div>
-                            <ul>
-                                <li>
-                                    <router-link to="/">
-                                        <img class="iconfont" src="../../../../static/img/public/home.png" />
-                                        <span class="text">首页</span>
-                                    </router-link>
-                                </li>
-                                <li>
-                                    <router-link to="/classify">
-                                        <img class="iconfont" src="../../../../static/img/public/class.png" />
-                                        <span class="text">分类</span>
-                                    </router-link>
-                                </li>
-                                <li>
-                                    <router-link to="/cart" rel="nofollow">
-                                        <img class="iconfont" src="../../../../static/img/public/Cart.png" />
-                                        <span class="text">购物车</span>
-                                    </router-link>
-                                </li>
-                                <li>
-                                    <router-link to="/user" rel="nofollow">
-                                        <img class="iconfont" src="../../../../static/img/public/user.png" />
-                                        <span class="text">我的</span>
-                                    </router-link>
-                                </li>
-                            </ul>
-                    </div>
+                    <div class="ul-arr"></div>
+                    <ul>
+                        <li>
+                            <router-link to="/">
+                                <img class="iconfont" src="../../../../static/img/public/home.png" />
+                                <span class="text">首页</span>
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link to="/classify">
+                                <img class="iconfont" src="../../../../static/img/public/class.png" />
+                                <span class="text">分类</span>
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link to="/cart" rel="nofollow">
+                                <img class="iconfont" src="../../../../static/img/public/Cart.png" />
+                                <span class="text">购物车</span>
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link to="/user" rel="nofollow">
+                                <img class="iconfont" src="../../../../static/img/public/user.png" />
+                                <span class="text">我的</span>
+                            </router-link>
+                        </li>
+                    </ul>
+                </div>
         </header>
-        <!-- 列表 -->
-        <!-- <van-search
-        v-model="value"
-        placeholder="请输入搜索关键词"
-        show-action
-        shape="round"
-        @search="onSearch"
-        >
-        <div slot="action" @click="onSearch">搜索</div>
-        </van-search> -->
-        <div class="good-list-page">
+        
+        <!-- 搜索框 -->
+            <van-search
+                v-model="value"
+                placeholder="请输入搜索关键词"
+                show-action
+                shape="round"
+                @search="onSearch"
+                @keyup="onSearch(value)"
+                
+                >
+                <div slot="action" @click="onSSearch(value)">搜索</div>
+            </van-search>
+            <!-- 搜索关键字 -->
+             <ul class="search-associate" v-if="value!=''">
+                      <li v-for="item in keywo" :key="item.id" @click="searchTo(item.goods_name)">
+                          <span class="keyword">{{item.goods_name}}</span>
+                          <span class="">
+                              <i class="right-arrow"></i>
+                          </span>
+                      </li>
+            </ul>
+        <div class="good-list-page" v-if="keywo.length===0 || value===''">
                 <div class="filter-tab">
                      <ul class="list-nav clearfloat" >
                         <li v-for="item in list" :key="item.id" class="buriedpoint" :class="[listId==item.id?'active':'',item.class]"  :data-ip="item.data"   @click.passive='setlocation(item.id,item.data)'>
@@ -65,7 +77,7 @@
                              </a>
                          </li>
                     </ul>
-                    <ul class="drop-list "  :class="{hide:drop}">
+                    <ul class="drop-list"  :class="{hide:drop}">
                             <li  v-for="item in discount" :key="item.id"  :data-ip="item.data" :data-text="item.name" :class="[indexx==item.id?'active':'',item.class]" @click.passive='setloca(item)'>
                                 <span>{{item.name}}</span>
                                 <span class="chose"></span>
@@ -74,9 +86,7 @@
                 </div>
                 <!-- 列表 -->
                 <div id="goods-container" class="goods-container clearfloat">
-                        <div>
-
-                       
+               <div>
                      <div class="good-info "  v-for="(item,index) in proList" :key="index" :data-good-id="item.pid" :data-id="item.cat_id" :data-bp-id="item.goods_name">
                             <div class="tag-container clearfloat">
                                  <p class="good-tag new-tag" v-if="newState">NEW</p>
@@ -99,12 +109,16 @@
                                 <a class="similar-btn iconfont">&#xe60b;</a>
                             </div>
                     </div>
-                     </div>
+                </div>
+                <div class="no-result-new" v-if="searchInfo && proList.length===0">
+                    <p>没有找到相关商品</p>
+                    <p>试试搜索别的看看</p>
+               </div>
                     <!-- 筛选 -->
                 <div class="filter-mask" style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);" :class="{hide:screen}">
                   <div class="filter-body">
                                 <ul class="classify">
-                                <li class="classify-item " v-for="item in screenList" :key="item.id" :data-ip="item.data" :class="{active:item.name==classifyName}" @click="classifyNa(item.name)">
+                                <!-- <li class="classify-item " v-for="item in screenList" :key="item.id" :data-ip="item.data" :class="{active:item.name==classifyName}" @click="classifyNa(item.name)">
                                     <p class="shower">
                                          <span class="title">{{item.name}}：</span>
                                          {{item.title}}
@@ -115,7 +129,7 @@
                                             <i class="iconfont chosed-icon">&#xe6ba;</i>
                                         </li>
                                     </ul>
-                                </li>
+                                </li> -->
                                 </ul>
                    </div>
                 </div>
@@ -126,13 +140,16 @@
 <script>
 // 公共头部
 import headerView from '../../common/headerView'
+import {Toast,Dialog} from "vant"
 export default {
     data(){
         return{
-          //搜索关键字
+          //搜索title
             value:'',
           //商品分类id
             cat_id:this.$route.query.cat_id,
+          //搜索
+            searchInfo:'商品列表',
 
           //头部显示导航
              isHide:true,
@@ -163,10 +180,10 @@ export default {
         
 
         //新品
-        newProduct:[],
         newState:false, //新品状态
-        // newStatee:0,
         
+        //搜索信息
+        keywo:[],
 
 
              listId:1,
@@ -206,7 +223,7 @@ export default {
             this.isHide=!this.isHide
         },
         setlocation(id,ip){
-            
+             var url=""
             this.listId=id
 
             if(this.list[0].data==ip){//如果是默认
@@ -215,7 +232,12 @@ export default {
 
                 // 
                 if(this.indexx==1){ //选中的下标为一
-                     this.ajax()
+                  if(this.searchInfo){  //如果是搜索
+                      this.searchMo()
+                  }else{
+                      this.ajax()
+                  }
+                      
                 }
                 if(this.indexx==2){ //选中的下标为二
                      
@@ -240,17 +262,32 @@ export default {
               
                 // 取消上一次请求
                 this.cancelRequest();
-            
-                var url="/goods/category?goods_attr="+2+'&cat_id='+this.cat_id
-
-                this.$axios.get(url).then((res)=>{
-                        if(res.data.status==1){
-                             this.proList=res.data.data.goods_list;
-                           
-                             this.newState=true;
+               var params = new URLSearchParams();
+               params.append('goods_attr', 3);  
+               params.append('page', this.page);       
+               if(this.searchInfo){   //是搜索
+                    url = 'search/search'
+                    params.append('token', this.$store.getters.optuser.Authorization);           //token
+                    params.append('keywords', this.searchInfo);          
+               }else{
+                    url="/goods/category"
+                    params.append('cat_id', this.cat_id);           //token
+               }
+               this.$axios({
+                    method:"post",
+                    url:url,
+                    data: params
+                    }).then((res)=>{
+                        if(res.data.status === 1){
+                            this.proList= '' //清空
+                            this.proList=res.data.data.goods_list
+                            this.newState=true;
+                        }else{  
+                            Dialog.alert({
+                                    message:res.data.msg
+                            })
                         }
-                })
-               
+                    })
 
               
             }else{
@@ -264,14 +301,34 @@ export default {
                
                  // 取消上一次请求
                 this.cancelRequest();
-            
-                var url="/goods/category?goods_attr="+3+'&cat_id='+this.cat_id
-
-                this.$axios.get(url).then((res)=>{
-                        this.proList=res.data.data.goods_list;
                        
+               var params = new URLSearchParams();
+                    params.append('goods_attr', 3);   
+                    params.append('page', this.page);        
+               if(this.searchInfo){   //是搜索
+                    url = 'search/search'
+                    params.append('token', this.$store.getters.optuser.Authorization);           //token
+                    params.append('keywords', this.searchInfo);          
+               }else{
+                    url="/goods/category"
+                    params.append('cat_id', this.cat_id);           //token
+               }
+               this.$axios({
+                    method:"post",
+                    url:url,
+                    data: params
+                    }).then((res)=>{
+                        if(res.data.status === 1){
+                            this.proList= '' //清空
+                            this.proList=res.data.data.goods_list
+                        }else{  
+                            Dialog.alert({
+                                    message:res.data.msg
+                            })
+                        }
+                    })
 
-                })
+                
               
 
             }
@@ -337,47 +394,48 @@ export default {
         },
 
         getGoodsListPirce(){
-        
+         var url 
+         var  param
         if(this.isCur){  //升序
 
-                    var param = {
+                     param = {
                             // 请求时传点击的价格区间数据给后台
                             sort:this.sort="ASC" // 点击的价格区间
-        }
-        
-       
-       // 取消上一次请求
-            this.cancelRequest();
+                       }
 
-       var url="/goods/category?sort="+param.sort+'&cat_id='+this.cat_id
-
-       this.$axios.get(url).then((res)=>{
-            this.proList=res.data.data.goods_list;
-            // this.ascList=res.data.data.goods_list;//保存商品列表
-       })
-
-         this.ascState=1;
-        
         }else if(!this.isCur){
 
-                    var param = {
+                     param = {
                             // 请求时传点击的价格区间数据给后台
                             sort:this.sort="DESC" // 点击的价格区间
                     }
-        
-        
-        // 取消上一次请求
-            this.cancelRequest();
-
-        var url="/goods/category?sort="+param.sort+'&cat_id='+this.cat_id
-        
-        this.$axios.get(url).then((res)=>{
-            this.proList=res.data.data.goods_list
-          
-        })
-
-        
         }
+         // 取消上一次请求
+            this.cancelRequest();
+                var params = new URLSearchParams();
+                    params.append('sort', param.sort);           //token
+               if(this.searchInfo){   //是搜索
+                    url = 'search/search'
+                    params.append('token', this.$store.getters.optuser.Authorization);           //token
+                    params.append('keywords', this.searchInfo);          
+               }else{
+                    url="/goods/category"
+                    params.append('cat_id', this.cat_id);           //token
+               }
+               this.$axios({
+                    method:"post",
+                    url:url,
+                    data: params
+                    }).then((res)=>{
+                        if(res.data.status === 1){
+                            this.proList= '' //清空
+                            this.proList=res.data.data.goods_list
+                        }else{  
+                            Dialog.alert({
+                                    message:res.data.msg
+                            })
+                        }
+                    })
     },
      cancelRequest(){
             if(typeof this.source ==='function'){
@@ -385,7 +443,6 @@ export default {
             }
         },
         scrollBottom() {
-    //    console.log(window.screen.height + document.body.scrollTop,document.body.clientHeight)
         if (((window.screen.height + document.body.scrollTop) > (document.body.clientHeight)) && this.REQUIRE) {
           // 请求的数据未加载完成时，滚动到底部不再请求前一天的数据 this.REQUIRE = false;
           
@@ -393,15 +450,91 @@ export default {
       },
       //页面默认
       ajax(){
-             var url = "/goods/category?cat_id="+this.cat_id
-                this.$axios.get(url).then((res)=>{
-                    this.proList=res.data.data.goods_list;
+             var url = "/goods/category"
+                var params = new URLSearchParams();
+               params.append('cat_id',this.cat_id);           //token
+               this.$axios({
+                    method:"post",
+                    url:url,
+                    data: params
+                    }).then((res)=>{
+                        if(res.data.status === 1){
+                            this.proList=res.data.data.goods_list
+                        }else{  
+                            Dialog.alert({
+                                    message:res.data.msg
+                            })
+                        }
+                    })
+                
+      },
+      //搜索
+        onSearch(value){
+            // 搜索 search/search
+            // 参数：
+            // token
+            // keywords
+            // sort
+            // goods_attr
+            // page
+            var url = 'search/search'
+            var params = new URLSearchParams();
+            params.append('token', this.$store.getters.optuser.Authorization);           //token
+            params.append('keywords', value);           //搜索关键字
+            params.append('sort','' );           
+            params.append('goods_attr','' );           
+            params.append('page', '');          //页码
+            if(value == ''){
+                return
+            }
+            if(value!=''){
+                 this.$axios({
+                 method:"post",
+                 url:url,
+                 data: params
+                 }).then((res)=>{
+                    if(res.data.status === 1){
+                       this.keywo=res.data.data.goods_list
+                    }else{
+                        Dialog.alert({
+                         message:res.data.msg
+                     })
+                    }
                 })
-      },
-      //搜索商品
-      onSearch(){
-
-      },
+            }
+        },
+        onSSearch(value){
+            if(value===''){
+                  Toast('搜索不能为空！')
+            }else{
+                this.$router.push('/productLsit?query='+value);
+                this.$router.go(0)
+            }
+        },
+        searchTo(value){
+                this.$router.push('/productLsit?query='+value);
+                this.$router.go(0)
+        },
+      //搜索默认
+      searchMo(){
+               let url = 'search/search'
+               var params = new URLSearchParams();
+               params.append('token', this.$store.getters.optuser.Authorization);           //token
+               params.append('keywords', this.searchInfo);           //token
+               this.$axios({
+                    method:"post",
+                    url:url,
+                    data: params
+                    }).then((res)=>{
+                        if(res.data.status === 1){
+                            this.proList=res.data.data.goods_list
+                        }else{  
+                            Dialog.alert({
+                                    message:res.data.msg
+                            })
+                        }
+                    })
+      }
 
     },
 
@@ -413,7 +546,20 @@ export default {
     created() {
         //图片路径
            this.baseUrl=this.url
-           this.ajax()
+        //    获取搜索信息
+            // 搜索 search/search
+            // 参数：
+            // token
+            // keywords
+            // sort
+            // goods_attr
+            // page
+            this.searchInfo =  this.$route.query.query;
+            if(this.searchInfo){
+                this.searchMo()
+           }else{
+                this.ajax()
+           }
     },
 }
 </script>
@@ -706,4 +852,43 @@ export default {
     .filter-body .sub-classify .chosed-icon 
             display: none;
 
+.good-list-page .no-result-new 
+    padding-bottom: 70px
+    padding-top: 60px
+    text-align: center;
+
+.good-list-page .no-result-new p 
+    color: #ccc;
+    font-size: 30px
+    margin-bottom: 15px
+
+.good-list-page .no-result-new p:first-child 
+    color: #444;
+    font-size: 50px
+
+//搜索关键字内容
+.search-associate 
+    background: #ffffff
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+
+.search-associate li 
+    background: #ffffff
+    box-sizing: border-box;
+    clear: both;
+    height:84px
+    line-height: 84px
+    margin-bottom:5px
+    padding: 0 20px
+    width: 100%;
+    position relative
+
+.search-associate .keyword 
+    float: left;
+    font-size: 30px
+    max-width 80%
+    overflow hidden
+    text-overflow ellipsis
+    white-space nowrap
 </style>

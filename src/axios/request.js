@@ -113,6 +113,7 @@ axios.interceptors.response.use(
 		}else{
 			error.message = '网络出现问题，请稍后再试'
 		}
+		console.log(Promise.reject(error.response))
 		return Promise.reject(error.response.data)
 	});
 

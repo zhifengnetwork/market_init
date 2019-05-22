@@ -58,7 +58,9 @@
 										</div>
 										<div class="text">
 											<h3>{{item.goods_name}}</h3>
-											<span class="sign" v-for="items in item.attr_name" :key="items">{{items}}</span>
+											<div class="line2">
+												<span class="sign" v-for="items in item.attr_name" :key="items">{{items}}</span>
+											</div>
 											<div class="line3">
 												<span class="price">¥{{item.price}}</span>
 												<span class="commentNum">评论{{item.comment}}条</span>

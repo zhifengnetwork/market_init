@@ -48,12 +48,13 @@
                 shape="round"
                 @search="onSearch"
                 @keyup="onSearch(value)"
+                
                 >
                 <div slot="action" @click="onSSearch(value)">搜索</div>
             </van-search>
             <!-- 搜索关键字 -->
              <ul class="search-associate" v-if="value!=''">
-                      <li v-for="item in keywo" :key="item.id">
+                      <li v-for="item in keywo" :key="item.id" @click="$router.push('/productLsit?query='+item.goods_name)">
                           <span class="keyword">{{item.goods_name}}</span>
                           <span class="">
                               <i class="right-arrow"></i>
@@ -61,88 +62,41 @@
                       </li>
             </ul>
                 <!-- 热搜 -->
-            <div class="hot-search-new ">
+            <div class="hot-search-new " v-if="keywo.length===0 || value===''">
                 <div class="now-hot">
                     <div class="hot-goods hot-title">热搜</div>
                     <div class="hot-goods"  v-for="item in hot" :key="item.id">
-                        <router-link to=''>
-                            {{item}}
+                        <router-link :to="'/productLsit?query='+item.keywords">
+                            {{item.keywords}}
                         </router-link>
                     </div>
-                <!-- <div class="hot-goods">
-                        <router-link to=''>
-                            开饭了
-                        </router-link>
-                    </div>
-                <div class="hot-goods">
-                        <router-link to=''>
-                            开饭了
-                        </router-link>
-                    </div>
-                <div class="hot-goods">
-                        <router-link to=''>
-                            开饭了
-                        </router-link>
-                    </div>
-                <div class="hot-goods">
-                        <router-link to=''>
-                            开饭了
-                        </router-link>
-                    </div> -->
                 </div>
             </div>
             <!-- item -->
-            <div class="search-item">
+            <div class="search-item" v-if="keywo.length===0 || value===''">
                  <div class="itemOne">
                       <div class="search-group history-search">
                           <div class="search-content-title">
                               <h3 class="left">最近搜索</h3>
-                              <i class="right">
+                              <i class="right" @click="deljilu">
                                   <img src="../../../static/img/user/userinfo/laji.png" alt="">
                               </i>
                           </div>
                           <div class="search-content">
                                <ul class="history">
                                    <li v-for="item in history" :key="item.id">
-                                       <a href="">{{item.keywords}}</a>
+                                       <router-link :to="'/productLsit?query='+item.keywords">{{item.keywords}}</router-link>
                                    </li>
                                </ul>
                           </div>
                       </div>
-                      <div class="search-group want-search">
+                      <div class="search-group want-search" v-if="keywo.length===0  || value===''">
                         <h3>猜你想找</h3>
                         <div class="search-content">
                             <ul class="want clearfix">
                                     <li v-for="item in like" :key="item.id">
-                                        <a href="javascript:void(0);">{{item}}</a>
+                                        <a href="javascript:void(0);">{{item.goods_name}}</a>
                                     </li>
-                                    <!-- <li>
-                                        <a href="javascript:void(0);">短袖T恤</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">夹克</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">卫衣</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">休闲裤</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">gxg.jeans</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">MO&amp;Co.</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">MATERIAL GIRL</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">Levi's官方旗舰店</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);">AliyaStore</a>
-                                    </li> -->
                             </ul>
                         </div>
                     </div>
@@ -154,6 +108,8 @@
 <script>
 // 公共头部
 import headerView from '../common/headerView'
+import {Toast,Dialog} from "vant"
+import { MessageBox } from 'mint-ui';
 export default {
      data(){
          return{
@@ -162,8 +118,8 @@ export default {
 
               //搜索关键字
               value:'',
-              history: [],  //热搜
-              hot: [],        //最近搜索
+              history: [],  //最近搜索
+              hot: [],        //热搜
               like: [],       //猜你想找
               keywo:[],       //搜索列表
          }
@@ -186,16 +142,20 @@ export default {
             var url = 'search/search'
             var params = new URLSearchParams();
             params.append('token', this.$store.getters.optuser.Authorization);           //token
-            params.append('keywords', value);           //token
-            params.append('sort','' );           //token
-            params.append('goods_attr','' );           //token
-            params.append('page', '');           //token
+            params.append('keywords', value);           //搜索关键字
+            params.append('sort','' );           
+            params.append('goods_attr','' );           
+            params.append('page', '');          //页码
+            if(value == '' || value == ' '){
+                return
+            }
+            console.log(value)
             if(value!=''){
                  this.$axios({
                  method:"post",
                  url:url,
                  data: params
-                }).then((res)=>{
+                 }).then((res)=>{
                     if(res.data.status === 1){
                        this.keywo=res.data.data.goods_list
                     }else{
@@ -206,30 +166,36 @@ export default {
                 })
             }
         },
-        // onSSearch(value){
-        //    var url = 'search/search'
-        //     var params = new URLSearchParams();
-        //     params.append('token', this.$store.getters.optuser.Authorization);           //token
-        //     params.append('keywords', value);           //token
-        //     params.append('sort','' );                  //token
-        //     params.append('goods_attr','' );            //token
-        //     params.append('page', '');                  //token
-        //     if(value!=''){
-        //          this.$axios({
-        //          method:"post",
-        //          url:url,
-        //          data: params
-        //         }).then((res)=>{
-        //             if(res.data.status === 1){
-        //                this.keywo=res.data.data.goods_list
-        //             }else{
-        //                 Dialog.alert({
-        //                  message:res.data.msg
-        //              })
-        //             }
-        //         })
-        //     }
-        // }
+        onSSearch(value){
+            if(value===''){
+                  Toast('搜索不能为空！')
+            }else{
+                this.$router.push('/productLsit?query='+value);
+            }
+        },
+        //删除最近搜索
+        deljilu(){
+            //  删除搜索记录		search/del_search
+            // 参数：
+            // token
+              var url = 'search/del_search'
+             var params = new URLSearchParams();
+              params.append('token', this.$store.getters.optuser.Authorization);           //token
+              MessageBox.confirm('你确定要删除您的最近搜索吗?').then(action => {
+                         this.$axios({
+                 method:"post",
+                 url:url,
+                 data: params
+                }).then((res)=>{
+                   if(res.data.status === 1){
+                       Toast(res.data.msg)
+                       this.history=[]
+                   }
+                })
+                }).catch(() => {
+                 
+                }); 
+        }
      },
 
      components:{
@@ -237,7 +203,7 @@ export default {
         headerView,
     },
     created()  {
-        //         获取搜索信息 search/get_search
+        //获取搜索信息 search/get_search
         // 参数：
         // token
          var url = 'search/get_search'
@@ -273,7 +239,7 @@ export default {
     z-index: 1;
 
 .search-associate li 
-    background: #f0f0f0
+    background: #ffffff
     box-sizing: border-box;
     clear: both;
     height:84px
@@ -286,6 +252,10 @@ export default {
 .search-associate .keyword 
     float: left;
     font-size: 30px
+    max-width 80%
+    overflow hidden
+    text-overflow ellipsis
+    white-space nowrap
 
 .sear-page .hot-search-new  
     border-bottom: 2px solid #e0e0e0;

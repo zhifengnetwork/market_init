@@ -118,7 +118,7 @@
                                     </div>
                                     <div class="opts bill ">
                                         <div class="total">
-                                            <p class="price">总计:¥{{getSubTotal}}&nbsp;&nbsp;({{getnum}}件)</p>
+                                            <p class="price">总计:¥{{getSubTotal.toFixed(2)}}&nbsp;&nbsp;({{getnum}}件)</p>
                                             <p class="intro">不含运费</p>
                                         </div>
 
