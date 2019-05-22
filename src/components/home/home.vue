@@ -22,7 +22,7 @@
 						<input type="text" class="searchText" :placeholder="v.data.tipeText" :style="{'color':v.params.textColor}">
 					</form>
 					<!--跳转-搜索页面-->
-					<p class="mask_input" @click.stop="routing_jump('/home')"></p>
+					<p class="mask_input" @click.stop="routing_jump('/search')"></p>
 				</div>
 
 			</div>
@@ -213,12 +213,6 @@
 					console.log(error);
 				});
 			/*axios=>请求-页面数据 -e*/
-
-			
-				
-
-			
-
 		},
 		methods: {
 			/*（轮播图）根据传过来的data=>创建 swiper 的分页器*/
