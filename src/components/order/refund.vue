@@ -137,8 +137,11 @@
 </template>
 
 <script>
+    import Vue from 'vue'
     import headerView from '../common/headerView'
     import {Swipe, SwipeItem} from 'mint-ui'
+    Vue.component(Swipe.name, Swipe)
+    Vue.component(SwipeItem.name, SwipeItem)
     export default {
         name:'refund',
         data(){

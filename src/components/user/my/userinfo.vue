@@ -66,8 +66,12 @@
                        <i class="right-arrow"></i>
                    </li>
                     </router-link>
-               </ul>
+               </ul>              
           </div>
+
+            <div class="quitOut-box" @click="quitOut">
+                <button class="quitOut">退出登录</button>
+            </div>
                    <!-- 我的生日 -->
                     <mt-datetime-picker
                     ref="picker"
@@ -105,7 +109,9 @@
 <script>
 // 公共头部
 import headerView from '@/components/common/headerView.vue'
-import { MessageBox } from 'mint-ui';
+import { MessageBox } from 'mint-ui'
+import store from '@/store/store'
+import { Dialog} from 'vant'
 /* 引入 mint-ui 弹窗组件 */
 import {Toast} from "mint-ui"
 export default {
@@ -126,102 +132,120 @@ export default {
         }
     },components:{
         headerView
-    },methods: {
+    },
+    methods: {
         //打开修改生日
-          openPicker() {
-            this.$refs.picker.open();
-          },
+        openPicker() {
+        this.$refs.picker.open();
+        },
         
         //点击修改生日后确定
-          getTime(){
-            //   生日接口传 birthyear  birthmonth  birthday  type传2
-              var url = 'user/set_reabir'
-              let y = this.pickerVisible.getFullYear() //年
-              let m = this.pickerVisible.getMonth()+1 //月
-              let d = this.pickerVisible.getDate()    //日    
-              var params = new URLSearchParams();
-                    params.append('type', 2);       //你要传给后台的参数值 key/value         //收货人
-                    params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value   //token
-                    params.append('birthyear', y);       //你要传给后台的参数值 key/value   //token
-                    params.append('birthmonth', m);       //你要传给后台的参数值 key/value   //token
-                    params.append('birthday', d);       //你要传给后台的参数值 key/value   //token
-                    this.$axios({
-                            method:"post",
-                            url:url,
-                            data:params
-                        }).then((res)=>{
-                        if(res.data.status===1){
-                            this.birthday =y+'-'+m+'-'+d;
-                            Toast(res.data.msg)
-                            this.amend=true
-                        }else{
-                            Toast(res.data.msg)
-                        }
-                })
-          },
+        getTime(){
+            //生日接口传 birthyear  birthmonth  birthday  type传2
+            var url = 'user/set_reabir'
+            let y = this.pickerVisible.getFullYear() //年
+            let m = this.pickerVisible.getMonth()+1 //月
+            let d = this.pickerVisible.getDate()    //日    
+            var params = new URLSearchParams();
+                params.append('type', 2);       //你要传给后台的参数值 key/value         //收货人
+                params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value   //token
+                params.append('birthyear', y);       //你要传给后台的参数值 key/value   //token
+                params.append('birthmonth', m);       //你要传给后台的参数值 key/value   //token
+                params.append('birthday', d);       //你要传给后台的参数值 key/value   //token
+                this.$axios({
+                        method:"post",
+                        url:url,
+                        data:params
+                    }).then((res)=>{
+                    if(res.data.status===1){
+                        this.birthday =y+'-'+m+'-'+d;
+                        Toast(res.data.msg)
+                        this.amend=true
+                    }else{
+                        Toast(res.data.msg)
+                    }
+            })
+        },
 
-          /* 修改昵称 */
-          complete(name){
-              if(name===''){
-                  Toast('用户昵称不能为空!')
-            return
+        /* 修改昵称 */
+        complete(name){
+            if(name===''){
+                Toast('用户昵称不能为空!')
+                return
             }else{
-                 var url="user/set_reabir"
-                   var params = new URLSearchParams();
-                    params.append('type', 1);       //你要传给后台的参数值 key/value         //收货人
-                    params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value   //token
-                    params.append('realname', name);       //你要传给后台的参数值 key/value   //token
-                    this.$axios({
-                            method:"post",
-                            url:url,
-                            data:params
-                        }).then((res)=>{
-                        if(res.data.status===1){
-                            this.userName = name;
-                            Toast(res.data.msg)
-                            this.amend=true
-                        }else{
-                            Toast(res.data.msg)
-                        }
+                var url="user/set_reabir"
+                var params = new URLSearchParams();
+                params.append('type', 1);       //你要传给后台的参数值 key/value         //收货人
+                params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value   //token
+                params.append('realname', name);       //你要传给后台的参数值 key/value   //token
+                this.$axios({
+                        method:"post",
+                        url:url,
+                        data:params
+                    }).then((res)=>{
+                    if(res.data.status===1){
+                        this.userName = name;
+                        Toast(res.data.msg)
+                        this.amend=true
+                    }else{
+                        Toast(res.data.msg)
+                    }
                 })
             }
-                  
-          },
-          onRead(file) {
+                
+        },
+
+        onRead(file) {
         // update_head_pic 传head_img 头像编辑
         var url = "user/update_head_pic"
         var params = new URLSearchParams();
-             params.append('head_img', file.content);       //你要传给后台的参数值 key/value         //收货人
-             params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value   //token
-             this.$axios({
-                    method:"post",
-                    url:url,
-                    data:params
-                }).then((res)=>{
-                  if(res.data.status===1){
-                      this.userImg = res.data.data;
-                     Toast(res.data.msg)
-                  }else{
-                     Toast(res.data.msg)
-                  }
-                })
+            params.append('head_img', file.content);       //你要传给后台的参数值 key/value         //收货人
+            params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value   //token
+            this.$axios({
+                method:"post",
+                url:url,
+                data:params
+            })
+            .then((res)=>{
+                if(res.data.status===1){
+                    this.userImg = res.data.data;
+                    Toast(res.data.msg)
+                }else{
+                    Toast(res.data.msg)
+                }
+            })
             
-    }
+        },
+
+        //退出登录
+        quitOut(){
+            Dialog.confirm({
+                title: '提示',
+                message: '你确定要退出登录吗?'
+            }).then(() => {
+               Toast('退出成功')
+               store.commit('del_token'); //token，清除它;
+               setTimeout(() => {
+					this.$router.push("/login");
+			   }, 1000);
+            }).catch(() => {
+                // on cancel
+            })
+        }
+
     },
     created() {
         //图片路径
-           this.baseUrl=this.url
-           this.userImg = JSON.parse(this.$store.getters.optuser.usin).avatar   //头像
-           this.userName = JSON.parse(this.$store.getters.optuser.usin).realname  //昵称
-           this.birthday = JSON.parse(this.$store.getters.optuser.usin).birthyear+'-'+JSON.parse(this.$store.getters.optuser.usin).birthmonth+'-'+JSON.parse(this.$store.getters.optuser.usin).birthday  //生日
-           //是否设置地址
-           this.address = JSON.parse(this.$store.getters.optuser.usin).is_address
+        this.baseUrl=this.url
+        this.userImg = JSON.parse(this.$store.getters.optuser.usin).avatar   //头像
+        this.userName = JSON.parse(this.$store.getters.optuser.usin).realname  //昵称
+        this.birthday = JSON.parse(this.$store.getters.optuser.usin).birthyear+'-'+JSON.parse(this.$store.getters.optuser.usin).birthmonth+'-'+JSON.parse(this.$store.getters.optuser.usin).birthday  //生日
+        //是否设置地址
+        this.address = JSON.parse(this.$store.getters.optuser.usin).is_address
     },
 }
 </script>
 <style lang="stylus" scoped>
-    .userinfo
-        background #ffffff
 
     .user-page
         background-color: #f0f0f0;
@@ -230,10 +254,18 @@ export default {
         margin-top: 20px;
         overflow: hidden;
         width: 100%;
-
+    .quitOut-box
+        background  #323232;
+        height 80px;
+        width 500px;
+        border-radius 10px
+        margin 50px auto 
+        line-height 80px
+        text-align center
+        .quitOut
+            color #ffffff
     .user-page ul
         background: #fff;
-        float: right;
         height: auto;
         margin-bottom: 10px;
         overflow: hidden;
@@ -363,5 +395,6 @@ export default {
     .van-icon
         font-size 40px
         vertical-align: middle
+   
 
 </style>
