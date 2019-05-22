@@ -34,8 +34,7 @@
 										tag="li"
 										v-for="(it,index) of item.children"
 										:to="'/productLsit?cat_id='+item.cat_id"
-										:key="index"
-									>
+										:key="index">
 									<div class="picture">
 											<img :src="baseUrl + it.img">
 										</div>

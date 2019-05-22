@@ -146,10 +146,10 @@ export default {
             params.append('sort','' );           
             params.append('goods_attr','' );           
             params.append('page', '');          //页码
-            console.log(value == '')
-            if(value == ''){
+            if(value == '' || value == ' '){
                 return
             }
+            console.log(value)
             if(value!=''){
                  this.$axios({
                  method:"post",
