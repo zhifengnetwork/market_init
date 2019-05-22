@@ -21,36 +21,9 @@
                     <van-actionsheet v-model="show" title="请选择退款原因" class="select-wrap">
                         <van-radio-group v-model="reason">
                             <van-cell-group>
-                                <van-cell v-for="item in refund.refund_reason" :key="item.id" :title="item" clickable @click="selectReason">
+                                <van-cell v-for="(item,index) in refund.refund_reason" :key="index" :title="item" clickable @click="selectReason($event,index)">
                                     <van-radio :name="item"/>
                                 </van-cell>
-                                <!-- <van-cell title="退运费" clickable @click="selectReason">
-                                    <van-radio name="退运费"/>
-                                </van-cell>
-                                <van-cell title="商品描述不符" clickable @click="selectReason">
-                                    <van-radio name="商品描述不符"/>
-                                </van-cell>
-                                <van-cell title="质量问题" clickable @click="selectReason">
-                                    <van-radio name="质量问题"/>
-                                </van-cell>
-                                <van-cell title="少件漏发" clickable @click="selectReason">
-                                    <van-radio name="少件漏发"/>
-                                </van-cell>
-                                <van-cell title="包装/商品破损/污渍" clickable @click="selectReason">
-                                    <van-radio name="包装/商品破损/污渍"/>
-                                </van-cell>
-                                <van-cell title="假冒品牌" clickable @click="selectReason">
-                                    <van-radio name="假冒品牌"/>
-                                </van-cell>
-                                <van-cell title="发票问题" clickable @click="selectReason">
-                                    <van-radio name="发票问题"/>
-                                </van-cell>
-                                <van-cell title="卖家发错货" clickable @click="selectReason">
-                                    <van-radio name="卖家发错货"/>
-                                </van-cell>
-                                <van-cell title="其他" clickable @click="selectReason">
-                                    <van-radio name="其他"/>
-                                </van-cell> -->
                             </van-cell-group>    
                         </van-radio-group>
                     </van-actionsheet>
@@ -60,12 +33,21 @@
             <!-- 退款方式 -->
             <div class="dispatch-row">
                 <van-cell-group class="goods-cell-group">
-                    <van-cell is-link>
+                    <van-cell is-link @click="showReasonType"> 
                         <template slot="title">
                             <span style="margin-right: 10px;">退款方式:</span>
-                            <span class="reasonText gray" style="float:right">按照原路返还</span>
+                            <span class="reasonText gray" style="float:right">{{reasonType}}</span>
                         </template>
-                    </van-cell>              
+                    </van-cell>  
+                    <van-actionsheet v-model="showW" title="请选择退款方式" class="select-wrap">
+                        <van-radio-group v-model="reasonType">
+                            <van-cell-group>
+                                <van-cell v-for="(item,index) in refund.refund_type" :key="index" :title="item" clickable @click="selectReasonType($event,index)">
+                                    <van-radio :name="item"/>
+                                </van-cell>
+                            </van-cell-group>    
+                        </van-radio-group>
+                    </van-actionsheet>            
                 </van-cell-group>
             </div>
 
@@ -85,6 +67,7 @@
             <div class="">
                 <van-cell-group>
                     <van-field
+                        v-model="cancel_remark"
                         label="问题描述"
                         type="textarea"
                         placeholder="问题描述(选填)"
@@ -130,7 +113,7 @@
             <!-- 按钮 -->
             <div class="refundBtn">
                 <button class="cancelBtn">取消</button>
-                <button class="confirmBtn">确认</button>
+                <button class="confirmBtn" @click="apply_refund()">确认</button>
             </div>
         </div>
     </div>
@@ -140,6 +123,7 @@
     import Vue from 'vue'
     import headerView from '../common/headerView'
     import {Swipe, SwipeItem} from 'mint-ui'
+import { Toast } from 'vant';
     Vue.component(Swipe.name, Swipe)
     Vue.component(SwipeItem.name, SwipeItem)
     export default {
@@ -147,7 +131,15 @@
         data(){
             return{
                 reason:'请选择退款原因',
+                reasonType:'请选择退款方式',
+                //退款原因
                 show:false,
+                reasonIndex:0,
+                //退款方式
+                showW:false,
+                reasonTypeIndex:0,
+                //退款备注
+                cancel_remark:'',
                 maxImages:3,
                 imgUrls:[],
                 leftImages:0,
@@ -164,11 +156,23 @@
             showReason() {
                 this.show = true;
             },
-
-            // 选择支付方式
-            selectReason(e){
+            //  退款方式
+            showReasonType(){
+                this.showW = true;
+            },
+            //选中退款方式
+            selectReasonType(e,index){
+                this.reasonType = e.target.innerText;
+                this.showW = false; 
+                this.reasonIndex = index
+                
+            },
+            
+            // 选择退款方式
+            selectReason(e,index){
                 this.reason = e.target.innerText;
                 this.show = false;
+                this.reasonTypeIndex = index
             },
 
               //上传图片
@@ -184,7 +188,7 @@
                         
                         reader.onload = function (e) {
                             that.imgUrls.push(this.result)
-
+                            console.log(that.imgUrls)
                         }
                     }
                     // 剩余张数
@@ -217,9 +221,45 @@
                 this.showBigImg = true;
                 this.num = index
             },
+
+            //申请退款
+            apply_refund(){
+                    // 申请退款	order/apply_refund
+                    // 参数：
+                    // token
+                    // order_id
+                    // refund_type
+                    // refund_reason
+                    // cancel_remark
+                    // img
+                    var url = 'order/apply_refund'
+                    var params = new URLSearchParams();
+                    var returnObj = new Object();//创建一个对象
+                    returnObj.img = this.imgUrls;
+                        params.append('token', this.$store.getters.optuser.Authorization);           //token
+                        params.append('order_id',this.orderId );
+                        params.append('refund_type',this.reasonIndex );    
+                        params.append('refund_reason',this.reasonTypeIndex );    
+                        params.append('cancel_remark',this.cancel_remark );      
+                        params.append('img',JSON.stringify(this.imgUrls));   
+                        this.$axios({
+                                        method:"post",
+                                        url:url,
+                                        data: params
+                                        }).then((res)=>{
+                                               if(res.data.status === 1){
+                                                   Toast(res.data.msg)
+                                                   setTimeout(()=>{
+                                                       this.$router.push('/afterSale/afterDetails?order_id='+this.orderId)
+                                                   },2000)
+                                               }else{
+                                                    Toast(res.data.msg)
+                                               }
+                                        })
+            }
             
         },
-        components:{
+        components:{ 
 			headerView
         },
         created() {
@@ -237,7 +277,6 @@
                                         data: params
                                         }).then((res)=>{
                                                if(res.data.status === 1){
-                                                   console.log(res.data.data)
                                                    this.refund = res.data.data
                                                }
                                         })

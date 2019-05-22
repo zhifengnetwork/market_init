@@ -273,6 +273,7 @@ const router = new Router({
 			path:'/search',
 			name: 'search',
 			component: (resolve) => require(['@/components/home/search'],resolve),
+			meta:{requireAuth:true}   //是否需要登录
 		},
 		// 退款
 		{

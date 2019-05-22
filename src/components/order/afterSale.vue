@@ -56,6 +56,7 @@ export default {
         created() {
             //图片路径
            this.baseUrl=this.url
+           
         },
 }
 </script>

@@ -70,7 +70,7 @@
 	right 30px
 	top 80px
 	width 280px
-	z-index 2
+	z-index 100
 	.ul-arr 
 		background-color #434343
 		-webkit-transform rotate(45deg)
