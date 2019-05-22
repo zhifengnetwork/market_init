@@ -76,8 +76,16 @@ import bindingMsg from '@/components/user/my/bindingMsg'
 
 //搜索
 import search from '@/components/home/search'
+
 // 退款
 import refund from '@/components/order/refund'
+
+// 公告列表
+import noticeList from '@/components/home/noticeList'
+
+// 公告详情
+import noticeDetails from '@/components/home/noticeDetails'
+
 
 
 
@@ -280,6 +288,22 @@ const router = new Router({
 			path:'/order/refund',
 			name: 'refund',
 			component: (resolve) => require(['@/components/order/refund'],resolve),
+			meta:{requireAuth:true}   //是否需要登录
+		},
+
+		// 公告列表
+		{
+			path:'/home/noticeList',
+			name: 'noticeList',
+			component: (resolve) => require(['@/components/home/noticeList'],resolve),
+			meta:{requireAuth:true}   //是否需要登录
+		},
+
+		// 公告详情
+		{
+			path:'/home/noticeDetails',
+			name: 'noticeDetails',
+			component: (resolve) => require(['@/components/home/noticeDetails'],resolve),
 			meta:{requireAuth:true}   //是否需要登录
 		},
 		

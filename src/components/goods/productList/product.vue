@@ -11,34 +11,34 @@
                         </div>
                 </headerView> 
                 <div class="homebuttom" :class="{hide:isHide}">
-                            <div class="ul-arr"></div>
-                            <ul>
-                                <li>
-                                    <router-link to="/">
-                                        <img class="iconfont" src="../../../../static/img/public/home.png" />
-                                        <span class="text">首页</span>
-                                    </router-link>
-                                </li>
-                                <li>
-                                    <router-link to="/classify">
-                                        <img class="iconfont" src="../../../../static/img/public/class.png" />
-                                        <span class="text">分类</span>
-                                    </router-link>
-                                </li>
-                                <li>
-                                    <router-link to="/cart" rel="nofollow">
-                                        <img class="iconfont" src="../../../../static/img/public/Cart.png" />
-                                        <span class="text">购物车</span>
-                                    </router-link>
-                                </li>
-                                <li>
-                                    <router-link to="/user" rel="nofollow">
-                                        <img class="iconfont" src="../../../../static/img/public/user.png" />
-                                        <span class="text">我的</span>
-                                    </router-link>
-                                </li>
-                            </ul>
-                    </div>
+                    <div class="ul-arr"></div>
+                    <ul>
+                        <li>
+                            <router-link to="/">
+                                <img class="iconfont" src="../../../../static/img/public/home.png" />
+                                <span class="text">首页</span>
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link to="/classify">
+                                <img class="iconfont" src="../../../../static/img/public/class.png" />
+                                <span class="text">分类</span>
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link to="/cart" rel="nofollow">
+                                <img class="iconfont" src="../../../../static/img/public/Cart.png" />
+                                <span class="text">购物车</span>
+                            </router-link>
+                        </li>
+                        <li>
+                            <router-link to="/user" rel="nofollow">
+                                <img class="iconfont" src="../../../../static/img/public/user.png" />
+                                <span class="text">我的</span>
+                            </router-link>
+                        </li>
+                    </ul>
+                </div>
         </header>
         
         <!-- 搜索框 -->
@@ -77,7 +77,7 @@
                              </a>
                          </li>
                     </ul>
-                    <ul class="drop-list "  :class="{hide:drop}">
+                    <ul class="drop-list"  :class="{hide:drop}">
                             <li  v-for="item in discount" :key="item.id"  :data-ip="item.data" :data-text="item.name" :class="[indexx==item.id?'active':'',item.class]" @click.passive='setloca(item)'>
                                 <span>{{item.name}}</span>
                                 <span class="chose"></span>
