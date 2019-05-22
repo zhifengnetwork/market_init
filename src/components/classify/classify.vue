@@ -169,6 +169,7 @@
 						this.initScroll()
 						this.getHeight()
 					})
+					console.log(this.resData);
 				 }
 			 })
 			.catch( error => {
