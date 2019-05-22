@@ -266,13 +266,12 @@ export default {
             var order_list = [];
             for(var i=0;i<this.orderList.length;i++){
                 var item = this.orderList[i];
-                returnObj.order_id = this.id;
+                 returnObj.order_id = this.id;
 　　　　　　　　  returnObj.goods_id = item.goods_id;
                 returnObj.sku_id = item.sku_id;
                 returnObj.content = item.textmsg;
                 returnObj.star_rating =item.value;
                 returnObj.img = item.imgUrls;
-                
                 order_list[i] = returnObj;
                 var returnObj = new Object();//创建一个对象
             }

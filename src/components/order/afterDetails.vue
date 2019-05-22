@@ -21,14 +21,14 @@
                 <div class="retreat-sum info-msg">
                     <span>退款信息</span>
                 </div>
-                <div class="info-details">
+                <div class="info-details" v-for="item in afeter.goods_res" :key="item.id">
                     <div class="info-img">
-                      <img src="" alt="">
+                      <img :src="item" alt="">
                     </div>
                     <div  class="text">
-                        <h3 >美的（Midea） 三门冰箱 风冷无霜家</h3>
+                        <h3 >{{item.goods_name}}</h3>
                          <p >
-                             <span  class="color">规格:升级版,颜色:星空灰,尺寸:大</span>
+                             <span  class="color">{{item.spec_key_name}}</span>
                         </p>
                         </div>
                 </div>
@@ -40,7 +40,7 @@
                         </li>
                         <li>
                             <span>退款金额: </span>
-                            <span class="nowal">￥79</span>
+                            <span class="nowal">￥{{afeter.order_amount}}</span>
                         </li>
                         <li>
                             <span>申请件数: </span>
@@ -64,10 +64,12 @@
 <script>
 // 公共头部
 import headerView from '../common/headerView.vue'
+import { Toast } from 'vant';
 export default {
     data(){
         return{
-
+                 orderId:this.$route.query.order_id,
+                 afeter:[],
         }
     },
     components:{
@@ -76,7 +78,47 @@ export default {
         created() {
             //图片路径
            this.baseUrl=this.url
+            // 订单详情 	der/order_detail
+            // 参数：
+            // token
+            // order_id
+             var url =  'order/order_detail'
+             var params = new URLSearchParams();
+                 params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value    tokne
+                 params.append('order_id',this.orderId);
+            this.$axios({
+                            method:"post",
+                            url:url,
+                            data: params
+            }).then((res)=>{
+                if(res.data.status===1){
+                    this.afeter = res.data.data
+                    console.log(this.afeter)
+                }else{
+                    Toast(res.data.msg)
+                }
+            })
+
+
         },
+        filters: {
+            formatDate: function (value) {
+                
+                let date = new Date(value*1000);
+                let y = date.getFullYear();
+                let MM = date.getMonth() + 1;
+                MM = MM < 10 ? ('0' + MM) : MM;
+                let d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+                let h = date.getHours();
+                h = h < 10 ? ('0' + h) : h;
+                let m = date.getMinutes();
+                m = m < 10 ? ('0' + m) : m;
+                let s = date.getSeconds();
+                s = s < 10 ? ('0' + s) : s;
+                return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s;
+            }
+            }, 
 }
 </script>
 <style lang="stylus" scoped>

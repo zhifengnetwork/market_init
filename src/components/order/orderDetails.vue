@@ -88,6 +88,14 @@
                        ¥{{order.total_amount}}
                     </div>
                 </div>
+                <div class="line">
+                    <div class="left">
+                        实付金额:
+                    </div>
+                    <div class="right">
+                       ¥{{order.order_amount}}
+                    </div>
+                </div>
                
             </div>
      
@@ -191,7 +199,6 @@
             }).then((res)=>{
         
                 if(res.data.status===1){
-                    console.log(res.data.data)
                     this.order = res.data.data
                     this.pay_name = res.data.data.pay_type.pay_name
                 }

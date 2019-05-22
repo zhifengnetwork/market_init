@@ -40,8 +40,8 @@
                             </ul>
                     </div>
         </header>
-        <!-- 列表 -->
-        <!-- <van-search
+        
+        <van-search
         v-model="value"
         placeholder="请输入搜索关键词"
         show-action
@@ -49,7 +49,7 @@
         @search="onSearch"
         >
         <div slot="action" @click="onSearch">搜索</div>
-        </van-search> -->
+        </van-search>
         <div class="good-list-page">
                 <div class="filter-tab">
                      <ul class="list-nav clearfloat" >
@@ -210,7 +210,7 @@ export default {
             this.isHide=!this.isHide
         },
         setlocation(id,ip){
-            
+             var url=""
             this.listId=id
 
             if(this.list[0].data==ip){//如果是默认
@@ -219,7 +219,12 @@ export default {
 
                 // 
                 if(this.indexx==1){ //选中的下标为一
-                     this.ajax()
+                  if(this.searchInfo){  //如果是搜索
+                      this.searchMo()
+                  }else{
+                      this.ajax()
+                  }
+                      
                 }
                 if(this.indexx==2){ //选中的下标为二
                      
@@ -244,17 +249,32 @@ export default {
               
                 // 取消上一次请求
                 this.cancelRequest();
-            
-                var url="/goods/category?goods_attr="+2+'&cat_id='+this.cat_id
-
-                this.$axios.get(url).then((res)=>{
-                        if(res.data.status==1){
-                             this.proList=res.data.data.goods_list;
-                           
-                             this.newState=true;
+               var params = new URLSearchParams();
+               params.append('goods_attr', 3);  
+               params.append('page', this.page);       
+               if(this.searchInfo){   //是搜索
+                    url = 'search/search'
+                    params.append('token', this.$store.getters.optuser.Authorization);           //token
+                    params.append('keywords', this.searchInfo);          
+               }else{
+                    url="/goods/category"
+                    params.append('cat_id', this.cat_id);           //token
+               }
+               this.$axios({
+                    method:"post",
+                    url:url,
+                    data: params
+                    }).then((res)=>{
+                        if(res.data.status === 1){
+                            this.proList= '' //清空
+                            this.proList=res.data.data.goods_list
+                            this.newState=true;
+                        }else{  
+                            Dialog.alert({
+                                    message:res.data.msg
+                            })
                         }
-                })
-               
+                    })
 
               
             }else{
@@ -268,14 +288,34 @@ export default {
                
                  // 取消上一次请求
                 this.cancelRequest();
-            
-                var url="/goods/category?goods_attr="+3+'&cat_id='+this.cat_id
-
-                this.$axios.get(url).then((res)=>{
-                        this.proList=res.data.data.goods_list;
                        
+               var params = new URLSearchParams();
+               params.append('goods_attr', 3);   
+               params.append('page', this.page);        
+               if(this.searchInfo){   //是搜索
+                    url = 'search/search'
+                    params.append('token', this.$store.getters.optuser.Authorization);           //token
+                    params.append('keywords', this.searchInfo);          
+               }else{
+                    url="/goods/category"
+                    params.append('cat_id', this.cat_id);           //token
+               }
+               this.$axios({
+                    method:"post",
+                    url:url,
+                    data: params
+                    }).then((res)=>{
+                        if(res.data.status === 1){
+                            this.proList= '' //清空
+                            this.proList=res.data.data.goods_list
+                        }else{  
+                            Dialog.alert({
+                                    message:res.data.msg
+                            })
+                        }
+                    })
 
-                })
+                
               
 
             }
@@ -341,47 +381,48 @@ export default {
         },
 
         getGoodsListPirce(){
-        
+         var url 
+         var  param
         if(this.isCur){  //升序
 
-                    var param = {
+                     param = {
                             // 请求时传点击的价格区间数据给后台
                             sort:this.sort="ASC" // 点击的价格区间
-        }
-        
-       
-       // 取消上一次请求
-            this.cancelRequest();
+                       }
 
-       var url="/goods/category?sort="+param.sort+'&cat_id='+this.cat_id
-
-       this.$axios.get(url).then((res)=>{
-            this.proList=res.data.data.goods_list;
-            // this.ascList=res.data.data.goods_list;//保存商品列表
-       })
-
-        //  this.ascState=1;
-        
         }else if(!this.isCur){
 
-                    var param = {
+                     param = {
                             // 请求时传点击的价格区间数据给后台
                             sort:this.sort="DESC" // 点击的价格区间
                     }
-        
-        
-        // 取消上一次请求
-            this.cancelRequest();
-
-        var url="/goods/category?sort="+param.sort+'&cat_id='+this.cat_id
-        
-        this.$axios.get(url).then((res)=>{
-            this.proList=res.data.data.goods_list
-          
-        })
-
-        
         }
+         // 取消上一次请求
+            this.cancelRequest();
+                var params = new URLSearchParams();
+                    params.append('sort', param.sort);           //token
+               if(this.searchInfo){   //是搜索
+                    url = 'search/search'
+                    params.append('token', this.$store.getters.optuser.Authorization);           //token
+                    params.append('keywords', this.searchInfo);          
+               }else{
+                    url="/goods/category"
+                    params.append('cat_id', this.cat_id);           //token
+               }
+               this.$axios({
+                    method:"post",
+                    url:url,
+                    data: params
+                    }).then((res)=>{
+                        if(res.data.status === 1){
+                            this.proList= '' //清空
+                            this.proList=res.data.data.goods_list
+                        }else{  
+                            Dialog.alert({
+                                    message:res.data.msg
+                            })
+                        }
+                    })
     },
      cancelRequest(){
             if(typeof this.source ==='function'){
@@ -389,7 +430,6 @@ export default {
             }
         },
         scrollBottom() {
-    //    console.log(window.screen.height + document.body.scrollTop,document.body.clientHeight)
         if (((window.screen.height + document.body.scrollTop) > (document.body.clientHeight)) && this.REQUIRE) {
           // 请求的数据未加载完成时，滚动到底部不再请求前一天的数据 this.REQUIRE = false;
           
@@ -397,15 +437,48 @@ export default {
       },
       //页面默认
       ajax(){
-             var url = "/goods/category?cat_id="+this.cat_id
-                this.$axios.get(url).then((res)=>{
-                    this.proList=res.data.data.goods_list;
-                })
+             var url = "/goods/category"
+                var params = new URLSearchParams();
+               params.append('cat_id',this.cat_id);           //token
+               this.$axios({
+                    method:"post",
+                    url:url,
+                    data: params
+                    }).then((res)=>{
+                        if(res.data.status === 1){
+                            this.proList=res.data.data.goods_list
+                        }else{  
+                            Dialog.alert({
+                                    message:res.data.msg
+                            })
+                        }
+                    })
+                
       },
       //搜索商品
       onSearch(){
 
       },
+      //搜索默认
+      searchMo(){
+               let url = 'search/search'
+               var params = new URLSearchParams();
+               params.append('token', this.$store.getters.optuser.Authorization);           //token
+               params.append('keywords', this.searchInfo);           //token
+               this.$axios({
+                    method:"post",
+                    url:url,
+                    data: params
+                    }).then((res)=>{
+                        if(res.data.status === 1){
+                            this.proList=res.data.data.goods_list
+                        }else{  
+                            Dialog.alert({
+                                    message:res.data.msg
+                            })
+                        }
+                    })
+      }
 
     },
 
@@ -425,25 +498,9 @@ export default {
             // sort
             // goods_attr
             // page
-           this.searchInfo =  this.$route.query.query;
+            this.searchInfo =  this.$route.query.query;
             if(this.searchInfo){
-               let url = 'search/search'
-               var params = new URLSearchParams();
-               params.append('token', this.$store.getters.optuser.Authorization);           //token
-               params.append('keywords', this.searchInfo);           //token
-               this.$axios({
-                    method:"post",
-                    url:url,
-                    data: params
-                    }).then((res)=>{
-                        if(res.data.status === 1){
-                            this.proList=res.data.data.goods_list
-                        }else{  
-                            Dialog.alert({
-                                    message:res.data.msg
-                            })
-                        }
-                    })
+                this.searchMo()
            }else{
                 this.ajax()
            }
