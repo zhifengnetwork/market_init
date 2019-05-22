@@ -2,7 +2,7 @@
     <!-- 商品列表 -->
     <div class="productL-box">
           <header>
-                <headerView custom-title="商品列表"  rightNone>
+                <headerView :custom-title="searchInfo"  rightNone>
                         <div class="backBtn" slot="backBtn" @click="$router.go(-1)">
                             <img src="../../../../static/img/public/backBtn.png" />
                         </div>
@@ -74,9 +74,7 @@
                 </div>
                 <!-- 列表 -->
                 <div id="goods-container" class="goods-container clearfloat">
-                        <div>
-
-                       
+               <div>
                      <div class="good-info "  v-for="(item,index) in proList" :key="index" :data-good-id="item.pid" :data-id="item.cat_id" :data-bp-id="item.goods_name">
                             <div class="tag-container clearfloat">
                                  <p class="good-tag new-tag" v-if="newState">NEW</p>
@@ -99,7 +97,11 @@
                                 <a class="similar-btn iconfont">&#xe60b;</a>
                             </div>
                     </div>
-                     </div>
+                </div>
+                <div class="no-result-new" v-if="searchInfo && proList.length===0">
+                    <p>没有找到相关商品</p>
+                    <p>试试搜索别的看看</p>
+               </div>
                     <!-- 筛选 -->
                 <div class="filter-mask" style="touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);" :class="{hide:screen}">
                   <div class="filter-body">
@@ -129,12 +131,12 @@ import headerView from '../../common/headerView'
 export default {
     data(){
         return{
-          //搜索关键字
+          //搜索title
             value:'',
           //商品分类id
             cat_id:this.$route.query.cat_id,
           //搜索
-            searchInfo:this.$route.query.query,
+            searchInfo:'商品列表',
 
           //头部显示导航
              isHide:true,
@@ -165,7 +167,7 @@ export default {
         
 
         //新品
-        newProduct:[],
+        // newProduct:[],
         newState:false, //新品状态
         // newStatee:0,
         
@@ -423,7 +425,8 @@ export default {
             // sort
             // goods_attr
             // page
-           if(this.searchInfo){
+           this.searchInfo =  this.$route.query.query;
+            if(this.searchInfo){
                let url = 'search/search'
                var params = new URLSearchParams();
                params.append('token', this.$store.getters.optuser.Authorization);           //token
@@ -434,7 +437,6 @@ export default {
                     data: params
                     }).then((res)=>{
                         if(res.data.status === 1){
-                            console.log(res.data.data.goods_list    )
                             this.proList=res.data.data.goods_list
                         }else{  
                             Dialog.alert({
@@ -736,5 +738,19 @@ export default {
 
     .filter-body .sub-classify .chosed-icon 
             display: none;
+
+.good-list-page .no-result-new 
+    padding-bottom: 70px
+    padding-top: 60px
+    text-align: center;
+
+.good-list-page .no-result-new p 
+    color: #ccc;
+    font-size: 30px
+    margin-bottom: 15px
+
+.good-list-page .no-result-new p:first-child 
+    color: #444;
+    font-size: 50px
 
 </style>

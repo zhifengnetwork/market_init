@@ -106,10 +106,7 @@ export default {
     },
     methods: {
         quitOut(){
-<<<<<<< HEAD
-=======
            
->>>>>>> 8b16b7a73480861d09306e624b7f3a4772bcc444
             Dialog.confirm({
             title: '提示',
             message: '你确定要退出登录吗?'
