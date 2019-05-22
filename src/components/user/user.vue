@@ -67,9 +67,9 @@
                       </router-link>
             </div>
         </div>
-         <div class="quitOut-box" @click="quitOut">
+         <!-- <div class="quitOut-box" @click="quitOut">
              <button class="quitOut">退出登录</button>
-         </div>
+         </div> -->
         <menuBar></menuBar>
     </div>
 </template>
@@ -105,24 +105,21 @@ export default {
         menuBar
     },
     methods: {
-        quitOut(){
-<<<<<<< HEAD
-=======
-           
->>>>>>> 8b16b7a73480861d09306e624b7f3a4772bcc444
-            Dialog.confirm({
-            title: '提示',
-            message: '你确定要退出登录吗?'
-            }).then(() => {
-               Toast('退出成功')
-               store.commit('del_token'); //token，清除它;
-               setTimeout(() => {
-								this.$router.push("/login");
-			   }, 1000);
-            }).catch(() => {
-            // on cancel
-            });
-        }
+        // 退出登录
+        // quitOut(){
+        //     Dialog.confirm({
+        //     title: '提示',
+        //     message: '你确定要退出登录吗?'
+        //     }).then(() => {
+        //        Toast('退出成功')
+        //        store.commit('del_token'); //token，清除它;
+        //        setTimeout(() => {
+		// 			this.$router.push("/login");
+		// 	   }, 1000);
+        //     }).catch(() => {
+        //         // on cancel
+        //     });
+        // }
     },
     created() {
          var url = "user/userinfo"
