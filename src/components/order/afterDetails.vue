@@ -10,12 +10,14 @@
         </headerView>
         <div class="retreat-pege">
              <div class="retreat-stil">
-               <p class="title-stil te">退款成功</p>
-               <span class="time te">2018年 10 月 20 日 15:16</span>
+               <p class="title-stil te" v-if="afeter.status===6">待退款</p>
+               <p class="title-stil te" v-if="afeter.status===7">已退款</p>
+               <p class="title-stil te" v-if="afeter.status===8">拒绝退款</p>
+               <span class="time te">{{create_time | formatDate}}</span>
              </div>
              <div class="retreat-sum info-msg">
                  <span>退款总金额</span>
-                 <span class="price">￥79.00</span>
+                 <span class="price">￥{{afeter.total_amount}}</span>
              </div>
              <div class="retreat-info">
                 <div class="retreat-sum info-msg">
@@ -23,12 +25,18 @@
                 </div>
                 <div class="info-details" v-for="item in afeter.goods_res" :key="item.id">
                     <div class="info-img">
-                      <img :src="item" alt="">
+                      <img :src="baseUrl+item.img" alt="">
                     </div>
                     <div  class="text">
                         <h3 >{{item.goods_name}}</h3>
                          <p >
                              <span  class="color">{{item.spec_key_name}}</span>
+                        </p>
+                         <p >
+                             <span  class="color">价格:{{item.goods_price}}</span>
+                        </p>
+                        <p >
+                             <span  class="color">件数:{{item.goods_num}}</span>
                         </p>
                         </div>
                 </div>
@@ -36,7 +44,19 @@
                     <ul>
                         <li>
                             <span>退款原因: </span>
-                            <span class="nowal">尺码拍错</span>
+                            <span class="nowal" v-if="refund_reason===0">7天无理由退款</span>
+                            <span class="nowal" v-if="refund_reason===1">退运费</span>
+                            <span class="nowal" v-if="refund_reason===2">商品描述不符</span>
+                            <span class="nowal" v-if="refund_reason===3">质量问题</span>
+                            <span class="nowal" v-if="refund_reason===4">少件漏发</span>
+                            <span class="nowal" v-if="refund_reason===5">包装/商品破损/污渍</span>
+                            <span class="nowal" v-if="refund_reason===6">发票问题</span>
+                            <span class="nowal" v-if="refund_reason===7">卖家发错货</span>
+                        </li>
+                        <li>
+                            <span>退款方式: </span>
+                            <span class="nowal" v-if="refund_type.refund_type===0">支付原路退回</span>
+                            <span class="nowal" v-if="refund_type.refund_type===1">退到用户余额</span>
                         </li>
                         <li>
                             <span>退款金额: </span>
@@ -48,11 +68,24 @@
                         </li>
                         <li>
                             <span>申请时间: </span>
-                            <span class="nowal">2018-10-10 09:23</span>
+                            <span class="nowal">{{create_time | formatDate}}</span>
                         </li>
                         <li>
                             <span>退款编号: </span>
-                            <span class="nowal">4564654564564156</span>
+                            <span class="nowal">{{afeter.order_sn}}</span>
+                        </li>
+                        <li>
+                            <span>退款备注: </span>
+                            <span class="nowal">{{refund_type.cancel_remark}}</span>
+                        </li>
+                        <li>
+                            <span>退款图片: </span>
+                            
+                            <div class="nowalImg">
+                                <div v-for="item in listImg" :key="item.id">
+                                <img :src="baseUrl+item" alt="">
+                                </div>
+                            </div>
                         </li>
                         
                     </ul>
@@ -70,6 +103,15 @@ export default {
         return{
                  orderId:this.$route.query.order_id,
                  afeter:[],
+                 //图片路径
+                 baseUrl:'',
+                 //退款时间
+                 create_time:'',
+                 //退款原因
+                 refund_reason:'',
+                 //退款方式
+                 refund_type:'',
+                 listImg:[],
         }
     },
     components:{
@@ -93,7 +135,11 @@ export default {
             }).then((res)=>{
                 if(res.data.status===1){
                     this.afeter = res.data.data
-                    console.log(this.afeter)
+                    this.create_time = res.data.data.order_refund.create_time
+                    this.refund_reason = res.data.data.order_refund.refund_reason  //退款原因
+                    this.refund_type = res.data.data.order_refund  //退款方式
+                    this.listImg = res.data.data.order_refund.img.split(',')  //退款图片
+
                 }else{
                     Toast(res.data.msg)
                 }
@@ -153,6 +199,7 @@ export default {
     background #ffffff
     img
      width 100%
+     height 100%
   .info-details   .text
     flex 1
     font-size 26px
@@ -177,6 +224,8 @@ export default {
  .refund-info ul li 
      display flex
      overflow hidden
+ .refund-info ul li:last-child
+     display block
  .refund-info ul li span 
      white-space nowrap
      margin-right 10px
@@ -184,5 +233,15 @@ export default {
  .refund-info ul li .nowal
      overflow hidden
      text-overflow ellipsis
-
+.nowalImg
+     display flex
+     justify-content space-around
+     width 100%
+     height 200px
+     div
+       width 30%
+       img 
+            height 100%
+            width 100%
+    
 </style>

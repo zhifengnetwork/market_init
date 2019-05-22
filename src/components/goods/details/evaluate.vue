@@ -40,7 +40,7 @@
                </div>
         </header>
         <!-- 评价 -->
-        <div class="goods-comments" id="goods-comments" >
+        <div class="goods-comments" id="goods-comments"  v-if="comment.length!=0">
             <div class="comment-item clearfloat" v-for="(item,index) in comment" :key="index">
                 <div class="user-info clearfloat">
                     <span class="user-name">{{item.mobile}}</span>
@@ -59,6 +59,10 @@
                 <span>{{item.replies}}</span>
             </div>
         </div>
+        <div class="none vacancy" v-if="comment.length===0">
+                    <img src="/static/img/public/none.png" alt="">
+                    <p>暂无评论</p>
+          </div>
     </div>
 </template>
 <script>
@@ -98,9 +102,7 @@ export default {
                     url:url,
                     data:params
                 }).then((res)=>{
-                   
                   if(res.data.status===1){
-                      console.log(res)
                      this.comment = res.data.data
                  
                   }
@@ -243,6 +245,13 @@ export default {
     .img   .eveImg img 
             height 100%
             width 100%
-
+.vacancy
+                text-align center
+                padding-top 50%
+         img 
+                    width 80px
+        p
+                    color #666
+                    line-height 40px
 </style>
 

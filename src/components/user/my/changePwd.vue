@@ -169,7 +169,7 @@
                  </div>
                 <!-- 邮箱 -->
                 <div class="mailbox" v-if="alter==3">   
-                        <headerView custom-title="填写邮箱地址">
+                        <headerView custom-title="编辑邮箱">
                             <div class="backBtn" slot="backBtn" @click="alter=0">
                                 取消
                             </div>
@@ -180,7 +180,7 @@
                                     <div class="list_item_bd">
                                         <div class="list_item_label"></div>
                                         <div class="list_item_cnt">
-                                            <input class="list_item_input" id="editEmailTxt" type="text" v-model="emile">
+                                            <input class="list_item_input" id="editEmailTxt" type="text" v-model="emile" placeholder="请输入邮箱">
                                         </div>
                                     </div>
                                 </div>
@@ -421,7 +421,7 @@ export default {
 						 return
 				  }else if(!this.pwdd.test(this.getpayment.pwd)){
                         Dialog.alert({
-						message: '密码由6位英文字母数字组成!!'
+						message: '密码由6位数字组成!!'
 						})
 						return
                   }

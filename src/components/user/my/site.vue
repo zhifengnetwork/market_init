@@ -8,7 +8,7 @@
                       </div>
         </headerView>
         <div class="my-address-page yoho-page">
-                <div class="page-wrap" style="min-height: 913px;">
+                <div class="page-wrap" >
                         <input type="hidden" name="_csrf" value="jT1UUoB2-sPizk8OZFoN4vtGpJDsinvqovSo">
                         <div class="address-item" v-for="(item,index) in siteList" :key="index">
                             <span class="name">{{item.consignee}}</span>
@@ -270,5 +270,8 @@ export default {
     .my-address-page .address-item .action .edit>img,.del>img
         width 32px
         height 32px  
-
+   .van-popup
+    transform none
+    top 0 
+    left 0
 </style>
