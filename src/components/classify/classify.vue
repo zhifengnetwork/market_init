@@ -27,7 +27,7 @@
 							:key="index"
 							>	
 							<!-- 热门种类 -->
-							<div v-for="item in items.children">
+							<div v-for="(item,index) in items.children" :key="index">
 								<h3 class="title">{{item.cat_name}}</h3>
 								<ul class="pro-items">
 									<router-link
