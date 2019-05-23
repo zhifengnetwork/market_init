@@ -139,18 +139,23 @@
 			</div>
 
 		</div>
+		<scrolls></scrolls>
 		<menuBar></menuBar>
 	</div>
 </template>
 
 <script>
+	/*底部导航*/
 	import menuBar from "@/components/common/menuBar.vue";
 	import Swiper from "swiper";
 	import "swiper/dist/css/swiper.css";
+	/*返回顶部*/
+	import scrolls from "@/components/models/return_top"
 	export default {
 		name: "home",
 		components: {
-			menuBar
+			menuBar,
+			scrolls
 		},
 		data() {
 			return {
@@ -179,7 +184,7 @@
 			/*swiper分页*/
 			let res = [];
 			var that = this;
-			console.log('token: '+localStorage.getItem('Authorization'));
+			/*console.log('token: '+localStorage.getItem('Authorization'));*/
 			/*axios=>请求-页面数据 -s*/
 			that.$axios.post("/shop/getShopData")
 				.then(function(response) {
@@ -209,7 +214,7 @@
 					}
 				})
 				.catch(function(error) {
-					alert(error);
+					alert('页面请求失败：'+error);
 					console.log(error);
 				});
 			/*axios=>请求-页面数据 -e*/
@@ -267,11 +272,14 @@
 
 <style lang="stylus" scoped>
 	.home {
+		padding-bottom: 100px;
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
 		width: 100%;
-		overflow: hidden;
-		margin-bottom: 100px;
 		font-size: 34px;
 		text-align: center;
+		overflow-x: hidden;
 	}
 	/*public=>包着组件div*/
 	
