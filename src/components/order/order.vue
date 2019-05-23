@@ -61,22 +61,23 @@
                                 <router-link :to="'/order/refund?order_id='+item.order_id">
                                 <span class="btn cancelBtn">退款</span>
                                 </router-link>
+                                
                                 <!-- <span class="btn">确认收货</span> -->
                             </div>
                             <div class="order-opt" v-if="item.status===3">
-                                <!-- <span class="btn cancelBtn">删除订单</span> -->
+                               
                                  <span class="btn"  @click="receipt(index,item.order_id,item.status)">确认收货</span>
                             </div>
                             <div class="order-opt" v-if="item.status===4">
                                 <span class="btn cancelBtn" @click="delOrder(index,item.order_id,item.status)">删除订单</span>
-                                  <!-- <router-link :to="'/my/appraise?order_id='+item.order_id" > -->
+                                
                                  <span class="btn" @click="evaluateet(item)">评价</span>
-                                 <!-- </router-link> -->
+                         
                             </div>
-                            <!-- <div class="order-opt">
-                                <span class="btn">删除订单</span>
-                                <span class="btn">再次购买</span>
-                            </div> -->
+                            <div class="order-opt" v-if="item.status===6">
+                                <span class="btn" @click="cancelRefund(index,item.order_id,item.status)">取消退款</span>
+                                <!-- <span class="btn">再次购买</span> -->
+                            </div>
                         </div>
                          
                         
@@ -346,6 +347,11 @@
             //确认收货
             receipt(index,id,status){
                 var msgg = '您要确认收货吗？'
+                this.ajax(index,id,status,this.allOrders,msgg) 
+            },
+            //取消订单
+            cancelRefund(index,id,status){
+                var msgg = '您要确认取消退款吗？'
                 this.ajax(index,id,status,this.allOrders,msgg) 
             },
            

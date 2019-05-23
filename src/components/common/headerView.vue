@@ -77,9 +77,10 @@
 		height 42px
 		position absolute
 		right 30px
-		top 15px
+		top 0px
 		transform rotate(45deg)
-		width 42px
+		z-index -1
+		width 50px
 	ul 
 		border-radius 25px
 		height 338px
@@ -115,9 +116,7 @@
 				margin-top 20px
 ul>li:last-child span
     border-bottom none
-      
-
-
+   
 
  
 </style>

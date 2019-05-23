@@ -54,13 +54,12 @@
                 <!-- 登录密码 -->
                 <div class="pwd" v-if="alter==1">
                     <headerView custom-title="修改密码">
-                        <div class="backBtn" slot="backBtn" @click="alter=0">
+                        <div class="backBtn" slot="backBtn" @click="goback">
                                 <img src="../../../../static/img/public/backBtn.png" />
                         </div>
                    </headerView>
                    
                    <div class="main_wrap_inner" >
-                       
                         <div class="mod_list">
                                 <div class="mod_list_item" id="modifyPswDiv" style="display: none">
                                     <div class="list_item_bd">
@@ -86,8 +85,8 @@
                                             <input id="pay_code" class="list_item_input js_verifyCode" type="text" placeholder="验证码"  v-model="getpwd.newCode">
                                         </div>
                                         <div class="list_item_extra" >
-                                             <button type="submit" id="pay_getcode1" class="list_item_extra_btn js_getcode" v-show="!LoginPwd.canGet" disabled="disabled">{{LoginPwd.waitTime+"s后重新获取"}}</button>
-                                             <button type="submit" id="pay_getcode" class="list_item_extra_btn js_getcode"  v-show="LoginPwd.canGet" @click="loginGetCode()">获取手机验证码</button>
+                                             <button type="submit" id="pay_getcode1" class="list_item_extra_btn js_getcode" v-if="!LoginPwd.canGet" disabled="disabled">{{LoginPwd.waitTime+"s后重新获取"}}</button>
+                                             <button type="submit" id="pay_getcode" class="list_item_extra_btn js_getcode"  v-if="LoginPwd.canGet" @click="loginGetCode()">获取手机验证码</button>
                                         </div>
                                     </div>
                                 </div>
@@ -120,7 +119,7 @@
                 <!-- 手机 -->
                 <div class="phone" v-if="alter==2">
                     <headerView custom-title="重新绑定手机">
-                        <div class="backBtn" slot="backBtn" @click="alter=0">
+                        <div class="backBtn" slot="backBtn" @click="goback">
                                 <img src="../../../../static/img/public/backBtn.png" />
                         </div>
                     </headerView>
@@ -155,8 +154,8 @@
                                         <input id="code" class="list_item_input" type="text" placeholder="验证码" v-model="newCode">
                                     </div>
                                     <div class="list_item_extra" >
-                                        <button id="getcode" class="list_item_extra_btn" v-show="!phone.canGet" disabled="disabled">{{phone.waitTime+"s后重新获取"}}</button>
-                                         <button id="getcode" class="list_item_extra_btn"  v-show="phone.canGet" @click="getPhoneCode(newPhone)">获取手机验证码</button>
+                                        <button id="getcode" class="list_item_extra_btn" v-if="!phone.canGet" disabled="disabled">{{phone.waitTime+"s后重新获取"}}</button>
+                                         <button id="getcode" class="list_item_extra_btn"  v-if="phone.canGet" @click="getPhoneCode(newPhone)">获取手机验证码</button>
                                         </div>
                                 </div>
                             </div>
@@ -170,7 +169,7 @@
                 <!-- 邮箱 -->
                 <div class="mailbox" v-if="alter==3">   
                         <headerView custom-title="编辑邮箱">
-                            <div class="backBtn" slot="backBtn" @click="alter=0">
+                            <div class="backBtn" slot="backBtn" @click="goback">
                                 取消
                             </div>
                         </headerView>
@@ -191,9 +190,9 @@
                         </div>
                     </div>
                 <!-- 商城支付密码 -->
-                <div class="paymentPwd" v-if="alter==4">
+                <div class="paymentPwd" v-if="alter==4" >
                     <headerView custom-title="设置支付密码">
-                        <div class="backBtn" slot="backBtn" @click="alter=0">
+                        <div class="backBtn" slot="backBtn" @click="goback" >
                                 <img src="../../../../static/img/public/backBtn.png" />
                         </div>
                     </headerView>
@@ -216,8 +215,8 @@
                                             <input id="pay_code" class="list_item_input js_verifyCode" type="text" placeholder="验证码" v-model="getpayment.newCode">
                                         </div>
                                         <div class="list_item_extra" >
-                                             <button id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="!pwd.canGet" disabled="disabled">{{pwd.waitTime+"s后重新获取"}}</button>
-                                             <button id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-show="pwd.canGet" @click="pwdGetCode()">获取手机验证码</button>
+                                             <button id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-if="!pwd.canGet" disabled="disabled">{{pwd.waitTime+"s后重新获取"}}</button>
+                                             <button id="pay_getcode" class="list_item_extra_btn js_getcode" href="javascript:void(0)" v-if="pwd.canGet" @click="pwdGetCode()">获取手机验证码</button>
                                             </div>
                                     </div>
                                 </div>
@@ -504,7 +503,6 @@ export default {
                             return
                      }
                      //用户手机
-				
 				  else if(!this.mobile.test(phone)){
                         Dialog.alert({
 						message: '手机号格式错误!!'
@@ -580,6 +578,12 @@ export default {
                 })
                   }
          },
+         goback(){
+              this.alter=0;
+              this.tempPwd.canGet = true
+              this.tempPhone.canGet = true
+              this.tempLoginPwd.canGet = true
+         }
         
     },computed:{
         pwd(){ //最终对象  商城

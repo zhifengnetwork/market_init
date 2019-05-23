@@ -27,7 +27,7 @@
                    <li >
                        <span>性别</span>
                        <span>
-                            <select name="" id="selGender" title="选择性别" v-model="gender"  @change="selectGender(genderr)">
+                            <select name="" id="selGender" title="选择性别" v-model="gender"  @change="selectGender(gender)">
                             <option :value="0">未设置</option>
                             <option :value="1">男</option>
                             <option :value="2">女</option>
@@ -122,7 +122,6 @@ export default {
               amend:true,
               //性别
               gender:0,
-              genderr:0,
 
               //修改昵称
               userName:'',
@@ -220,8 +219,29 @@ export default {
             
         },
         //性别选择
-        selectGender(){
-            console.log(this.genderr)
+        selectGender(val){
+            //   接口
+            // user/set_reabir
+            var url = 'user/set_reabir'
+            var params = new URLSearchParams();
+            params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value         //token
+            params.append('type', 3);       //你要传给后台的参数值 key/value         
+            params.append('gender', val);       //你要传给后台的参数值 key/value  
+            this.$axios({
+                method:"post",
+                url:url,
+                data:params
+            })
+            .then((res)=>{
+                if(res.data.status===1){
+                    
+                    JSON.parse(localStorage.usin).gender = val
+                    console.log(JSON.parse(localStorage.usin).gender)
+                    Toast(res.data.msg)
+                }else{
+                    Toast(res.data.msg)
+                }
+            })
         },
      
         //退出登录
