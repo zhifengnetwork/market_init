@@ -88,6 +88,11 @@
                                     </li>
                                    
                             </ul>
+                            <!-- 暂无可使用优惠券 -->
+                            <div class="none vacancy" v-if="coupons.length===0">
+                                <img src="/static/img/public/none.png" alt="">
+                                <p>暂无可使用优惠券</p>
+                            </div>
                         </div>
                      </div>
                      <div class="coupon-drawer-mask" @click="getCoupon=false" @touchmove.prevent></div>
@@ -198,6 +203,7 @@
                     @delete="onDelete"
                     @blur="showKeyboard = false"
             />
+            
     </div>
 </template>
 
@@ -293,11 +299,20 @@ import {Toast,Dialog} from "vant"
                                   }
                                   this.totalPrice() //总金额
                                   this.totalNumber() //商品总数量
+                            }else if(res.data.status === -1){  
+                            Dialog.alert({
+                            message:res.data.msg
+                            }).then(()=>{
+                            store.commit('del_token'); //token，清除它;
+                            setTimeout(() => {
+                            this.$router.push("/login");  
+                                })
+                                })
                             }else{
                                 Dialog.alert({
-                                message:res.data.msg
-                                });
-                            } 
+                                    message:res.data.msg
+                                    })
+                            }
                         })  
                 
                 //获取用户信息
@@ -924,6 +939,18 @@ import {Toast,Dialog} from "vant"
         width 100px
         height 100px
         z-index 3100!important
+   .vacancy
+                text-align center
+                padding-top 20%
+                img 
+                    width 80px
+                p
+                    color #666
+                    line-height 40px
+.site>.van-popup
+    transform none
+    top 0
+    left 0
 </style>
 
 

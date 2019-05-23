@@ -472,11 +472,20 @@ export default {
                     }).then((res)=>{
                         if(res.data.status === 1){
                             this.proList=res.data.data.goods_list
-                        }else{  
+                        }else if(res.data.status === -1){  
                             Dialog.alert({
-                                    message:res.data.msg
+                            message:res.data.msg
+                            }).then(()=>{
+                            store.commit('del_token'); //token，清除它;
+                            setTimeout(() => {
+                            this.$router.push("/login");  
+                         })
+                         })
+                    }else{
+                          Dialog.alert({
+                            message:res.data.msg
                             })
-                        }
+                    }
                     })
                 
       },
@@ -508,10 +517,19 @@ export default {
                  }).then((res)=>{
                     if(res.data.status === 1){
                        this.keywo=res.data.data.goods_list
+                    }else if(res.data.status === -1){  
+                            Dialog.alert({
+                            message:res.data.msg
+                            }).then(()=>{
+                            store.commit('del_token'); //token，清除它;
+                            setTimeout(() => {
+                            this.$router.push("/login");  
+                         })
+                         })
                     }else{
-                        Dialog.alert({
-                         message:res.data.msg
-                     })
+                          Dialog.alert({
+                            message:res.data.msg
+                            })
                     }
                 })
             }
@@ -541,11 +559,20 @@ export default {
                     }).then((res)=>{
                         if(res.data.status === 1){
                             this.proList=res.data.data.goods_list
-                        }else{  
+                        }else if(res.data.status === -1){  
                             Dialog.alert({
-                                    message:res.data.msg
+                            message:res.data.msg
+                            }).then(()=>{
+                            store.commit('del_token'); //token，清除它;
+                            setTimeout(() => {
+                            this.$router.push("/login");  
+                         })
+                         })
+                    }else{
+                          Dialog.alert({
+                            message:res.data.msg
                             })
-                        }
+                    }
                     })
       }
 

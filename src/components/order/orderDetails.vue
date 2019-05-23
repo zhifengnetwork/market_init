@@ -11,11 +11,14 @@
             <!-- 订单状态 -->
             <div class="order-state">
                  <p>订单状态：
-                     <span v-if="order.status==1">待付款</span>
-                     <span v-if="order.status==2">待发货</span>
-                     <span v-if="order.status==3">待收货</span>
-                     <span v-if="order.status==4">待评价</span>
-                     <span v-if="order.status==5">已取消</span>
+                     <span v-if="order.status===1">待付款</span>
+                     <span v-if="order.status===2">待发货</span>
+                     <span v-if="order.status===3">待收货</span>
+                     <span v-if="order.status===4">待评价</span>
+                     <span v-if="order.status===5">已取消</span>
+                     <span v-if="order.status===6">待退款</span>
+                     <span v-if="order.status===7">已退款</span>
+                     <span v-if="order.status===8">拒绝退款</span>
                      </p>   
                  <img src="/static/img/order/order-state1.png" alt="">
             </div>
@@ -201,7 +204,20 @@
                 if(res.data.status===1){
                     this.order = res.data.data
                     this.pay_name = res.data.data.pay_type.pay_name
-                }
+                }else if(res.data.status === -1){  
+                            Dialog.alert({
+                            message:res.data.msg
+                            }).then(()=>{
+                            store.commit('del_token'); //token，清除它;
+                            setTimeout(() => {
+                            this.$router.push("/login");  
+                         })
+                         })
+                    }else{
+                          Dialog.alert({
+                            message:res.data.msg
+                            })
+                    }
             })
         },
         filters: {

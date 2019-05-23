@@ -132,14 +132,14 @@
                             </p> -->
                             
                         </div>
-                        <div class="marking_price_wrap">
+                        <!-- <div class="marking_price_wrap">
                             <p class="marking_price__title">划线价格：</p>
                             <p class="marking_price__content">指商品专柜价、吊牌价、正品零售价、厂商指导价或该商品的曾经展示过的销售价等，并非原价，仅供參考。</p>
                             <p class="marking_price__title">未划线价格：</p>
                             <p class="marking_price__content">指商品的实时标价，不因表述的差异改变性质。具体成交价格根据商品参加活动，或会员使用优惠券、积分等发生变化，最终以订单结算页价格为准。</p>
                             <p class="marking_price__content">商家详情页（含主图）以图片成文字形式标注的一口价、促销价、优惠价等价格可能是在使用优惠券、满减或特定优惠活动和时段等情形下的价格.具体请以结算页面的标价、优惠条件或活动规则为准。</p>
                             <p class="marking_price__content">此说明仅当出现价格比较时有效，如有疑问，您可在购买前联系客服进行咨询。</p>
-                        </div>
+                        </div> -->
                 </div>
                        <van-goods-action>
                             <van-goods-action-mini-btn
@@ -200,7 +200,7 @@
                                                            -
                                                         </button>
                                                         <input id="good-num" class="good-num disabled" type="text" v-model="sku_num" disabled>
-                                                            <button class="btn btn-plus" href="javascript:void(0);" @click="addNum" :disabled='sku_num>goods.most_buy_number'>
+                                                            <button class="btn btn-plus" href="javascript:void(0);" @click="addNum" :disabled='sku_num>goods.single_number'>
                                                            +
                                                         </button>
                                                     </div>
@@ -222,7 +222,7 @@
                       <div class="title" @touchmove.prevent>领取优惠券</div>
                         <div class="body">
                             <ul class="coupon-list">
-                                    <li class="coupon" :data-coupon="item.coupon_id" v-for="item in goods.coupon" :key="item.coupon_id">
+                                    <li class="coupon" :data-coupon="item.coupon_id" v-for="item in coupon" :key="item.coupon_id">
                                         <div class="pull-right">
                                             <button type="button"  :class="['coupon-btn',{'coupon-btn-valid':item.is_lq===0}]" @click="getCouponBt(item)" >{{item.is_lq===0?'立即领取':'已领取'}}</button>
                                         </div>
@@ -236,6 +236,11 @@
                                     </li>
                                    
                             </ul>
+                            <!-- 暂无可领取优惠券 -->
+                            <div class="none vacancy" v-if="coupon.length===0">
+                                <img src="/static/img/public/none.png" alt="">
+                                <p>暂无可领取优惠券</p>
+                            </div>
                         </div>
                      </div>
                      <div class="coupon-drawer-mask" @click="getCoupon=false" @touchmove.prevent></div>
@@ -293,6 +298,9 @@ export default {
 
             //商品评论
             elevping:[],
+
+            //优惠券
+            coupon:[],
 
 
              //显示加入购物车还是立即购买//规格弹窗的按钮text
@@ -377,9 +385,14 @@ export default {
                 for (let j = 0; j < that.good[i].res.length; j++) {
                        that.good[i].res[j].isSelect = false;
                        that.good[i].res[j].isShow = true;
-                if (that.shopItemInfo[that.good[i].res[j].attr_id] == null) {
-                       that.good[i].res[j].isShow = false;
-                       that.good[i].res[j].isSelect = true;
+                     
+                if (that.shopItemInfo[that.good[i].res[j].attr_id] === null) {   //如果一开始库存为0 默认不可选
+
+                       this.$set(that.good[i].res[j],'isShow',false)
+
+
+                       this.$set(that.good[i].res[j],'isSelect',true)
+
                 }
                 }
             }
@@ -403,9 +416,9 @@ export default {
             this.shopItemInfo[key].prices.push(sku.price);
         } else {
             this.shopItemInfo[key] = {
-            goods_id:sku.goods_id,    //商品Id
-            sku_id:sku.sku_id,    //skuId  
-            inventory: sku.inventory,  //库存
+            goods_id:sku.goods_id,      //商品Id
+            sku_id:sku.sku_id,          //skuId  
+            inventory: sku.inventory,   //库存
             prices: [sku.price],        //sku价格
             sku_attr:sku.sku_attr       //sku组合
             };
@@ -534,6 +547,7 @@ export default {
             orderInfoChild[index].isSelect = false;
                 this.sku_num = 1,  //只要取消选中 商品选择数量自动默认为1
                 this.pitch=true;
+               
         } else {
             for (let i = 0; i < orderInfoChild.length; i++) {
                 orderInfoChild[i].isSelect = false;
@@ -745,6 +759,7 @@ export default {
         addNum(){
                 let le = [];
                 let sele = []
+                
                  if(this.selectArr == ''){
                       for (let i = 0; i < this.good.length; i++) {
                         le.push(this.good[i].spec_name) 
@@ -772,12 +787,16 @@ export default {
                     }     
                     }
                  }
-                  if( this.sku_num < 10){  //如果数量小于10
-            
-                      this.sku_num++;
+                //  this.goods.single_number
+                  if( this.sku_num < this.sku_stock){    //如果单次购买的数量小于库存
+                      if(this.sku_num < this.goods.single_number){   //如果单次购买的数量小于限购
+                            this.sku_num++;
+                       }else{
+                       Toast(`单次商品限购${this.goods.single_number}噢~`)
+                       }
                   }else{
 
-                      Toast('您选中的数量不能超过10噢~')
+                      Toast(`您选中的数量不能超过库存噢~`)
 
                   }
 
@@ -1015,9 +1034,10 @@ export default {
                    data: params
                 }).then((res)=>{
                   if(res.data.status === 1){
-                    that.goods = res.data.data;
+                    that.goods = res.data.data;    //商品详情
                     // console.log(that.goods)
-                    that.good =  res.data.data.spec.spec_attr;
+                    that.good =  res.data.data.spec.spec_attr; //商品规格
+                    that.coupon = res.data.data.coupon;
                     // 数据加载成功，关闭loading 
 					          this.$store.commit('hideLoading')
                   }
@@ -1027,18 +1047,20 @@ export default {
                       
                   // }
                   else{
-                    if(res.status === 401){
-                      Dialog.alert({
-                      message:res.data.msg
-                    }).then(()=>{
-                    
-                    })
+                      if(res.data.status === -1){  
+                            Dialog.alert({
+                            message:res.data.msg
+                            }).then(()=>{
+                            store.commit('del_token'); //token，清除它;
+                            setTimeout(() => {
+                            this.$router.push("/login");  
+                         })
+                         })
+                    }else{
+                          Dialog.alert({
+                            message:res.data.msg
+                            })
                     }
-                    else {
-                    Dialog.alert({
-                    message:res.data.msg
-                    })
-                   }
                   }
                
               //购物车总数
@@ -1060,7 +1082,7 @@ export default {
              that.shopItemInfo[that.goods.spec.goods_sku[i].sku_attr1] = that.goods.spec.goods_sku[i]; //修改数据结构格式，改成键值对的方式，以方便和选中之后的值进行匹配
               }
                //初始化规格
-                this.initializeSpecification();
+            this.initializeSpecification();
                 
             })
             .catch( error => {
@@ -1498,5 +1520,12 @@ export default {
 .van-cell:not(:last-child)::after
      left 0
 
-
+.vacancy
+                text-align center
+                padding-top 20%
+                img 
+                    width 80px
+                p
+                    color #666
+                    line-height 40px
 </style>

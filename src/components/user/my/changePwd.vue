@@ -86,7 +86,7 @@
                                             <input id="pay_code" class="list_item_input js_verifyCode" type="text" placeholder="验证码"  v-model="getpwd.newCode">
                                         </div>
                                         <div class="list_item_extra" >
-                                             <button type="submit" id="pay_getcode1" class="list_item_extra_btn js_getcode" v-show="!LoginPwd.canGet" disabled="disabled">{{pwd.waitTime+"s后重新获取"}}</button>
+                                             <button type="submit" id="pay_getcode1" class="list_item_extra_btn js_getcode" v-show="!LoginPwd.canGet" disabled="disabled">{{LoginPwd.waitTime+"s后重新获取"}}</button>
                                              <button type="submit" id="pay_getcode" class="list_item_extra_btn js_getcode"  v-show="LoginPwd.canGet" @click="loginGetCode()">获取手机验证码</button>
                                         </div>
                                     </div>
@@ -281,7 +281,7 @@ export default {
                  pwd1:'',
                  newCode:'',
             },
-            password:/^[a-zA-Z]\w{5,17}$/,             //用户密码正则
+            password:/^([\d]|[\w]){6,20}$/,              //用户密码正则
             // pwdd:/^[a-zA-Z0-9]{6}$/,                   //支付密码
             pwdd:/^\d{6}$/,                   //支付密码
             email:/^[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/,               //用户邮箱正则
@@ -336,7 +336,8 @@ export default {
 						var params = new URLSearchParams();
 						params.append('mobile', this.userList.mobile);       //你要传给后台的参数值 key/value
 						params.append('temp', temp);
-						params.append('auth', auth);
+                        params.append('auth', auth);
+                        params.append('type', 2);
 						that.$axios({
 							method: 'post',
 							url:url,
@@ -367,7 +368,7 @@ export default {
 						 return
 				  }else if(!this.password.test(this.getpwd.pwd)){
                         Dialog.alert({
-						message: '密码长度要在6~18位之间,且必须以字母开头!'
+						message: '密码长度为6-20位可以为数字、字母、特殊字符的密码!'
 						})
 						return
                   }
@@ -559,7 +560,8 @@ export default {
 						var params = new URLSearchParams();
 						params.append('mobile', code);       //你要传给后台的参数值 key/value
 						params.append('temp', temp);
-						params.append('auth', auth);
+                        params.append('auth', auth);
+                        params.append('type', 2);
 						that.$axios({
 							method: 'post',
 							url:url,

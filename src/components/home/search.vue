@@ -74,8 +74,8 @@
             </div>
             <!-- item -->
             <div class="search-item" v-if="keywo.length===0 || value===''">
-                 <div class="itemOne">
-                      <div class="search-group history-search">
+                 <div class="itemOne" v-if="history.length != 0 || like.length != 0">
+                      <div class="search-group history-search" v-if="history.length != 0">
                           <div class="search-content-title">
                               <h3 class="left">最近搜索</h3>
                               <i class="right" @click="deljilu">
@@ -90,6 +90,7 @@
                                </ul>
                           </div>
                       </div>
+                      <div v-if="like.length != 0">
                       <div class="search-group want-search" v-if="keywo.length===0  || value===''">
                         <h3>猜你想找</h3>
                         <div class="search-content">
@@ -98,6 +99,7 @@
                                         <a href="javascript:void(0);">{{item.goods_name}}</a>
                                     </li>
                             </ul>
+                            </div>
                         </div>
                     </div>
                  </div>
@@ -149,7 +151,6 @@ export default {
             if(value == '' || value == ' '){
                 return
             }
-            console.log(value)
             if(value!=''){
                  this.$axios({
                  method:"post",
@@ -218,9 +219,14 @@ export default {
                         this.history=res.data.data.history
                         this.hot=res.data.data.hot
                         this.like=res.data.data.like
-                    }else{  
-                         Dialog.alert({
-                                 message:res.data.msg
+                    }else if(res.data.status === -1){  
+                            Dialog.alert({
+                            message:res.data.msg
+                            }).then(()=>{
+                            store.commit('del_token'); //token，清除它;
+                            setTimeout(() => {
+                            this.$router.push("/login");  
+                         })
                          })
                     }
                 })

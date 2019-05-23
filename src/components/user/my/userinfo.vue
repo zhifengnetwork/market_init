@@ -24,13 +24,13 @@
                        </span>
                        <i class="right-arrow"></i>
                    </li>
-                   <li>
+                   <li >
                        <span>性别</span>
                        <span>
-                            <select name="" id="selGender" title="选择性别">
-                            <option value="3" selected="selected">保密</option>
-                            <option value="2">男</option>
-                            <option value="1">女</option>
+                            <select name="" id="selGender" title="选择性别" v-model="gender"  @change="selectGender(genderr)">
+                            <option :value="0">未设置</option>
+                            <option :value="1">男</option>
+                            <option :value="2">女</option>
                         </select>
                        </span>
                        <i class="right-arrow"></i>
@@ -120,6 +120,9 @@ export default {
               pickerVisible: new Date(),
               birthday:'请填写生日',
               amend:true,
+              //性别
+              gender:0,
+              genderr:0,
 
               //修改昵称
               userName:'',
@@ -216,7 +219,11 @@ export default {
             })
             
         },
-
+        //性别选择
+        selectGender(){
+            console.log(this.genderr)
+        },
+     
         //退出登录
         quitOut(){
             Dialog.confirm({
@@ -240,6 +247,7 @@ export default {
         this.userImg = JSON.parse(this.$store.getters.optuser.usin).avatar   //头像
         this.userName = JSON.parse(this.$store.getters.optuser.usin).realname  //昵称
         this.birthday = JSON.parse(this.$store.getters.optuser.usin).birthyear+'-'+JSON.parse(this.$store.getters.optuser.usin).birthmonth+'-'+JSON.parse(this.$store.getters.optuser.usin).birthday  //生日
+        this.gender = JSON.parse(this.$store.getters.optuser.usin).gender
         //是否设置地址
         this.address = JSON.parse(this.$store.getters.optuser.usin).is_address
     },

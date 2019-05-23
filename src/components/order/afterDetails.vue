@@ -64,7 +64,7 @@
                         </li>
                         <li>
                             <span>申请件数: </span>
-                            <span class="nowal">1</span>
+                            <span class="nowal">{{totalNum}}</span>
                         </li>
                         <li>
                             <span>申请时间: </span>
@@ -77,15 +77,6 @@
                         <li>
                             <span>退款备注: </span>
                             <span class="nowal">{{refund_type.cancel_remark}}</span>
-                        </li>
-                        <li>
-                            <span>退款图片: </span>
-                            
-                            <div class="nowalImg">
-                                <div v-for="item in listImg" :key="item.id">
-                                <img :src="baseUrl+item" alt="">
-                                </div>
-                            </div>
                         </li>
                         
                     </ul>
@@ -111,7 +102,8 @@ export default {
                  refund_reason:'',
                  //退款方式
                  refund_type:'',
-                 listImg:[],
+                 //总件数
+                 totalNum:0,
         }
     },
     components:{
@@ -138,11 +130,23 @@ export default {
                     this.create_time = res.data.data.order_refund.create_time
                     this.refund_reason = res.data.data.order_refund.refund_reason  //退款原因
                     this.refund_type = res.data.data.order_refund  //退款方式
-                    this.listImg = res.data.data.order_refund.img.split(',')  //退款图片
-
-                }else{
-                    Toast(res.data.msg)
-                }
+                     for(var i = 0;i<this.afeter.goods_res.length;i++){
+                       this.totalNum += this.afeter.goods_res[i].goods_num
+                     }
+                }else if(res.data.status === -1){  
+                            Dialog.alert({
+                            message:res.data.msg
+                            }).then(()=>{
+                            store.commit('del_token'); //token，清除它;
+                            setTimeout(() => {
+                            this.$router.push("/login");  
+                         })
+                         })
+                    }else{
+                          Dialog.alert({
+                            message:res.data.msg
+                            })
+                    }
             })
 
 

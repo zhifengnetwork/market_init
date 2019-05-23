@@ -93,22 +93,23 @@ export default {
         .notice-list
             ul
                 li
-                    height 134px
                     font-size 28px
                     line-height 50px
                     border-bottom 1px solid #efefef
                     padding 0 30px
                     box-sizing border-box
-                    position relative
                     margin-top 10px
                     h3
+                        display -webkit-box
+                        overflow hidden
+                        -webkit-line-clamp 2
+                        -webkit-box-orient vertical
                         font-weight normal
                     .date
+                        display block
                         color #999999
                         font-size 24px
-                        position absolute
-                        right 30px
-                        bottom 10px
+                        text-align right 
 
 
 </style>

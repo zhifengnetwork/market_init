@@ -31,6 +31,7 @@ axios.interceptors.request.use(
 		return config
 	},
 	error => {
+		console.log(error)
 		return Promise.reject(error)
 	})
 
@@ -112,8 +113,9 @@ axios.interceptors.response.use(
 			}
 		}else{
 			error.message = '网络出现问题，请稍后再试'
+			console.log(error.message)
 		}
-		console.log(Promise.reject(error.response))
+		console.log(Promise.reject(error.response.data))
 		return Promise.reject(error.response.data)
 	});
 
