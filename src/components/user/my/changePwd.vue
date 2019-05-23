@@ -336,7 +336,8 @@ export default {
 						var params = new URLSearchParams();
 						params.append('mobile', this.userList.mobile);       //你要传给后台的参数值 key/value
 						params.append('temp', temp);
-						params.append('auth', auth);
+                        params.append('auth', auth);
+                        params.append('type', 2);
 						that.$axios({
 							method: 'post',
 							url:url,
@@ -559,7 +560,8 @@ export default {
 						var params = new URLSearchParams();
 						params.append('mobile', code);       //你要传给后台的参数值 key/value
 						params.append('temp', temp);
-						params.append('auth', auth);
+                        params.append('auth', auth);
+                        params.append('type', 2);
 						that.$axios({
 							method: 'post',
 							url:url,
