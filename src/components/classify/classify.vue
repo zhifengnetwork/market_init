@@ -113,9 +113,9 @@
 		 
 	 	methods:{
 			// 后退
-            backBtn:function(){
-                this.$router.go(-1);
-			},
+//          backBtn:function(){
+//              this.$router.go(-1);
+//			},
 			// 初始化Better-Scroll实例
 	 		initScroll(){
 				this.menuScroll = new BScroll(this.$refs.menuBox,{

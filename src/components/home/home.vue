@@ -145,6 +145,8 @@
 </template>
 
 <script>
+	/*状态-商店*/
+	import store from '@/store/store.js'
 	/*底部导航*/
 	import menuBar from "@/components/common/menuBar.vue";
 	import Swiper from "swiper";
@@ -153,6 +155,7 @@
 	import scrolls from "@/components/models/return_top"
 	export default {
 		name: "home",
+		store,
 		components: {
 			menuBar,
 			scrolls
@@ -185,6 +188,8 @@
 			let res = [];
 			var that = this;
 			/*console.log('token: '+localStorage.getItem('Authorization'));*/
+			// 调用loading 
+			that.$store.commit('showLoading')
 			/*axios=>请求-页面数据 -s*/
 			that.$axios.post("/shop/getShopData")
 				.then(function(response) {
@@ -208,14 +213,21 @@
 								});
 							}
 						}
+						that.$store.commit('hideLoading');
 					} else {
 						/*保存失败*/
 						alert(response["data"]["msg"]);
+						
 					}
+					//调用loading-关闭（store.js为什么取反=>都是调用操控同一个状态）
+					that.$store.commit('hideLoading');
 				})
 				.catch(function(error) {
+					//调用loading 
+					that.$store.commit('hideLoading');
 					alert('页面请求失败：'+error);
 					console.log(error);
+					
 				});
 			/*axios=>请求-页面数据 -e*/
 		},
