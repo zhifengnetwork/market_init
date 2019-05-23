@@ -23,7 +23,6 @@
 			handleScroll () {
 				this.scroll['scrollTop'] = this.scroll['eve'].scrollTop;
 //				this.scroll['scrollTop'] = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-				console.log(this.scroll['scrollTop']);
 				if (this.scroll['scrollTop'] > 300) {
 		          this.scroll['show'] = true;
 		        }else {
@@ -32,12 +31,10 @@
 			},
 			/*回到顶部*/
 			scrollToTop() {
-				console.log('滚动条！');
 		        let timer = null, _that = this
 		        //动画，使用requestAnimationFrame代替setInterval
 		        cancelAnimationFrame(timer)
 		        timer = requestAnimationFrame(function fn() {
-//		        	console.log(66,_that.scroll['scrollTop']);
 			        if (_that.scroll['scrollTop'] > 0) {
 			           _that.scroll['scrollTop'] -= 50
 			            //然后修改这里实现动画滚动效果

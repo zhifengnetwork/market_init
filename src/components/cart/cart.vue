@@ -24,14 +24,16 @@
                               </div> 
                               <!-- 购物车列表 -->
                               <div class="cart-content normal-good active" v-if="list.length>0">
-                                    <a class="tips clearfix" href="" >
-                                        <div>
-                                            购物满¥000.00 已免运费
-                                        </div>
-                                        <span class="iconfont free-shipping">
-                                            <img src="../../../static/img/public/right.png" alt="">
-                                        </span>
-                                    </a>
+	                              	<router-link to="/home">
+	                                    <a class="tips clearfix">
+	                                        <div>
+	                                          	购物满¥000.00 已免运费
+	                                        </div>
+	                                        <span class="iconfont free-shipping">
+	                                            <img src="../../../static/img/public/right.png" alt="">
+	                                        </span>
+	                                    </a>
+                                    </router-link>
                                 <div class="normal-box" >
                                         <div class="cart-brand  good-pools-data"  >
                                                 <div class="good-list" v-for="(item,index) in list" :key="index"  :data-id="item.goods_id" :data-skn="item.sku_id">
