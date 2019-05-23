@@ -939,7 +939,6 @@ import {Toast,Dialog} from "vant"
         width 100px
         height 100px
         z-index 3100!important
-<<<<<<< HEAD
    .vacancy
                 text-align center
                 padding-top 20%
@@ -948,12 +947,10 @@ import {Toast,Dialog} from "vant"
                 p
                     color #666
                     line-height 40px
-=======
-.van-popup
+.site>.van-popup
     transform none
     top 0
     left 0
->>>>>>> aeafcba91d4cb6ac93f2508b2c658d21f061083c
 </style>
 
 
