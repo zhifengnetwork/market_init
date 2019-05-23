@@ -288,10 +288,10 @@
         methods:{
             handleClick(index){
                 this.nowIndex = index;
-//              this.$router.go(0)
+                this.$router.go(0)
                 this.$router.push('/order?type='+index);
                 this.type = this.$route.query.type;
-				this.data_rendering();
+//				this.data_rendering();
             },
             //取消订单
             ajax(index,id,status,s,msgg){
@@ -448,130 +448,130 @@
                 this.value = ''
             },
 			/*页面-数据渲染*/
-			data_rendering() {
-				// 调用loading 
-				this.$store.commit('showLoading')
-				//图片路径
-				this.baseUrl = this.url
-				// 订单列表	order/order_list
-				// 参数：
-				// token
-				// type		//全部订单 all，待付款 dfk，待发货 dfh，待收货 dsh，待评价 dpj，已取消 yqx
-				// 订单状态提示：
-				// order_status	//订单状态	已确认，2已收货，3已取消，4已完成
-				// pay_status	//支付状态	0未支付，1已支付，3，已退款
-				// shipping_status	//商品配送情况 0未发货，1已发货，3已收货，4退货
-				this.nowIndex = parseInt(this.type);
-				console.log(parseInt(this.type));
-				var type, siz
-				if(this.nowIndex === 0) {
-					type = 'all'
-				}
-				if(this.nowIndex === 1) {
-					type = 'dfk'
-				}
-				if(this.nowIndex === 2) {
-					type = 'dfh'
-				}
-				if(this.nowIndex === 3) {
-					type = 'dsh'
-				}
-				if(this.nowIndex === 4) {
-					type = 'dpj'
-				}
-				var url = 'order/order_list'
-				var params = new URLSearchParams();
-				params.append('token', this.$store.getters.optuser.Authorization); //token
-				params.append('type', type);
-				this.$axios({
-					method: "post",
-					url: url,
-					data: params
-				}).then((res) => {
-					if(res.data.status === 1) {
-						// 数据加载成功，关闭loading 
-						this.$store.commit('hideLoading')
-	
-						this.allOrders = res.data.data
-	
-					} else {
-						Dialog.alert({
-							message: res.data.msg
-						}).then(() => {
-							this.$router.push('/login');
-						});
-					}
-				}).catch((err) => {
-					alert('请求错误'+err);
-				})
-			},
+//			data_rendering() {
+//				// 调用loading 
+//				this.$store.commit('showLoading')
+//				//图片路径
+//				this.baseUrl = this.url
+//				// 订单列表	order/order_list
+//				// 参数：
+//				// token
+//				// type		//全部订单 all，待付款 dfk，待发货 dfh，待收货 dsh，待评价 dpj，已取消 yqx
+//				// 订单状态提示：
+//				// order_status	//订单状态	已确认，2已收货，3已取消，4已完成
+//				// pay_status	//支付状态	0未支付，1已支付，3，已退款
+//				// shipping_status	//商品配送情况 0未发货，1已发货，3已收货，4退货
+//				this.nowIndex = parseInt(this.type);
+//				console.log(parseInt(this.type));
+//				var type, siz
+//				if(this.nowIndex === 0) {
+//					type = 'all'
+//				}
+//				if(this.nowIndex === 1) {
+//					type = 'dfk'
+//				}
+//				if(this.nowIndex === 2) {
+//					type = 'dfh'
+//				}
+//				if(this.nowIndex === 3) {
+//					type = 'dsh'
+//				}
+//				if(this.nowIndex === 4) {
+//					type = 'dpj'
+//				}
+//				var url = 'order/order_list'
+//				var params = new URLSearchParams();
+//				params.append('token', this.$store.getters.optuser.Authorization); //token
+//				params.append('type', type);
+//				this.$axios({
+//					method: "post",
+//					url: url,
+//					data: params
+//				}).then((res) => {
+//					if(res.data.status === 1) {
+//						// 数据加载成功，关闭loading 
+//						this.$store.commit('hideLoading')
+//	
+//						this.allOrders = res.data.data
+//	
+//					} else {
+//						Dialog.alert({
+//							message: res.data.msg
+//						}).then(() => {
+//							this.$router.push('/login');
+//						});
+//					}
+//				}).catch((err) => {
+//					alert('请求错误'+err);
+//				})
+//			},
         },
         components:{
             headerView
         },
         created(){
-        	/*数据请求*/
-			this.data_rendering();
-//          // 调用loading 
-//			                    this.$store.commit('showLoading')
-//          //图片路径
-//         this.baseUrl=this.url
-//          // 订单列表	order/order_list
-//          // 参数：
-//          // token
-//          // type		//全部订单 all，待付款 dfk，待发货 dfh，待收货 dsh，待评价 dpj，已取消 yqx
-//          // 订单状态提示：
-//          // order_status	//订单状态	已确认，2已收货，3已取消，4已完成
-//          // pay_status	//支付状态	0未支付，1已支付，3，已退款
-//          // shipping_status	//商品配送情况 0未发货，1已发货，3已收货，4退货
-//         this.nowIndex=parseInt(this.type);
-//         console.log(parseInt(this.type));
-//         var type,siz
-//         if(this.nowIndex === 0){
-//             type='all'
-//         }
-//         if(this.nowIndex === 1){
-//             type='dfk'
-//         }
-//         if(this.nowIndex === 2){
-//             type='dfh'
-//         }
-//         if(this.nowIndex === 3){
-//             type='dsh'  
-//         }
-//         if(this.nowIndex === 4){
-//             type='dpj'
-//         }
-//                              var url = 'order/order_list'
-//                              var params = new URLSearchParams();
-//                              params.append('token', this.$store.getters.optuser.Authorization);           //token
-//                              params.append('type',type );                      
-//                              this.$axios({
-//                                      method:"post",
-//                                      url:url,
-//                                      data: params
-//                                      }).then((res)=>{
-//                                      if( res.data.status === 1){
-//                                          // 数据加载成功，关闭loading 
-//					                        this.$store.commit('hideLoading')
-//                                        
-//                                              this.allOrders = res.data.data
-//                                      
-//                                      }else if(res.data.status === -1){  
-//                                          Dialog.alert({
-//                                          message:res.data.msg
-//                                          }).then(()=>{
-//                                          store.commit('del_token'); //token，清除它;
-//                                          setTimeout(() => {
-//                                          this.$router.push("/login");  
-//                                      })
-//                                      })
-//                                      }else{
-//                                      Dialog.alert({
-//                                          message:res.data.msg
-//                                          })
-//                                  }
-//          }) 
+//      	/*数据请求*/
+//			this.data_rendering();
+            // 调用loading 
+			                    this.$store.commit('showLoading')
+            //图片路径
+           this.baseUrl=this.url
+            // 订单列表	order/order_list
+            // 参数：
+            // token
+            // type		//全部订单 all，待付款 dfk，待发货 dfh，待收货 dsh，待评价 dpj，已取消 yqx
+            // 订单状态提示：
+            // order_status	//订单状态	已确认，2已收货，3已取消，4已完成
+            // pay_status	//支付状态	0未支付，1已支付，3，已退款
+            // shipping_status	//商品配送情况 0未发货，1已发货，3已收货，4退货
+           this.nowIndex=parseInt(this.type);
+           console.log(parseInt(this.type));
+           var type,siz
+           if(this.nowIndex === 0){
+               type='all'
+           }
+           if(this.nowIndex === 1){
+               type='dfk'
+           }
+           if(this.nowIndex === 2){
+               type='dfh'
+           }
+           if(this.nowIndex === 3){
+               type='dsh'  
+           }
+           if(this.nowIndex === 4){
+               type='dpj'
+           }
+                                var url = 'order/order_list'
+                                var params = new URLSearchParams();
+                                params.append('token', this.$store.getters.optuser.Authorization);           //token
+                                params.append('type',type );                      
+                                this.$axios({
+                                        method:"post",
+                                        url:url,
+                                        data: params
+                                        }).then((res)=>{
+                                        if( res.data.status === 1){
+                                            // 数据加载成功，关闭loading 
+					                        this.$store.commit('hideLoading')
+                                          
+                                                this.allOrders = res.data.data
+                                        
+                                        }else if(res.data.status === -1){  
+                                            Dialog.alert({
+                                            message:res.data.msg
+                                            }).then(()=>{
+                                            store.commit('del_token'); //token，清除它;
+                                            setTimeout(() => {
+                                            this.$router.push("/login");  
+                                        })
+                                        })
+                                        }else{
+                                        Dialog.alert({
+                                            message:res.data.msg
+                                            })
+                                    }
+            }) 
             
         },
         

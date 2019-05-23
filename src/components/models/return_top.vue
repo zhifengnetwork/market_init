@@ -69,6 +69,7 @@
 
 <style lang="stylus" scoped>
 	.return_top_box {
+		
 		position: fixed;
 		right: 60px;
 		bottom: 140px;
@@ -85,5 +86,8 @@
 		height: 100%;
 		background: url(/static/img/public/return_top_icon.png) no-repeat 0 0;
 		background-size: 100% 100%;
+		-moz-opacity: .4;          
+		-khtml-opacity: .4;          
+		opacity: .4; 
 	}
 </style>
