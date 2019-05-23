@@ -457,6 +457,7 @@
             // pay_status	//支付状态	0未支付，1已支付，3，已退款
             // shipping_status	//商品配送情况 0未发货，1已发货，3已收货，4退货
            this.nowIndex=parseInt(this.type);
+           console.log(parseInt(this.type));
            var type,siz
            if(this.nowIndex === 0){
                type='all'

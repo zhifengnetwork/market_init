@@ -101,7 +101,7 @@ const router = new Router({
 		    name: 'login',
 		    redirect: '/login', /**重定向**/
 		    /*component: login*/
-			 component: (resolve) => require(['@/components/login/login.vue'],resolve)
+			component: (resolve) => require(['@/components/login/login.vue'],resolve)
 		},
 		//登录
 	    {
