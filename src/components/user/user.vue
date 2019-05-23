@@ -88,12 +88,12 @@ export default {
                  {id:5,name:'退款/售后',imgUrl:'../../../static/img/user/shouhou.png',ar:'/order/afterSale'}
              ],
              btnBar:[
-                 {id:1,name:'会员福利社',viceName:'签到送积分',imgUrl:'../../../static/img/user/Member@2x.png',aUrl:''},
-                 {id:2,name:'急速保价',imgUrl:'../../../static/img/user/Price@2x.png',aUrl:''},
+                //  {id:1,name:'会员福利社',viceName:'签到送积分',imgUrl:'../../../static/img/user/Member@2x.png',aUrl:''},
+                //  {id:2,name:'急速保价',imgUrl:'../../../static/img/user/Price@2x.png',aUrl:''},
                  {id:3,name:'我的优惠券',imgUrl:'../../../static/img/user/coupon.png',aUrl:'/my/coupon'},
-                 {id:4,name:'我的兑换',imgUrl:'../../../static/img/user/exchange@2x.png',aUrl:''},
+                //  {id:4,name:'我的兑换',imgUrl:'../../../static/img/user/exchange@2x.png',aUrl:''},
                  {id:5,name:'我的收藏',imgUrl:'../../../static/img/user/Collection@2x.png',aUrl:'/collection'},
-                 {id:6,name:'帮助中心',imgUrl:'../../../static/img/user/Help@2x.png',aUrl:''},
+                //  {id:6,name:'帮助中心',imgUrl:'../../../static/img/user/Help@2x.png',aUrl:''},
                  {id:7,name:'设置',viceName:'用户设置•地址',imgUrl:'../../../static/img/user/Set_up@2x.png',aUrl:'/my/userinfo'}
              ],
              user:{ id:1,userName:'马冬梅',vipRank:'白金会员'},

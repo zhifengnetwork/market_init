@@ -924,6 +924,10 @@ import {Toast,Dialog} from "vant"
         width 100px
         height 100px
         z-index 3100!important
+.van-popup
+    transform none
+    top 0
+    left 0
 </style>
 
 
