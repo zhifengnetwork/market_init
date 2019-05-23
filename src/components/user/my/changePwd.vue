@@ -281,7 +281,7 @@ export default {
                  pwd1:'',
                  newCode:'',
             },
-            password:/^[a-zA-Z]\w{5,17}$/,             //用户密码正则
+            password:/^([\d]|[\w]){6,20}$/,              //用户密码正则
             // pwdd:/^[a-zA-Z0-9]{6}$/,                   //支付密码
             pwdd:/^\d{6}$/,                   //支付密码
             email:/^[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$/,               //用户邮箱正则
@@ -368,7 +368,7 @@ export default {
 						 return
 				  }else if(!this.password.test(this.getpwd.pwd)){
                         Dialog.alert({
-						message: '密码长度要在6~18位之间,且必须以字母开头!'
+						message: '密码长度为6-20位可以为数字、字母、特殊字符的密码!'
 						})
 						return
                   }
