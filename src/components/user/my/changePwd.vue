@@ -86,7 +86,7 @@
                                             <input id="pay_code" class="list_item_input js_verifyCode" type="text" placeholder="验证码"  v-model="getpwd.newCode">
                                         </div>
                                         <div class="list_item_extra" >
-                                             <button type="submit" id="pay_getcode1" class="list_item_extra_btn js_getcode" v-show="!LoginPwd.canGet" disabled="disabled">{{pwd.waitTime+"s后重新获取"}}</button>
+                                             <button type="submit" id="pay_getcode1" class="list_item_extra_btn js_getcode" v-show="!LoginPwd.canGet" disabled="disabled">{{LoginPwd.waitTime+"s后重新获取"}}</button>
                                              <button type="submit" id="pay_getcode" class="list_item_extra_btn js_getcode"  v-show="LoginPwd.canGet" @click="loginGetCode()">获取手机验证码</button>
                                         </div>
                                     </div>

@@ -29,6 +29,9 @@
                                 <span class="order-state" v-if="item.status===3">待收货</span>
                                 <span class="order-state" v-if="item.status===4">待评价</span>
                                 <span class="order-state" v-if="item.status===5">已取消</span>
+                                <span class="order-state" v-if="item.status===6">待退款</span>
+                                <span class="order-state" v-if="item.status===7">已退款</span>
+                                <span class="order-state" v-if="item.status===8">拒绝退款</span>
                             </div>
                             <router-link :to="'/orderDetails?order_id='+item.order_id">
                                 <div class="order-item">
@@ -485,13 +488,20 @@
                                           
                                                 this.allOrders = res.data.data
                                         
-                                        }else{
+                                        }else if(res.data.status === -1){  
                                             Dialog.alert({
                                             message:res.data.msg
-                                        }).then(() => {
-                                            this.$router.push('/login');
-                                        });
-                        }
+                                            }).then(()=>{
+                                            store.commit('del_token'); //token，清除它;
+                                            setTimeout(() => {
+                                            this.$router.push("/login");  
+                                        })
+                                        })
+                                        }else{
+                                        Dialog.alert({
+                                            message:res.data.msg
+                                            })
+                                    }
             }) 
             
         },

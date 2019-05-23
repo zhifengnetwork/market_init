@@ -188,7 +188,6 @@ import { Toast } from 'vant';
                         
                         reader.onload = function (e) {
                             that.imgUrls.push(this.result)
-                            console.log(that.imgUrls)
                         }
                     }
                     // 剩余张数

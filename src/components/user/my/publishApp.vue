@@ -275,7 +275,7 @@ export default {
                 order_list[i] = returnObj;
                 var returnObj = new Object();//创建一个对象
             }
-         console.log(order_list)
+
             var s = JSON.stringify(order_list)
                 params.append('token',this.$store.getters.optuser.Authorization)
                 params.append('comments', s);

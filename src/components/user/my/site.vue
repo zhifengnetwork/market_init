@@ -15,6 +15,7 @@
                             <span class="tel">{{item.mobile}}</span>
                             <p class="address-info">{{item.address}}</p>
                             <div class="action iconfont">
+                                <span class="moren" v-if="item.is_default===1">默认地址</span>
                                 <a class="edit" href="javascript:;"  @click="xiugai(item,index)">
                                     <img src="../../../../static/img/user/userinfo/xiugai.png" alt="">
                                 </a>
@@ -83,11 +84,20 @@ export default {
                    
                   if(res.data.status===1){
                      this.siteList = res.data.data
-                  }else{
-                    Dialog.alert({
-								message:res.data.msg
-								})
-                  }
+                  }else if(res.data.status === -1){  
+                            Dialog.alert({
+                            message:res.data.msg
+                            }).then(()=>{
+                            store.commit('del_token'); //token，清除它;
+                            setTimeout(() => {
+                            this.$router.push("/login");  
+                         })
+                         })
+                    }else{
+                          Dialog.alert({
+                            message:res.data.msg
+                            })
+                    }
                 })
         //获取地址
         var url = "user/get_address"
@@ -100,7 +110,20 @@ export default {
                 }).then((res)=>{
                   if(res.data.status===1){
                      this.areaList = res.data.data
-                  }
+                  }else if(res.data.status === -1){  
+                            Dialog.alert({
+                            message:res.data.msg
+                            }).then(()=>{
+                            store.commit('del_token'); //token，清除它;
+                            setTimeout(() => {
+                            this.$router.push("/login");  
+                         })
+                         })
+                    }else{
+                          Dialog.alert({
+                            message:res.data.msg
+                            })
+                    }
           })
     },
     methods: {
@@ -274,5 +297,6 @@ export default {
         transform none
         top 0
         left 0
-
+    .my-address-page .address-item .action .moren
+        float left
 </style>

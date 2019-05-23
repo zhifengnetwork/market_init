@@ -246,7 +246,20 @@ export default {
                }).then((res)=>{
                  if(res.data.status === 1){
                        this.list = res.data.data
-                 }
+                 }else if(res.data.status === -1){  
+                            Dialog.alert({
+                            message:res.data.msg
+                            }).then(()=>{
+                            store.commit('del_token'); //token，清除它;
+                            setTimeout(() => {
+                            this.$router.push("/login");  
+                         })
+                         })
+                    }else{
+                          Dialog.alert({
+                            message:res.data.msg
+                            })
+                    }
                })
            //图片路径
            this.baseUrl=this.url
@@ -369,17 +382,17 @@ export default {
 
           if (item.goods_num == 1) {
 
-            Toast("修改的商品不能为零噢~");
+            Toast("你选择的商品件数最低为一");
 
             return;
           }
-            var num = item.goods_num
-            item.goods_num--;
+            
+            var num =  item.goods_num-1
             var url = 'cart/addCart'
             var params = new URLSearchParams();
             params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value    tokne
             params.append('sku_id', item.sku_id);                //你要传给后台的参数值 key/value             sku id
-            params.append('cart_number', item.goods_num);       //你要传给后台的参数值 key/value              数量
+            params.append('cart_number', num);       //你要传给后台的参数值 key/value              数量
             params.append('act', 'edit');       //你要传给后台的参数值 key/value              修改购物车
            this.$axios({
                    method:"post",
@@ -387,12 +400,10 @@ export default {
                    data: params
                 }).then((res)=>{
                     if(res.data.status === 1){
-                        
+                        item.goods_num--;
                     }else{
-                        Dialog.alert({
-                        message:res.data.msg
-                        });
-                        item.goods_num = num
+                        Toast(res.data.msg)
+                        item.goods_num+1;
                     }
                 })
 
@@ -407,14 +418,12 @@ export default {
       var id = e.target.dataset.id;
       for (var item of this.list) {
         if (item.sku_id == id) {
-            
-            var num = item.goods_num
-            item.goods_num++;
+            var num =  item.goods_num +1
             var url = 'cart/addCart'
             var params = new URLSearchParams();
             params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value    tokne
             params.append('sku_id', item.sku_id);                //你要传给后台的参数值 key/value             sku id
-            params.append('cart_number', item.goods_num);       //你要传给后台的参数值 key/value              数量
+            params.append('cart_number', num);       //你要传给后台的参数值 key/value              数量
             params.append('act', 'edit');       //你要传给后台的参数值 key/value              修改购物车
             this.$axios({
                    method:"post",
@@ -422,11 +431,10 @@ export default {
                    data: params
                 }).then((res)=>{
                     if(res.data.status === 1){
+                         item.goods_num++;
                     }else{
-                        Dialog.alert({
-                        message:res.data.msg
-                        });
-                        item.goods_num = num
+                        Toast(res.data.msg)
+                        item.goods_num-1;
                     }
                 })
           this.liding()

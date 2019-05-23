@@ -134,7 +134,20 @@ export default {
                   if(res.data.status===1){
                      this.userItem = res.data.data
                      this.$store.commit("userInfo",res.data.data);
-                  }
+                  }else if(res.data.status === -1){  
+                            Dialog.alert({
+                            message:res.data.msg
+                            }).then(()=>{
+                            store.commit('del_token'); //token，清除它;
+                            setTimeout(() => {
+                            this.$router.push("/login");  
+                         })
+                         })
+                    }else{
+                          Dialog.alert({
+                            message:res.data.msg
+                            })
+                    }
                 })
     },
 }
