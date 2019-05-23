@@ -255,7 +255,9 @@ import {Toast,Dialog} from "vant"
                 show2:false,//是否显示配送方式上拉列表
                 
                 //用户信息
-                userItem:''
+                userItem:'',
+                //订单ID
+                orderId:'',
             };
         },
         created(){
@@ -439,11 +441,7 @@ import {Toast,Dialog} from "vant"
                                 });
                                 return 
                     }
-                    if(this.payId === 1){  //余额支付
-                         this.showPwd=true;
-                         this.showKeyboard=true;
-                         return
-                    }
+                    
                     if(this.payId === ''){
                                 Dialog.alert({
                                 message:'请选择支付方式'
@@ -465,17 +463,20 @@ import {Toast,Dialog} from "vant"
                                         data: params
                                     }).then((res)=>{
                                         if(res.data.status=== 1){
+                                            this.orderId = res.data.data
+                                            if(this.payId === 1){  //余额支付
+                                                this.showPwd=true;
+                                                this.showKeyboard=true;
+                                                return
+                                            }else{
+
                                             
-                                        // console.log(this.home)
-                                        // console.log(res)
-                                         // return
                                         // order_id  int
                                         // pay_type string  (alipay
                                         // 支付宝，weixin
                                         // 微信，credit
                                         // 余额，cash
                                         // 货到付款)
-                                        var orderId = res.data.data
                                         var urll = 'pay/payment'
                                         var params = new URLSearchParams();
                                         params.append('token', this.$store.getters.optuser.Authorization);                         //订单id
@@ -487,7 +488,7 @@ import {Toast,Dialog} from "vant"
                                             data: params
                                         }).then((res)=>{
                                             if(res.data.status ===1){
-                                            
+                                               
                                                 if(this.payId === 1){
                                                    
                                                 }else{
@@ -501,6 +502,7 @@ import {Toast,Dialog} from "vant"
                                             });
                                             }
                                         })
+                                        }
                                         }else{
                                             Dialog.alert({
                                             message:res.data.msg
@@ -530,8 +532,10 @@ import {Toast,Dialog} from "vant"
             },
             //输入密码
             onInput(key) {
+
                this.value = (this.value + key).slice(0, 6);
                       if(this.value.length === 6){
+                            
                                         var url = 'user/check_pwd'
                                         var params = new URLSearchParams();
                                         params.append('token', this.$store.getters.optuser.Authorization);                         //token
@@ -551,33 +555,13 @@ import {Toast,Dialog} from "vant"
                                                  //请求支付接口  
                                            
 
-                                var params = new URLSearchParams();
-                                params.append('token', this.$store.getters.optuser.Authorization);           //token
-                                params.append('cart_id',this.home );                       //购物车ID（多个逗号分开）
-                                params.append('address_id', this.tacitlySite.address_id); //收货ID
-                                params.append('pay_type', this.payId);                   //支付方式
-                                params.append('user_note', this.message);               //订单备注
-                                params.append('coupon_id',this.couponssId)             //优惠券id
-                                var url = "	order/submitOrder"
-                                this.$axios({
-                                        method:"post",
-                                        url:url,
-                                        data: params
-                                    }).then((res)=>{
-                                        if(res.data.status=== 1){         //请求成功
-                                        // order_id  int
-                                        // pay_type string  (alipay
-                                        // 支付宝，weixin
-                                        // 微信，credit
-                                        // 余额，cash
-                                        // 货到付款)
-
+                           
                                          
                                         var orderId = res.data.data
                                         var urll = 'pay/payment'
                                         var params = new URLSearchParams();
                                         params.append('token', this.$store.getters.optuser.Authorization);                         //订单id
-                                        params.append('order_id', orderId);                                                       //订单id
+                                        params.append('order_id', this.orderId);                                                       //订单id
                                         params.append('pay_type',this.payId);                                                    //支付方式                                  
                                         this.$axios({
                                             method:"post",
@@ -611,16 +595,7 @@ import {Toast,Dialog} from "vant"
                                           })
 
                                         }else{
-                                            setTimeout(()=>{
-                                                Toast.fail(res.data.msg);
-                                                this.showKeyboard = false
-                                            },2000)
-                                        }
-                                        
-                                         })  
-
-                                       }else{    //请求失败
-                                            Toast.loading({
+                                             Toast.loading({
                                                 mask: true,
                                                 message: '支付中...'
                                             });
@@ -630,8 +605,13 @@ import {Toast,Dialog} from "vant"
                                                 Toast.fail(res.data.msg);
                                                 this.value = '';
                                             },2000)
-                                            }
-                                        })
+                                          
+                                        }
+                                        
+                                         })  
+
+                                  
+                                 
                }
             },
             //删除密码

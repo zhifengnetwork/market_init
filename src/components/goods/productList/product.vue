@@ -93,7 +93,7 @@
                             </div>
                             <div class="good-detail-img">
                                 <router-link class="good-thumb" :to="'/details?goods_id='+item.goods_id" :title="item.desc">
-                                        <img class="lazy" v-lazy="baseUrl+item.img"  :alt="item.goods_name" :src="baseUrl+item.img" style="display: block;">
+                                        <img class="lazy"   :alt="item.goods_name" :src="baseUrl+item.img" style="display: block;">
                                 </router-link>
                                 <div class="similar-c">
                                 <div class="bg"></div>
@@ -104,7 +104,10 @@
                                     <router-link class="good-thumb" :to="'/details?goods_id='+item.goods_id" :title="item.desc">{{item.goods_name}}</router-link>
                                 </div>
                                 <div class="price">
-                                        <span class="sale-price no-price">¥{{item.price}}</span>
+                                        <span class="sale-price no-price">
+                                            ¥{{item.price}}
+                                            <!-- {{baseUrl+item.img}} -->
+                                        </span>
                                 </div>
                                 <a class="similar-btn iconfont">&#xe60b;</a>
                             </div>
@@ -224,10 +227,10 @@ export default {
         },
         setlocation(id,ip){
              var url=""
-            this.listId=id
+             this.listId=id
 
             if(this.list[0].data==ip){//如果是默认
-            
+                  
                    this.drop=!this.drop
 
                 // 
@@ -241,9 +244,9 @@ export default {
                 }
                 if(this.indexx==2){ //选中的下标为二
                      
-                     this.isCur=false
+                      this.isCur=false
 
-                     this.getGoodsListPirce()//发送请求
+                      this.getGoodsListPirce()//发送请求
                      
                 }else if(this.indexx==3){
                      
@@ -261,7 +264,7 @@ export default {
             
               
                 // 取消上一次请求
-                this.cancelRequest();
+                // this.cancelRequest();
                var params = new URLSearchParams();
                params.append('goods_attr', 3);  
                params.append('page', this.page);       
@@ -298,9 +301,8 @@ export default {
 
             if(this.list[2].data==ip){//人气
                
-               
                  // 取消上一次请求
-                this.cancelRequest();
+                // this.cancelRequest();
                        
                var params = new URLSearchParams();
                     params.append('goods_attr', 3);   
@@ -320,7 +322,8 @@ export default {
                     }).then((res)=>{
                         if(res.data.status === 1){
                             this.proList= '' //清空
-                            this.proList=res.data.data.goods_list
+                            this.proList=res.data.data.goods_list;
+                       
                         }else{  
                             Dialog.alert({
                                     message:res.data.msg
@@ -377,7 +380,13 @@ export default {
                 this.getGoodsListPirce()//发送请求
 
             }else{
-                this.ajax()
+
+               if(this.searchInfo){  //如果是搜索
+                      this.searchMo()
+                  }else{
+                      this.ajax()
+                  }
+
             }
             
         },
@@ -395,7 +404,8 @@ export default {
 
         getGoodsListPirce(){
          var url 
-         var  param
+         var param
+        //  console.log(this.isCur)
         if(this.isCur){  //升序
 
                      param = {
@@ -411,7 +421,7 @@ export default {
                     }
         }
          // 取消上一次请求
-            this.cancelRequest();
+            // this.cancelRequest();
                 var params = new URLSearchParams();
                     params.append('sort', param.sort);           //token
                if(this.searchInfo){   //是搜索
@@ -430,12 +440,14 @@ export default {
                         if(res.data.status === 1){
                             this.proList= '' //清空
                             this.proList=res.data.data.goods_list
+              
                         }else{  
                             Dialog.alert({
                                     message:res.data.msg
                             })
                         }
                     })
+                   
     },
      cancelRequest(){
             if(typeof this.source ==='function'){
@@ -477,6 +489,7 @@ export default {
             // sort
             // goods_attr
             // page
+            // this.searchInfo =  this.$route.query.query;
             var url = 'search/search'
             var params = new URLSearchParams();
             params.append('token', this.$store.getters.optuser.Authorization);           //token
@@ -484,7 +497,7 @@ export default {
             params.append('sort','' );           
             params.append('goods_attr','' );           
             params.append('page', '');          //页码
-            if(value == ''){
+            if(value == '' || value == ' '){
                 return
             }
             if(value!=''){

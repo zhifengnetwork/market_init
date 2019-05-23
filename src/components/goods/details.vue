@@ -1163,6 +1163,8 @@ export default {
                             padding-left: 40px
                             width: 190px
                             text-align left
+         ul>li:last-child span
+            border-bottom none
        .homebuttom ul li .iconfont
             display: block;
             float: left;

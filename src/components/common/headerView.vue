@@ -94,7 +94,7 @@
 			overflow hidden
 			padding-left 40px
 			width 100%
-			.text
+			span
 				border-bottom 1px solid #444
 				color #fff
 				display block
@@ -104,12 +104,18 @@
 				padding-left 40px
 				width 190px
 				text-align left
+            &:last-child span
+                border-bottom none
+                color red
 			.iconfont
 				display block
 				float left
 				height 40px
 				width 40px
 				margin-top 20px
+ul>li:last-child span
+    border-bottom none
+      
 
 
 

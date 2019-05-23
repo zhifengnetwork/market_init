@@ -51,7 +51,7 @@
                             <div class="order-opt" v-if="item.status===1">
                                 <span class="btn cancelBtn" @click="cancellation(index,item.order_id,item.status)">取消订单</span>
                            
-                                <span class="btn payBtn" @click="payment(item.order_id)">立即付款</span>
+                                <span class="btn payBtn" @click="payment(item.order_id,item.pay_type)">立即付款</span>
                           
                             </div>
                             <div class="order-opt" v-if="item.status===2">
@@ -210,6 +210,21 @@
                     <img src="/static/img/public/none.png" alt="">
                     <p>暂无数据</p>
                 </div>
+                 <!-- 密码输入框 -->
+            <van-popup v-model="showPwd" class="popup" @click-overlay="close()">
+                  <van-password-input
+                    :value="value"
+                    info="密码为 6 位数字"
+                    @focus="showKeyboard = true"
+                    />
+            </van-popup>
+             <!-- 数字键盘 -->
+                    <van-number-keyboard
+                    :show="showKeyboard"
+                    @input="onInput"
+                    @delete="onDelete"
+                    @blur="showKeyboard = false"
+            />
             </div>
 
         </div>
@@ -224,6 +239,13 @@
         name:'order',
         data(){
             return{
+                //支付密码
+                value: '',
+                showPwd:false,
+                showKeyboard:false,
+                orderId:'',
+                //支付方式
+                payId:'',
                 //商品图片路径
                 baseUrl:'',
 
@@ -298,26 +320,13 @@
                     })
             },
             //立即付款ajax
-            payment(id){
-               
-                   var url = "order/temporary"
-                   var params = new URLSearchParams();
-                        params.append('token', this.$store.getters.optuser.Authorization);       //你要传给后台的参数值 key/value    tokne
-                        params.append('order_id', id);                //你要传给后台的参数值 key/value             购物车id
-                        this.$axios({
-                            method:"post",
-                            url:url,
-                            data: params
-                        }).then((res)=>{
-                            if(res.data.status=== 1){
-                                 this.$router.push("/confirmOrder?id="+id);
-                            }else{
-                                Dialog.alert({
-                                message:res.data.msg
-                                });
-                            }
-                            
-                        })
+            payment(id,type){
+                  if(type===1){
+                       this.showPwd=true;
+                       this.showKeyboard=true;
+                       this.orderId = id
+                       this.payId = type
+                  }
             },
             
              //待付款取消订单
@@ -343,6 +352,89 @@
                 }else{
                     this.$router.push('/my/appraise?order_id='+item.order_id);
                 }
+            },
+             //输入密码
+            onInput(key) {
+               this.value = (this.value + key).slice(0, 6);
+                      if(this.value.length === 6){
+                                        var url = 'user/check_pwd'
+                                        var params = new URLSearchParams();
+                                        params.append('token', this.$store.getters.optuser.Authorization);                         //token
+                                        params.append('pwd', this.value);                                                         //密码
+                                        this.$axios({
+                                            method:"post",
+                                            url:url,
+                                            data: params
+                                        }).then((res)=>{
+                                      if(res.data.status ===1){  //提交成功
+                                                Toast.loading({
+                                                mask: true,
+                                                message: '支付中...'
+                                                });
+                                                this.showKeyboard=false;
+                                                this.value = '';
+                                                 //请求支付接口  
+
+                                        var orderId = res.data.data
+                                        var urll = 'pay/payment'
+                                        var params = new URLSearchParams();
+                                        params.append('token', this.$store.getters.optuser.Authorization);                         //订单id
+                                        params.append('order_id', this.orderId);                                                       //订单id
+                                        params.append('pay_type',this.payId);                                                    //支付方式                                  
+                                        this.$axios({
+                                            method:"post",
+                                            url:urll,
+                                            data: params
+                                        }).then((res)=>{
+                                            if(res.data.status ===1){  //余额支付成功
+                                            setTimeout(()=>{
+                                                Toast.success(res.data.msg);
+                                                var data = JSON.stringify(res.data.data)
+                                                this.$router.push(
+                                                    {
+                                                     path:'/paySucceed',
+                                                     name: 'paySucceed',
+                                                      params: {
+                                                         list:data
+                                                      }      
+                                                    })
+                                                },2000)
+                                            
+
+                                            }else{                     //余额支付失败
+                                            setTimeout(()=>{
+                                                Toast.fail(res.data.msg);
+                                                this.close();
+                                                this.showKeyboard = false
+                                            },2000)
+                                            }
+
+                                          })
+                                        }else{
+                                             Toast.loading({
+                                                mask: true,
+                                                message: '支付中...'
+                                            });
+                                            this.showKeyboard=false;
+                                            setTimeout(()=>{
+                                                this.showKeyboard=true;
+                                                Toast.fail(res.data.msg);
+                                                this.value = '';
+                                            },2000)
+                                          
+                                        }
+                                        
+                                         })  
+               }
+            },
+            //删除密码
+            onDelete() {
+            this.value = this.value.slice(0, this.value.length - 1);
+            },
+            //关闭蒙城 清空密码
+            close(){
+                this.showPwd=false
+                this.value = ''
             }
         },
         components:{
@@ -511,6 +603,25 @@
                     color #666
                     line-height 40px
 
+   .popup
+        width 100%
+   .van-number-keyboard
+        z-index 3000!important
+    .van-password-input__security li:first-child
+        border-left 0.5px solid #000
+
+    .van-password-input__security li
+        border 0.5px solid #000
+        border-left 0
+   .van-password-input
+        padding-top 30px
+   .van-loading
+        position fixed
+        top 45%
+        left 45%
+        width 100px
+        height 100px
+        z-index 3100!important
 
 </style>
 

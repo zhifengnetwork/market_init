@@ -10,29 +10,31 @@
         </headerView>
         <div class="page-aft-box">
              <div class="aft-list-info">
-                 <div class="list-info">
+                 <div class="list-info" v-for="(item,index) in allOrders" :key="index">
                   <router-link to="">
                       <div class="aft-list">
                         <div class="aft-img">
-                            <img src="" alt="">
+                            <img :src="baseUrl+item.img" alt="">
                         </div>
                         <div class="aft-text">
-                            <h3>美的（Midea） 三门冰箱 风冷无霜家</h3> 
+                            <h3>{{item.goods_name}}</h3> 
                             <p >
-                                <span  class="color">规格:升级版,颜色:星空灰,尺寸:大</span>
+                                <span  class="color">{{item.spec_key_name}}</span>
                             </p>
                         </div>
                         <div class="aft-num">
-                            <p class="count">x1</p>
+                            <p class="count">x{{item.goods_num}}</p>
                         </div>
                        </div>
                   </router-link>
                   <div class="aft-state">
                        <div class="tui">退</div>
-                       <span class="state">退货成功 退款成功</span>
+                       <span class="state" v-if="item.status===6">待退款</span>
+                       <span class="state" v-if="item.status===7">已退款</span>
+                       <span class="state" v-if="item.status===8">拒绝退款</span>
                   </div>
                   <div class="order-opt">
-                      <router-link to="/afterSale/afterDetails">
+                      <router-link :to="'/afterSale/afterDetails?order_id='+item.order_id">
                       <span  class="btn examine">查看详情</span>
                       </router-link>
                       </div>
@@ -47,7 +49,8 @@ import headerView from '../common/headerView.vue'
 export default {
     data(){
         return{
-
+            allOrders:[],
+            baseUrl:'',
         }
     },
     components:{
@@ -56,7 +59,28 @@ export default {
         created() {
             //图片路径
            this.baseUrl=this.url
-           
+           var url = 'order/order_list'
+           var tk = 'tk'
+                                var params = new URLSearchParams();
+                                params.append('token', this.$store.getters.optuser.Authorization);           //token
+                                params.append('type',tk );                      
+                                this.$axios({
+                                        method:"post",
+                                        url:url,
+                                        data: params
+                                        }).then((res)=>{
+                                        if( res.data.status === 1){
+                                          
+                                                this.allOrders = res.data.data
+                                        
+                                        }else{
+                                            Dialog.alert({
+                                            message:res.data.msg
+                                        }).then(() => {
+                                            this.$router.push('/login');
+                                        });
+                                        }
+                                        })
         },
 }
 </script>
@@ -75,6 +99,7 @@ export default {
     margin-right 18px
     img 
         width 100%
+        height 100%
  .aft-list .aft-text
     flex 1
     font-size 26px
