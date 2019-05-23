@@ -139,7 +139,7 @@
 			</div>
 
 		</div>
-		<menuBar></menuBar>
+	<menuBar></menuBar>
 	</div>
 </template>
 
@@ -150,7 +150,7 @@
 	export default {
 		name: "home",
 		components: {
-			menuBar
+			menuBar,
 		},
 		data() {
 			return {
