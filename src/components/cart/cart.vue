@@ -25,14 +25,14 @@
                               <!-- 购物车列表 -->
                               <div class="cart-content normal-good active" v-if="list.length>0">
 	                              	<router-link to="/home">
-	                                    <a class="tips clearfix">
+	                                    <div class="tips clearfix">
 	                                        <div>
 	                                          	购物满¥000.00 已免运费
 	                                        </div>
 	                                        <span class="iconfont free-shipping">
 	                                            <img src="../../../static/img/public/right.png" alt="">
 	                                        </span>
-	                                    </a>
+	                                    </div>
                                     </router-link>
                                 <div class="normal-box" >
                                         <div class="cart-brand  good-pools-data"  >

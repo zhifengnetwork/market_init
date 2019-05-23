@@ -235,7 +235,7 @@ export default {
             .then((res)=>{
                 if(res.data.status===1){
                     
-                    JSON.parse(localStorage.usin).gender = val
+                   localStorage.usin.gender = val
                     console.log(JSON.parse(localStorage.usin).gender)
                     Toast(res.data.msg)
                 }else{
