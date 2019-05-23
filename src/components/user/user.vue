@@ -165,4 +165,9 @@ export default {
       text-align center
     .quitOut
       color #ffffff
+   .btn-item:nth-child(2) .item-name
+      border-bottom: none;
+   .btn-item:nth-child(3)
+      margin-top: .4rem;
+
 </style>
