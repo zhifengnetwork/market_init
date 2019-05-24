@@ -1,5 +1,5 @@
 <template>
-    <div class="order">
+    <div class="order" ref="viewBox" >
         <!-- 头部组件 -->
         <headerView custom-title="我的订单" custom-fixed rightNone>
             <div class="backBtn" slot="backBtn" @click="$router.push('/user')">
@@ -61,8 +61,6 @@
                                 <router-link :to="'/order/refund?order_id='+item.order_id">
                                 <span class="btn cancelBtn">退款</span>
                                 </router-link>
-                                
-                                <!-- <span class="btn">确认收货</span> -->
                             </div>
                             <div class="order-opt" v-if="item.status===3">
                                
@@ -72,15 +70,14 @@
                                 <span class="btn cancelBtn" @click="delOrder(index,item.order_id,item.status)">删除订单</span>
                                 
                                  <span class="btn" @click="evaluateet(item)">评价</span>
-                         
+                            </div>
+                            <div class="order-opt" v-if="item.status===5">
+                                <span class="btn cancelBtn" @click="delOrder(index,item.order_id,item.status)">删除订单</span>
                             </div>
                             <div class="order-opt" v-if="item.status===6">
-                                <span class="btn" @click="cancelRefund(index,item.order_id,item.status)">取消退款</span>
-                                <!-- <span class="btn">再次购买</span> -->
+                                <span class="btn" @click="cancelRefund(index,item.order_id,)">取消退款</span>               
                             </div>
                         </div>
-                         
-                        
                     </li>
                     <li v-show="nowIndex===1">
                         <div class="order-good" v-for="(item,index) in allOrders" :key="index">
@@ -140,7 +137,6 @@
                             <div class="order-opt">
                                 <router-link :to="'/order/refund?order_id='+item.order_id">
                                 <span class="btn cancelBtn">退款</span>
-                                <!-- <span class="btn">确认收货</span> -->
                                 </router-link>
                             </div>
                         </div>
@@ -201,9 +197,7 @@
                             </router-link>
                             <div class="order-opt">
                                 <span class="btn cancelBtn" @click="delOrder(index,item.order_id,item.status)">删除订单</span>
-                                  <!-- <router-link :to="'/my/appraise?order_id='+item.order_id" > -->
                                  <span class="btn" @click='evaluateet(item)'>评价</span>
-                                 <!-- </router-link> -->
                             </div>
                         </div>
                     </li>
@@ -282,7 +276,11 @@
                         tabTitle:"待评价"
                     }
                 ],
-                list:[]
+                list:[],
+                //页码
+                page:1,
+                //是否请求数据
+                ispage:true
             }
         },
         methods:{
@@ -338,8 +336,7 @@
              //待付款取消订单
             cancellation(index,id,status){
                  var msgg = '您确定要取消订单吗？'
-                 this.ajax(index,id,status,this.allOrders,msgg)       
-                 console.log(index)        
+                 this.ajax(index,id,status,this.allOrders,msgg)              
             },
             //全部订单页  删除订单
             delOrder(index,id,status){
@@ -351,17 +348,44 @@
                 var msgg = '您要确认收货吗？'
                 this.ajax(index,id,status,this.allOrders,msgg) 
             },
-            //取消订单
-            cancelRefund(index,id,status){
-                var msgg = '您要确认取消退款吗？'
-                this.ajax(index,id,status,this.allOrders,msgg) 
+            //取消退款
+            cancelRefund(index,id){
+                    // 取消申请退款	order/cancel_refund
+                    // 参数：
+                    // token
+                    // order_id
+                    var url = 'order/cancel_refund'
+                    var params = new URLSearchParams();
+                    params.append('token', this.$store.getters.optuser.Authorization);           //token
+                    params.append('order_id',id ); 
+                             Dialog.confirm({
+                        message: '你确认要取消退款吗?'
+                        }).then(() => {   
+                        this.$axios({
+                                        method:"post",
+                                        url:url,
+                                        data: params
+                                        }).then((res)=>{
+                                        if( res.data.status === 1){
+                                          
+                                              this.allOrders.splice(index,1)  
+                                              Toast(res.data.msg)
+                                        }else {
+                                            Dialog.alert({
+                                                message:res.data.msg
+                                                })
+                                        }
+                })
+                }).catch(()=>{
+                        
+                })
             },
            
             evaluateet(item){
                 if(item.comment === 1){
                     Toast('你已评价过此商品')
                 }else{
-                    this.$router.push('/my/appraise?order_id='+item.order_id);
+                   this.$router.push('/my/appraise?order_id='+item.order_id);
                 }
             },
              //输入密码
@@ -450,7 +474,7 @@
 			/*页面-数据渲染*/
 			data_rendering() {
 				// 调用loading 
-				this.$store.commit('showLoading')
+				// this.$store.commit('showLoading')
 				//图片路径
 				this.baseUrl = this.url
 				// 订单列表	order/order_list
@@ -462,7 +486,6 @@
 				// pay_status	//支付状态	0未支付，1已支付，3，已退款
 				// shipping_status	//商品配送情况 0未发货，1已发货，3已收货，4退货
 				this.nowIndex = parseInt(this.type);
-				console.log(parseInt(this.type));
 				var type, siz
 				if(this.nowIndex === 0) {
 					type = 'all'
@@ -478,23 +501,35 @@
 				}
 				if(this.nowIndex === 4) {
 					type = 'dpj'
-				}
-				var url = 'order/order_list'
+                }
+                if(this.ispage){
+                var url = 'order/order_list'        
 				var params = new URLSearchParams();
 				params.append('token', this.$store.getters.optuser.Authorization); //token
-				params.append('type', type);
+                params.append('type', type);
+                params.append('page', this.page);
 				this.$axios({
 					method: "post",
 					url: url,
 					data: params
 				}).then((res) => {
 					if(res.data.status === 1) {
-						// 数据加载成功，关闭loading 
-						this.$store.commit('hideLoading')
+                        if(this.page ===1 ){
+                            // 数据加载成功，关闭loading 
+						// this.$store.commit('hideLoading')
 	
 						this.allOrders = res.data.data
+                        }else{
+                        // 数据加载成功，关闭loading 
+                        // this.$store.commit('hideLoading')
+                        if(res.data.data.length!=''){  //如果有数据
+                             this.allOrders = this.allOrders.concat(res.data.data);
+                        }else{
+                             this.ispage = false
+                        }
+                        }
 	
-					} else {
+					} else if(res.data.status === -1){
 						Dialog.alert({
 							message: res.data.msg
 						}).then(() => {
@@ -502,77 +537,37 @@
 						});
 					}
 				}).catch((err) => {
-					alert('请求错误'+err);
+					// alert('请求错误'+err);
 				})
-			},
+                }
+				
+            },
+            //底部加载更多
+            scrolljia(){
+                var scr = document.documentElement.scrollTop || document.body.scrollTop; // 向上滚动的那一部分高度
+                var clientHeight = document.documentElement.clientHeight || document.body.clientHeight ; // 屏幕高度也就是当前设备静态下你所看到的视觉高度
+                var scrHeight = document.documentElement.scrollHeight || document.body.scrollHeight; // 整个网页的实际高度，兼容Pc端
+             
+                if(scr + clientHeight + 10 >= scrHeight){
+                    console.log("距顶部"+scr+"可视区高度"+clientHeight+"滚动条总高度"+scrHeight);
+                    this.page ++
+                    this.data_rendering()    
+                }
+            }
         },
+        mounted(){     
+                var _this = this;
+                window.addEventListener('scroll',this.scrolljia,true)
+        },
+
         components:{
             headerView
         },
         created(){
         	/*数据请求*/
 			this.data_rendering();
-//          // 调用loading 
-//			                    this.$store.commit('showLoading')
-//          //图片路径
-//         this.baseUrl=this.url
-//          // 订单列表	order/order_list
-//          // 参数：
-//          // token
-//          // type		//全部订单 all，待付款 dfk，待发货 dfh，待收货 dsh，待评价 dpj，已取消 yqx
-//          // 订单状态提示：
-//          // order_status	//订单状态	已确认，2已收货，3已取消，4已完成
-//          // pay_status	//支付状态	0未支付，1已支付，3，已退款
-//          // shipping_status	//商品配送情况 0未发货，1已发货，3已收货，4退货
-//         this.nowIndex=parseInt(this.type);
-//         console.log(parseInt(this.type));
-//         var type,siz
-//         if(this.nowIndex === 0){
-//             type='all'
-//         }
-//         if(this.nowIndex === 1){
-//             type='dfk'
-//         }
-//         if(this.nowIndex === 2){
-//             type='dfh'
-//         }
-//         if(this.nowIndex === 3){
-//             type='dsh'  
-//         }
-//         if(this.nowIndex === 4){
-//             type='dpj'
-//         }
-//                              var url = 'order/order_list'
-//                              var params = new URLSearchParams();
-//                              params.append('token', this.$store.getters.optuser.Authorization);           //token
-//                              params.append('type',type );                      
-//                              this.$axios({
-//                                      method:"post",
-//                                      url:url,
-//                                      data: params
-//                                      }).then((res)=>{
-//                                      if( res.data.status === 1){
-//                                          // 数据加载成功，关闭loading 
-//					                        this.$store.commit('hideLoading')
-//                                        
-//                                              this.allOrders = res.data.data
-//                                      
-//                                      }else if(res.data.status === -1){  
-//                                          Dialog.alert({
-//                                          message:res.data.msg
-//                                          }).then(()=>{
-//                                          store.commit('del_token'); //token，清除它;
-//                                          setTimeout(() => {
-//                                          this.$router.push("/login");  
-//                                      })
-//                                      })
-//                                      }else{
-//                                      Dialog.alert({
-//                                          message:res.data.msg
-//                                          })
-//                                  }
-//          }) 
-            
+    
+
         },
         
     }

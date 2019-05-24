@@ -161,6 +161,11 @@ export default {
                     }).then((res)=>{
                     if(res.data.status===1){
                         this.birthday =y+'-'+m+'-'+d;
+                        var usin = JSON.parse(window.localStorage.getItem('usin'))   //获取localStorage用户信息
+                        usin.birthyear = y                                            //赋值修改的年份
+                        usin.birthmonth = m                                           //赋值修改的月份
+                        usin.birthday = d                                             //赋值修改的日份
+                        window.localStorage.setItem('usin', JSON.stringify(usin));    //从新覆盖用户信息
                         Toast(res.data.msg)
                         this.amend=true
                     }else{
@@ -187,6 +192,9 @@ export default {
                     }).then((res)=>{
                     if(res.data.status===1){
                         this.userName = name;
+                        var usin = JSON.parse(window.localStorage.getItem('usin'))   //获取localStorage用户信息
+                        usin.realname = name                                         //赋值修改的姓名
+                        window.localStorage.setItem('usin', JSON.stringify(usin));   //从新覆盖用户信息
                         Toast(res.data.msg)
                         this.amend=true
                     }else{
@@ -210,7 +218,10 @@ export default {
             })
             .then((res)=>{
                 if(res.data.status===1){
-                    this.userImg = res.data.data;
+                    this.userImg = res.data.data;                                //回显头像
+                    var usin = JSON.parse(window.localStorage.getItem('usin'))   //获取localStorage用户信息
+                    usin.avatar = res.data.data                                  //赋值修改的头像
+                    window.localStorage.setItem('usin', JSON.stringify(usin));   //从新覆盖用户信息
                     Toast(res.data.msg)
                 }else{
                     Toast(res.data.msg)
@@ -233,10 +244,10 @@ export default {
                 data:params
             })
             .then((res)=>{
-                if(res.data.status===1){
-                    
-                   localStorage.usin.gender = val
-                    console.log(JSON.parse(localStorage.usin).gender)
+                if(res.data.status===1){    
+                var usin = JSON.parse(window.localStorage.getItem('usin'))   //获取localStorage用户信息
+                usin.gender = val                                            //赋值修改的性别
+                window.localStorage.setItem('usin', JSON.stringify(usin));   //从新覆盖用户信息
                     Toast(res.data.msg)
                 }else{
                     Toast(res.data.msg)
@@ -264,6 +275,7 @@ export default {
     created() {
         //图片路径
         this.baseUrl=this.url
+        console.log(JSON.parse(this.$store.getters.optuser.usin))
         this.userImg = JSON.parse(this.$store.getters.optuser.usin).avatar   //头像
         this.userName = JSON.parse(this.$store.getters.optuser.usin).realname  //昵称
         this.birthday = JSON.parse(this.$store.getters.optuser.usin).birthyear+'-'+JSON.parse(this.$store.getters.optuser.usin).birthmonth+'-'+JSON.parse(this.$store.getters.optuser.usin).birthday  //生日
