@@ -34,6 +34,7 @@
                        <span class="state" v-if="item.status===8">拒绝退款</span>
                   </div>
                   <div class="order-opt">
+                      <span  class="btn examine" v-if="item.status===6" @click="cancelafter(item.order_id,index)">取消退款</span>
                       <router-link :to="'/afterSale/afterDetails?order_id='+item.order_id">
                       <span  class="btn examine">查看详情</span>
                       </router-link>
@@ -46,6 +47,7 @@
 <script>
 // 公共头部
 import headerView from '../common/headerView.vue'
+import { Toast ,Dialog} from 'vant';
 export default {
     data(){
         return{
@@ -63,7 +65,7 @@ export default {
            var tk = 'tk'
                                 var params = new URLSearchParams();
                                 params.append('token', this.$store.getters.optuser.Authorization);           //token
-                                params.append('type',tk );                      
+                                params.append('type',tk );                   
                                 this.$axios({
                                         method:"post",
                                         url:url,
@@ -88,6 +90,40 @@ export default {
                                                 })
                                         }
                                         })
+        },
+        methods: {
+            //取消退款
+            cancelafter(id,index){
+                    // 取消申请退款	order/cancel_refund
+                    // 参数：
+                    // token
+                    // order_id
+                    var url = 'order/cancel_refund'
+                    var params = new URLSearchParams();
+                    params.append('token', this.$store.getters.optuser.Authorization);           //token
+                    params.append('order_id',id ); 
+                             Dialog.confirm({
+                        message: '你确认要取消退款吗?'
+                        }).then(() => {   
+                        this.$axios({
+                                        method:"post",
+                                        url:url,
+                                        data: params
+                                        }).then((res)=>{
+                                        if( res.data.status === 1){
+                                          
+                                              this.allOrders.splice(index,1)  
+                                              Toast(res.data.msg)
+                                        }else {
+                                            Dialog.alert({
+                                                message:res.data.msg
+                                                })
+                                        }
+                })
+                }).catch(()=>{
+                        
+                })
+            }
         },
 }
 </script>

@@ -86,7 +86,7 @@ a {
     background: #ff7f81;
     color: #fff;
     display: block;
-    font-size: .2rem;
+    font-size: 30px;
     line-height: .4rem;
     margin-top: -.2rem;
     padding: .2rem .25rem;
@@ -742,7 +742,7 @@ img {
     padding-bottom: 1.17rem;
     position: absolute;
     right: 0;
-    transition: all 5s;
+    transition: all 1s;
 }
 
 .chose-panel .close {

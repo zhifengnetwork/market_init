@@ -1,5 +1,5 @@
 <template>
-    <div class='details'>
+    <div class='details' >
          <header>
          <headerView custom-title="商品详情" custom-fixed rightNone>
 				<div class="backBtn" slot="backBtn" @click="$router.go(-1)">
@@ -9,6 +9,7 @@
                     <img src="../../../static/img/public/recovery.png" />
                 </div>
 		</headerView> 
+       
            <div class="homebuttom" :class="{hide:isHide}">
                     <div class="ul-arr"></div>
                     <ul>
@@ -37,10 +38,11 @@
                             </router-link>
                         </li>
                     </ul>
-               </div>
+               
+          </div>
            </header>
     <!-- 商品详情 -->
-        <div class="goods">
+        <div class="goods" @click="isHide=true">
                 <van-swipe class="goods-swipe" :autoplay="0" indicator-color="#000">
                 <van-swipe-item v-for="(thumb,index) in goods.img" :key="index">
                     <img  :src="baseUrl+thumb.picture" v-lazy="baseUrl+thumb.picture" >       
@@ -116,13 +118,13 @@
                     </div>
                 <!-- 商品详情 -->
                 <div class="mod_detail_info_header evaluate">
-                        <a class="J_to_evaluate" href="/detail/index?itemid=1000000000100511234895&amp;mtag=30022.46.1#evaluate">
+                        
                             <div class="detail_info_line clearfloat">
                                 <h3>商品详情</h3>
                                 <h4>DETAILS</h4>
                                 <!-- <i class="midea-icon right-arrow"></i> -->
                             </div>
-                        </a>
+                        
                         <div class="detail_wrap" v-html='goods.content'>
                             <p class="p-info">
                               Dickies从1922年诞生之日起就旨在出品品质的工装制服，深谙美国服装文化的精髓。越来越多的冲浪和明星、各大音乐人、社会名流及新生代时尚偶像们开始拥戴Dickies品牌。Dickies以它的耐穿、舒适和标志性外观成为一个生活方式品牌，得到一代又一代年轻人的喜爱和拥蹙。Dickies，从不刻意追逐时尚的这份低调反而得到无数时尚人士的认同，朴实、简单、款式经典的工装风格本身就是一种时尚！ 
@@ -1161,6 +1163,7 @@ export default {
             top: .1rem;
             transform: rotate(45deg);
             width: 42px
+            z-index -1
         .homebuttom   ul 
                border-radius: .25rem;
                height: 338px

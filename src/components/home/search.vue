@@ -39,7 +39,7 @@
                             </ul>
                     </div>
         </header>
-        <div class="sear-page zfwl-page">
+        <div class="sear-page zfwl-page" @click="isHide=true">
             <!-- 搜索框 -->
             <van-search
                 v-model="value"

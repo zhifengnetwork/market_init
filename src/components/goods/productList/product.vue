@@ -2,7 +2,7 @@
     <!-- 商品列表 -->
     <div class="productL-box">
           <header>
-                <headerView :custom-title="searchInfo"  rightNone>
+                <headerView custom-title="商品列表"  rightNone>
                         <div class="backBtn" slot="backBtn" @click="$router.go(-1)">
                             <img src="../../../../static/img/public/backBtn.png" />
                         </div>
@@ -49,7 +49,7 @@
                 shape="round"
                 @search="onSearch"
                 @keyup="onSearch(value)"
-                
+                @click="isHide=true"
                 >
                 <div slot="action" @click="onSSearch(value)">搜索</div>
             </van-search>
@@ -62,7 +62,7 @@
                           </span>
                       </li>
             </ul>
-        <div class="good-list-page" v-if="keywo.length===0 || value===''">
+        <div class="good-list-page" v-if="keywo.length===0 || value===''" @click="isHide=true">
                 <div class="filter-tab">
                      <ul class="list-nav clearfloat" >
                         <li v-for="item in list" :key="item.id" class="buriedpoint" :class="[listId==item.id?'active':'',item.class]"  :data-ip="item.data"   @click.passive='setlocation(item.id,item.data)'>
@@ -152,7 +152,7 @@ export default {
           //商品分类id
             cat_id:this.$route.query.cat_id,
           //搜索
-            searchInfo:'商品列表',
+            searchInfo:'',
 
           //头部显示导航
              isHide:true,
@@ -595,6 +595,7 @@ export default {
             // goods_attr
             // page
             this.searchInfo =  this.$route.query.query;
+            this.value = this.$route.query.query;
             if(this.searchInfo){
                 this.searchMo()
            }else{
