@@ -197,7 +197,7 @@ const router = new Router({
 			path:'/my/appraise',
 			name:'appraise',
 			component: (resolve) => require(['@/components/user/my/publishApp'],resolve),
-			meta:{requireAuth:true}   //是否需要登录
+			meta:{requireAuth:false}   //是否需要登录
 		},
 		// 确认订单
 		{

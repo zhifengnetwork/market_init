@@ -181,7 +181,7 @@
 		 },
 		 created() {
 			 //图片路径
-           this.baseUrl=this.url
+           this.baseUrl = this.url
 		 },
 		// 注册组件 
 		components:{
